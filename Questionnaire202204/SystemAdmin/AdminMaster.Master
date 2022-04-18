@@ -7,7 +7,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>後台-問卷管理</title>
     <style>
-
+        .Title{
+            font-size:50pt;
+        }
+        .LeftBar{
+            float:left;
+            width:10%;
+        }
+        .Main{
+            float:left;
+            width:80%;
+            border:1px black solid;
+        }
     </style>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
@@ -15,12 +26,13 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            <h1>後台-問卷管理</h1>
+            <h1 class="Title">後台-問卷管理</h1>
             <div class="LeftBar">
-                <a href="List.aspx">問卷管理</a>
+                <a href="List.aspx">問卷管理</a><br />
                 <a href="CommonlyQuestionList.aspx">常用問題管理</a>
             </div>
-            <div>
+            <div class="Main">
+
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                 </asp:ContentPlaceHolder>
             </div>
