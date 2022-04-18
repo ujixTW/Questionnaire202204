@@ -11,18 +11,47 @@
             padding: 10px 30px;
             width: 90%;
         }
-        .SearchBar td{
-            padding:5px;
+
+            .SearchBar td {
+                padding: 5px;
+            }
+
+            .SearchBar input[type=text] {
+                width: 100%;
+                border: 3px solid #000;
+            }
+        /*新增/刪除按鈕*/
+        .btnImage {
+            width: 25px;
+            height: 25px;
+            margin: 3px 10px;
         }
-        .SearchBar input[type=text]{
-            width:100%;
-            border:3px solid #000;
+
+        .divDeleteMsg {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(0,0,0,0.5);
         }
-        .btnImage{
-            width:25px;
-            height:25px;
-            margin:3px 10px;
-        }
+
+            .divDeleteMsg > div {
+                position:absolute;
+                top: 50%;
+                left: 50%;
+                width: 400px;
+                height: 150px;
+                background-color: rgb(240,240,240);
+                transform:translate(-50%,-50%);
+                border-radius:5px;
+                padding:10px;
+                text-align:center;
+            }
+            .divDeleteMsg input[type=submit]{
+                width:100px;
+                border-radius:5px;
+            }
         /*問卷清單*/
         .tableQusList {
             border: 3px solid #000;
@@ -95,9 +124,12 @@
         <br />
         <%--刪除按鍵--%>
         <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Image/trash3-fill.svg" CssClass="btnImage" OnClick="btnDelete_Click" />
-        <div id="divDeleteMsg" runat="server">
+
+        <%--彈跳警告視窗--%>
+        <div id="divDeleteMsg" runat="server" class="divDeleteMsg" visible="false">
             <div>
                 <h2>確定要刪除這些檔案嗎?</h2>
+                <br />
                 <asp:Button ID="btnDeleteYes" runat="server" Text="是" OnClick="btnDelete_Click" />
                 <asp:Button ID="btnDeleteNo" runat="server" Text="否" OnClick="btnDelete_Click" />
             </div>
@@ -127,13 +159,13 @@
                     <ItemTemplate>
                         <tr>
                             <td>
-                                <input type="checkbox" name="checkboxQus" /></td>
+                                <input type="checkbox" name="checkboxQus" value="<%#Eval("QuestionnaireID") %>" /></td>
                             <td><%# Eval("NO") %></td>
                             <td><a href="Detail.aspx?ID=<%# Eval("QuestionnaireID") %>&State=1"><%# Eval("Title") %></a></td>
                             <td><%# Eval("IsEnableText") %></td>
                             <td><%# Eval("StartTime") %></td>
                             <td><%# Eval("EndTime") %></td>
-                            <td><a href="Detail.aspx?ID=<%# Eval("QuestionnaireID") %>&State=4">前往</a></td>
+                            <td><a href="Detail.aspx?ID=<%#Eval("QuestionnaireID") %>&State=4">前往</a></td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>
@@ -143,7 +175,7 @@
             </tbody>
 
         </table>
-        <uc1:ucPageChange runat="server" id="ucPageChange" />
+        <uc1:ucPageChange runat="server" ID="ucPageChange" />
     </div>
     <script>
 

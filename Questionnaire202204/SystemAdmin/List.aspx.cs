@@ -103,7 +103,9 @@ namespace Questionnaire202204.SystemAdmin
         {
             if (sender == this.btnDeleteYes)
             {
+                List<Guid> questionnaireIDList = new List<Guid>();
 
+                QuestionnaireManager.DeleteQuestionnaireList(questionnaireIDList);
             }
             else if (sender == this.btnDeleteNo)
             {

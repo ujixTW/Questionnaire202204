@@ -11,7 +11,7 @@ namespace Questionnaire202204.Managers
     public class QuestionnaireManager
     {
         //增加
-        
+
         //刪除
         /// <summary>
         /// 軟刪除所選擇的問卷
@@ -20,9 +20,12 @@ namespace Questionnaire202204.Managers
         public static void DeleteQuestionnaireList(List<Guid> questionnaireIDList)
         {
             string idText = string.Empty;
-            foreach (var temp in questionnaireIDList)
+            for (var i = 0; i < questionnaireIDList.Count; i++)
             {
-                idText += $"'{temp}',";
+                if (i != 0)
+                    idText += "," + $"'{questionnaireIDList[i]}'";
+                else
+                    idText += $"'{questionnaireIDList[i]}'";
             }
 
             string connStr = ConfigHelper.GetConnectionString();
@@ -31,7 +34,7 @@ namespace Questionnaire202204.Managers
                                 SET
                                     [IsDelete]='true'
                                 WHERE
-                                    [QuestionnaireID] IN ()
+                                    [QuestionnaireID] IN ({idText})
                                 ";
 
             try
@@ -40,11 +43,11 @@ namespace Questionnaire202204.Managers
                 {
                     using (SqlCommand command = new SqlCommand(commandText, conn))
                     {
-                        
+
                         conn.Open();
                         command.ExecuteNonQuery();
 
-                        
+
                     }
                 }
             }
@@ -66,10 +69,10 @@ namespace Questionnaire202204.Managers
         /// <returns>多筆問卷資料，及OUT該頁實際資料筆數</returns>
         public static List<QuestionnaireModel> GetQuestionnaireList(string keyword, string startTime, string endTime, int pageSize, int pageIndex, out int totalRows)
         {
-            DateTime startDate= DateTime.Today;
+            DateTime startDate = DateTime.Today;
             DateTime endDate = DateTime.Today;
             string whereText = string.Empty;
-            
+
             //計算跳頁數
             int skip = pageSize * (pageIndex - 1);
             if (skip < 0)
