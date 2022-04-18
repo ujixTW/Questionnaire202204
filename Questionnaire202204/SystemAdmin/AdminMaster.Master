@@ -17,7 +17,8 @@
         <div>
             <h1>後台-問卷管理</h1>
             <div class="LeftBar">
-
+                <a href="List.aspx">問卷管理</a>
+                <a href="CommonlyQuestionList.aspx">常用問題管理</a>
             </div>
             <div>
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">

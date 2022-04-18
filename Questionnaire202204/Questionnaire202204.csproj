@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
+    <Content Include="SystemAdmin\CommonlyQuestionList.aspx" />
     <Content Include="SystemAdmin\Detail.aspx" />
     <Content Include="SystemAdmin\List.aspx" />
     <Content Include="Web.config" />
@@ -83,6 +85,20 @@
     </Compile>
     <Compile Include="SystemAdmin\AdminMaster.Master.designer.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\CommonlyQuestionDetail.aspx.cs">
+      <DependentUpon>CommonlyQuestionDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\CommonlyQuestionDetail.aspx.designer.cs">
+      <DependentUpon>CommonlyQuestionDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\CommonlyQuestionList.aspx.cs">
+      <DependentUpon>CommonlyQuestionList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\CommonlyQuestionList.aspx.designer.cs">
+      <DependentUpon>CommonlyQuestionList.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\Detail.aspx.cs">
       <DependentUpon>Detail.aspx</DependentUpon>
