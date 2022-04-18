@@ -5,9 +5,15 @@
 <html>
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>後台-問卷管理</title>
+    <link href="../CSS/Bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="../JavaScript/bootstrap/bootstrap.min.js"></script>
+    <script src="../JavaScript/jquery/jquery.min.js"></script>
+    <title></title>
     <style>
-        .Title{
+        .Page{
+            margin:30px;
+        }
+        #PageTitle{
             font-size:50pt;
         }
         .LeftBar{
@@ -15,9 +21,8 @@
             width:10%;
         }
         .Main{
-            float:left;
+            float:right;
             width:80%;
-            border:1px black solid;
         }
     </style>
     <asp:ContentPlaceHolder ID="head" runat="server">
@@ -25,8 +30,9 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-            <h1 class="Title">後台-問卷管理</h1>
+        <div class="Page">
+            <h1 id="PageTitle"></h1>
+            <br />
             <div class="LeftBar">
                 <a href="List.aspx">問卷管理</a><br />
                 <a href="CommonlyQuestionList.aspx">常用問題管理</a>
@@ -40,5 +46,26 @@
 
         </div>
     </form>
+    <script>
+        //動態更改網頁標題
+        var PagePath = location.pathname;
+        switch (PagePath) {
+            //問卷管理
+            case "/SystemAdmin/List.aspx":
+            case "/SystemAdmin/Detail.aspx":
+                document.title = "後台-問卷管理";
+                document.getElementById("PageTitle").innerText = "後台-問卷管理";
+                break;
+            //常用問題管理
+            case "/SystemAdmin/CommonlyQuestionList.aspx":
+            case "/SystemAdmin/CommonlyQuestionDetail.aspx":
+                document.title = "後台-常用問題管理";
+                document.getElementById("PageTitle").innerText = "後台-常用問題管理";
+                break;
+            default:
+                break;
+        }
+    </script>
 </body>
+    
 </html>

@@ -70,12 +70,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CSS\Bootstrap\bootstrap.css" />
     <Content Include="CSS\Bootstrap\bootstrap.min.css" />
     <Content Include="Global.asax" />
-    <Content Include="JavaScript\bootstrap\bootstrap.js" />
     <Content Include="JavaScript\bootstrap\bootstrap.min.js" />
-    <Content Include="JavaScript\jquery\jquery.js" />
     <Content Include="JavaScript\jquery\jquery.min.js" />
     <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
     <Content Include="SystemAdmin\CommonlyQuestionList.aspx" />
@@ -135,7 +132,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
