@@ -7,56 +7,56 @@
 // </自動產生的>
 //------------------------------------------------------------------------------
 
-namespace Questionnaire202204.SystemAdmin
+namespace Sakei.ShareControls
 {
 
 
-    public partial class List
+    public partial class ucPageChange
     {
 
         /// <summary>
-        /// txtSearchText 控制項。
+        /// aLinkFirst 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearchText;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkFirst;
 
         /// <summary>
-        /// txtStartTime 控制項。
+        /// aLinkPage1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStartTime;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPage1;
 
         /// <summary>
-        /// txtEndTime 控制項。
+        /// aLinkPage2 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEndTime;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPage2;
 
         /// <summary>
-        /// btnSearch 控制項。
+        /// aLinkPage3 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPage3;
 
         /// <summary>
-        /// rptQusList 控制項。
+        /// aLinkLast 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptQusList;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkLast;
     }
 }

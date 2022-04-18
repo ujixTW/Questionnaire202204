@@ -74,6 +74,7 @@
     <Content Include="Global.asax" />
     <Content Include="JavaScript\bootstrap\bootstrap.min.js" />
     <Content Include="JavaScript\jquery\jquery.min.js" />
+    <Content Include="ShareControls\ucPageChange.ascx" />
     <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
     <Content Include="SystemAdmin\CommonlyQuestionList.aspx" />
     <Content Include="SystemAdmin\Detail.aspx" />
@@ -84,7 +85,18 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ConfigHelper.cs" />
+    <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Managers\QuestionnaireManager.cs" />
+    <Compile Include="Models\QuestionnaireModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShareControls\ucPageChange.ascx.cs">
+      <DependentUpon>ucPageChange.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShareControls\ucPageChange.ascx.designer.cs">
+      <DependentUpon>ucPageChange.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SystemAdmin\AdminMaster.Master.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -131,9 +143,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
