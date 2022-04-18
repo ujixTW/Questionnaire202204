@@ -25,9 +25,36 @@ namespace Questionnaire202204.Models
         /// </summary>
         public DateTime StartTime { get; set; }
         /// <summary>
+        /// 顯示於介面上的投票開始時間
+        /// </summary>
+        public string StartTimeText 
+        {
+            get 
+            {
+                return StartTime.ToString("d");
+            } 
+        }
+        /// <summary>
         /// 投票結束時間
         /// </summary>
         public DateTime? EndTime { get; set; }
+        /// <summary>
+        /// 顯示於介面上的投票開始時間
+        /// </summary>
+        public string EndTimeText
+        {
+            get
+            {
+                if (EndTime == null)
+                {
+                    return "-";
+                }else
+                {
+                    DateTime temp = (DateTime)EndTime;
+                    return temp.ToString("d");
+                }
+            }
+        }
         /// <summary>
         /// 是否啟用
         /// </summary>

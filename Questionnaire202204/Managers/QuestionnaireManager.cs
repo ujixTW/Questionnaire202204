@@ -69,10 +69,6 @@ namespace Questionnaire202204.Managers
         /// <returns>多筆問卷資料，及OUT該頁實際資料筆數</returns>
         public static List<QuestionnaireModel> GetQuestionnaireList(string keyword, string startTime, string endTime, int pageSize, int pageIndex, out int totalRows)
         {
-            DateTime startDate = DateTime.Today;
-            DateTime endDate = DateTime.Today;
-            string whereText = string.Empty;
-
             //計算跳頁數
             int skip = pageSize * (pageIndex - 1);
             if (skip < 0)
@@ -90,19 +86,21 @@ namespace Questionnaire202204.Managers
             }
 
             //帶入起始時間並將輸入內容轉換為DateTime
+            string startDate = string.Empty;
             string whatTimeStartCondition = string.Empty;
             if (!string.IsNullOrWhiteSpace(startTime))
             {
-                startDate = DateTime.Parse(startTime);
-                whatTimeStartCondition = " AND CreateTime >= '%'+@startDate+'%' ";
+                startDate = DateTime.Parse(startTime).ToString("yyyy-MM-dd");
+                whatTimeStartCondition = " AND StartTime >= @startDate ";
             }
 
             //帶入結束時間並將輸入內容轉換為DateTime
+            string endDate = string.Empty;
             string whatTimeEndCondition = string.Empty;
             if (!string.IsNullOrWhiteSpace(endTime))
             {
-                endDate = DateTime.Parse(endTime);
-                whatTimeEndCondition = " AND EndTime <= '%'+@endDate+'%' ";
+                endDate = DateTime.Parse(endTime).ToString("yyyy-MM-dd");
+                whatTimeEndCondition = " AND EndTime <= @endDate ";
             }
 
             //連接資料庫用文字
@@ -134,8 +132,8 @@ namespace Questionnaire202204.Managers
                     using (SqlCommand command = new SqlCommand(commandText, conn))
                     {
                         command.Parameters.AddWithValue("@keyword", keyword);
-                        command.Parameters.AddWithValue("@startTime", startDate);
-                        command.Parameters.AddWithValue("@endTime", endDate);
+                        command.Parameters.AddWithValue("@startDate", startDate);
+                        command.Parameters.AddWithValue("@endDate", endDate);
                         conn.Open();
                         SqlDataReader reader = command.ExecuteReader();
                         List<QuestionnaireModel> QuestionnaireDataList = new List<QuestionnaireModel>();

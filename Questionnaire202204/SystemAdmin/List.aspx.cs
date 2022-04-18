@@ -18,12 +18,12 @@ namespace Questionnaire202204.SystemAdmin
             if (!IsPostBack)
             {
                 string keyword = this.Request.QueryString["Caption"];   //使用者輸入的關鍵字
-                string startTime = this.Request.QueryString["Start"];  //使用者輸入的開始時間
-                string endTime = this.Request.QueryString["End"];      //使用者輸入的結束時間
+                string startTime = this.Request.QueryString["StartDate"];  //使用者輸入的開始時間
+                string endTime = this.Request.QueryString["EndDate"];      //使用者輸入的結束時間
                 this.txtSearchText.Text = keyword;
                 this.txtStartTime.Text = startTime;
                 this.txtEndTime.Text = endTime;
-                List<string> keyQS = new List<string>() { "Caption", "Start", "End" };
+                List<string> keyQS = new List<string>() { "Caption", "StartDate", "EndDate" };
                 List<string> keyQSValue = new List<string>() { keyword, startTime, endTime };
 
                 //判斷當前頁數
@@ -69,19 +69,34 @@ namespace Questionnaire202204.SystemAdmin
             string startTime = string.Empty;
             string endTime = string.Empty;
             string qs = string.Empty;
+            //關鍵字
             if (!string.IsNullOrWhiteSpace(this.txtSearchText.Text))
             {
                 caption = "Caption=" + this.txtSearchText.Text.Trim();
                 qs = "?";
             }
-            if (!string.IsNullOrWhiteSpace(this.txtStartTime.Text))
+            //開始時間
+            //如果前面有值就加上&符號
+            if (!string.IsNullOrWhiteSpace(this.txtStartTime.Text) && string.IsNullOrWhiteSpace(this.txtSearchText.Text))
             {
-                startTime = this.txtStartTime.Text;
+                startTime = "StartDate=" + this.txtStartTime.Text.Trim();
                 qs = "?";
             }
-            if (!string.IsNullOrWhiteSpace(this.txtEndTime.Text))
+            else if (!string.IsNullOrWhiteSpace(this.txtStartTime.Text) && !string.IsNullOrWhiteSpace(this.txtSearchText.Text))
             {
-                endTime = this.txtEndTime.Text;
+                startTime = "&" + "StartDate=" + this.txtStartTime.Text.Trim();
+                qs = "?";
+            }
+            //結束時間
+            //如果前面有值就加上&符號
+            if (!string.IsNullOrWhiteSpace(this.txtEndTime.Text) && string.IsNullOrWhiteSpace(this.txtStartTime.Text))
+            {
+                endTime = "EndDate=" + this.txtEndTime.Text.Trim();
+                qs = "?";
+            }
+            else if (!string.IsNullOrWhiteSpace(this.txtEndTime.Text) && !string.IsNullOrWhiteSpace(this.txtStartTime.Text))
+            {
+                endTime = "&" + "EndDate=" + this.txtEndTime.Text.Trim();
                 qs = "?";
             }
 
@@ -90,7 +105,17 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void btnDelete_Click(object sender, ImageClickEventArgs e)
         {
+            List<CheckBox> checkBoxeList = new List<CheckBox>();
+            foreach (var temp in this.Controls.OfType<CheckBox>())
+            {
+                if (temp.Checked)
+                    checkBoxeList.Add(temp);
+            }
             this.divDeleteMsg.Visible = true;
+            foreach (var item in checkBoxeList)
+            {
+                item.Checked = true;
+            }
         }
 
         protected void btnAdd_Click(object sender, ImageClickEventArgs e)
@@ -104,8 +129,18 @@ namespace Questionnaire202204.SystemAdmin
             if (sender == this.btnDeleteYes)
             {
                 List<Guid> questionnaireIDList = new List<Guid>();
+                var questionnaire = Request.Form["checkboxQus"];
+                if (questionnaire != null)
+                {
+                    QuestionnaireManager.DeleteQuestionnaireList(questionnaireIDList);
+                    this.divDeleteMsg.Visible = false;
 
-                QuestionnaireManager.DeleteQuestionnaireList(questionnaireIDList);
+                }
+                else
+                {
+                    this.divDeleteMsg.Visible = false;
+
+                }
             }
             else if (sender == this.btnDeleteNo)
             {

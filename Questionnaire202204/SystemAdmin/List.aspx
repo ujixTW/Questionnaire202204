@@ -52,6 +52,9 @@
                 width:100px;
                 border-radius:5px;
             }
+            .btnDeleteYes{
+                background-color:rgb(255,150,150);
+            }
         /*問卷清單*/
         .tableQusList {
             border: 3px solid #000;
@@ -130,7 +133,7 @@
             <div>
                 <h2>確定要刪除這些檔案嗎?</h2>
                 <br />
-                <asp:Button ID="btnDeleteYes" runat="server" Text="是" OnClick="btnDelete_Click" />
+                <asp:Button ID="btnDeleteYes" runat="server" CssClass="btnDeleteYes" Text="是" OnClick="btnDelete_Click" />
                 <asp:Button ID="btnDeleteNo" runat="server" Text="否" OnClick="btnDelete_Click" />
             </div>
         </div>
@@ -163,8 +166,8 @@
                             <td><%# Eval("NO") %></td>
                             <td><a href="Detail.aspx?ID=<%# Eval("QuestionnaireID") %>&State=1"><%# Eval("Title") %></a></td>
                             <td><%# Eval("IsEnableText") %></td>
-                            <td><%# Eval("StartTime") %></td>
-                            <td><%# Eval("EndTime") %></td>
+                            <td><%# Eval("StartTimeText") %></td>
+                            <td><%# Eval("EndTimeText") %></td>
                             <td><a href="Detail.aspx?ID=<%#Eval("QuestionnaireID") %>&State=4">前往</a></td>
                         </tr>
                     </ItemTemplate>
@@ -177,7 +180,7 @@
         </table>
         <uc1:ucPageChange runat="server" ID="ucPageChange" />
     </div>
-    <script>
 
-</script>
+    
+
 </asp:Content>
