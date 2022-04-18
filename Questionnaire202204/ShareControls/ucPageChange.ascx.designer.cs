@@ -24,6 +24,15 @@ namespace Sakei.ShareControls
         protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkFirst;
 
         /// <summary>
+        /// aLinkPrevious 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPrevious;
+
+        /// <summary>
         /// aLinkPage1 控制項。
         /// </summary>
         /// <remarks>
@@ -51,12 +60,39 @@ namespace Sakei.ShareControls
         protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPage3;
 
         /// <summary>
-        /// aLinkLast 控制項。
+        /// aLinkPage4 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkLast;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPage4;
+
+        /// <summary>
+        /// aLinkPage5 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkPage5;
+
+        /// <summary>
+        /// aLinkNext 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkNext;
+
+        /// <summary>
+        /// aLinkFinal 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkFinal;
     }
 }

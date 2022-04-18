@@ -11,16 +11,16 @@ namespace Sakei.ShareControls
     public partial class ucPageChange : System.Web.UI.UserControl
     {
         /// <summary> 目前頁數 </summary>
-        public int PageIndex { get; set; } = 1;
+        public int PageIndex { get; set; }
 
         /// <summary> 一頁幾筆 </summary>
-        public int PageSize { get; set; } = 10;
+        public int PageSize { get; set; }
 
         /// <summary> 共幾筆 </summary>
-        public int TotalRows { get; set; } = 0;
+        public int TotalRows { get; set; }
 
         /// <summary> 分頁用的 QueryString Key </summary>
-        public string IndexName { get; set; } = "Index";
+        public string IndexName { get; set; } = "Page";
 
         private string _url = null;
 
@@ -45,11 +45,18 @@ namespace Sakei.ShareControls
             NameValueCollection collection = new NameValueCollection();
             this.Bind(collection);
         }
-
-        public void Bind(string paramKey, int paramValue)
+        /// <summary>
+        /// 綁定頁數變換
+        /// </summary>
+        /// <param name="paramKey">QS的Key</param>
+        /// <param name="paramValue">QS的Key對應的值</param>
+        public void Bind(List<string> paramKey, List<string> paramValue)
         {
             NameValueCollection collection = new NameValueCollection();
-            collection.Add(paramKey, Convert.ToString(paramValue));
+            for (var i = 0; i < paramKey.Count; i++)
+            {
+                collection.Add(paramKey[i], paramValue[i]);
+            }
             this.Bind(collection);
         }
 
@@ -65,23 +72,42 @@ namespace Sakei.ShareControls
             // 第一頁，上一頁，下一頁，最未頁
             int prevIndex = ((this.PageIndex - 1) > 0) ? this.PageIndex - 1 : 1;
             int nextIndex = ((this.PageIndex + 1) < pageCount) ? this.PageIndex + 1 : pageCount;
+            //第一頁
             this.aLinkFirst.HRef = url + "?" + this.BuildQueryString(collection, 1);
-            this.aLinkLast.HRef = url + "?" + this.BuildQueryString(collection, pageCount);
-
-
-
-            this.aLinkPage1.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex - 1);
-            this.aLinkPage1.InnerText = (this.PageIndex - 1).ToString();
+            //上一頁
+            this.aLinkPrevious.HRef = url + "?" + this.BuildQueryString(collection, prevIndex);
             if (this.PageIndex <= 1)
+                this.aLinkPrevious.Visible = false;
+            //下一頁
+            this.aLinkNext.HRef = url + "?" + this.BuildQueryString(collection, nextIndex);
+            if ((this.PageIndex + 1) > pageCount)
+                this.aLinkNext.Visible = false;
+            //最未頁
+            this.aLinkFinal.HRef = url + "?" + this.BuildQueryString(collection, pageCount);
+
+
+            this.aLinkPage1.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex - 2);
+            this.aLinkPage1.InnerText = (this.PageIndex - 2 ).ToString();
+            if (this.PageIndex <= 2)
                 this.aLinkPage1.Visible = false;
 
-            this.aLinkPage2.HRef = "";
-            this.aLinkPage2.InnerText = this.PageIndex.ToString();
+            this.aLinkPage2.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex - 1);
+            this.aLinkPage2.InnerText = (this.PageIndex - 1).ToString();
+            if (this.PageIndex <= 1)
+                this.aLinkPage2.Visible = false;
 
-            this.aLinkPage3.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex + 1);
-            this.aLinkPage3.InnerText = (this.PageIndex + 1).ToString();
+            this.aLinkPage3.HRef = "";
+            this.aLinkPage3.InnerText = this.PageIndex.ToString();
+
+            this.aLinkPage4.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex + 1);
+            this.aLinkPage4.InnerText = (this.PageIndex + 1).ToString();
             if ((this.PageIndex + 1) > pageCount)
-                this.aLinkPage3.Visible = false;
+                this.aLinkPage4.Visible = false;
+
+            this.aLinkPage5.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex + 2);
+            this.aLinkPage5.InnerText = (this.PageIndex + 2).ToString();
+            if ((this.PageIndex + 2) > pageCount)
+                this.aLinkPage5.Visible = false;
 
         }
 

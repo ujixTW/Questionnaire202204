@@ -27,7 +27,7 @@ namespace Questionnaire202204.Models
         /// <summary>
         /// 投票結束時間
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
         /// <summary>
         /// 是否啟用
         /// </summary>

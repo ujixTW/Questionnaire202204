@@ -72,6 +72,8 @@
   <ItemGroup>
     <Content Include="CSS\Bootstrap\bootstrap.min.css" />
     <Content Include="Global.asax" />
+    <Content Include="Image\plus-lg.svg" />
+    <Content Include="Image\trash3-fill.svg" />
     <Content Include="JavaScript\bootstrap\bootstrap.min.js" />
     <Content Include="JavaScript\jquery\jquery.min.js" />
     <Content Include="ShareControls\ucPageChange.ascx" />

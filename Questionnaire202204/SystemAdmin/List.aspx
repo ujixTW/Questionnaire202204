@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="List.aspx.cs" Inherits="Questionnaire202204.SystemAdmin.List" %>
 
+<%@ Register Src="~/ShareControls/ucPageChange.ascx" TagPrefix="uc1" TagName="ucPageChange" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         /*搜尋欄位*/
@@ -14,6 +17,11 @@
         .SearchBar input[type=text]{
             width:100%;
             border:3px solid #000;
+        }
+        .btnImage{
+            width:25px;
+            height:25px;
+            margin:3px 10px;
         }
         /*問卷清單*/
         .tableQusList {
@@ -73,7 +81,7 @@
                         <asp:TextBox ID="txtEndTime" runat="server"></asp:TextBox>
                     </td>
                     <td>
-                        <asp:Button ID="btnSearch" runat="server" Text="搜尋" />
+                        <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click" />
                     </td>
                 </tr>
 
@@ -81,22 +89,25 @@
         </table>
 
     </div>
+
+    <%--新增/刪除按鈕--%>
     <div class="DeleteAddBtnBar">
         <br />
         <%--刪除按鍵--%>
-        <button id="btnDelete" class="btn btn-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
-            </svg>
-        </button>
+        <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Image/trash3-fill.svg" CssClass="btnImage" OnClick="btnDelete_Click" />
+        <div id="divDeleteMsg" runat="server">
+            <div>
+                <h2>確定要刪除這些檔案嗎?</h2>
+                <asp:Button ID="btnDeleteYes" runat="server" Text="是" OnClick="btnDelete_Click" />
+                <asp:Button ID="btnDeleteNo" runat="server" Text="否" OnClick="btnDelete_Click" />
+            </div>
+        </div>
+
         <%--新增按鍵--%>
-        <button id="btnAdd" class="btn btn-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-            </svg>
-        </button>
+        <asp:ImageButton ID="btnAdd" runat="server" ImageUrl="~/Image/plus-lg.svg" CssClass="btnImage" OnClick="btnAdd_Click" />
 
     </div>
+
     <%--問卷列表--%>
     <div class="ListBar">
         <table class="tableQusList">
@@ -126,10 +137,13 @@
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>
+                <tr id="trNoData" runat="server" visible="false">
+                    <td align="center" colspan="7">查無資料</td>
+                </tr>
             </tbody>
 
         </table>
-
+        <uc1:ucPageChange runat="server" id="ucPageChange" />
     </div>
     <script>
 
