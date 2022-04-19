@@ -118,7 +118,7 @@ namespace Questionnaire202204.Managers
                                             ORDER BY [CreateTime]
                                       ) 
                                         {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
-                                ORDER BY [CreateTime]
+                                ORDER BY [NO] DESC
                                 ";
             string commandCountText =
                 $@" SELECT COUNT([Questionnaire].[QuestionnaireID])

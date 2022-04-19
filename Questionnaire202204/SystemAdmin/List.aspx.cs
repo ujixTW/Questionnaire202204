@@ -1,4 +1,4 @@
-﻿using Questionnaire202204.Managers;
+﻿ using Questionnaire202204.Managers;
 using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,8 @@ namespace Questionnaire202204.SystemAdmin
     public partial class List : System.Web.UI.Page
     {
         private const int _pageSize = 10;
+
+        private static List<Guid> _questionnaireIDList = new List<Guid>();
         protected void Page_Load(object sender, EventArgs e)
         {
             int pageIndex;  //目前頁數
@@ -105,7 +107,20 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void btnDelete_Click(object sender, ImageClickEventArgs e)
         {
-            List<CheckBox> checkBoxList = new List<CheckBox>();
+            //重置選取的ID資料
+            _questionnaireIDList.Clear();
+            //讀取被選取的checkbox的value
+            var questionnaire = Request["checkboxQus"];
+
+            if (questionnaire != null)
+            {
+                var questionnaireIDs = questionnaire.ToString().Split(',');
+                foreach (var item in questionnaireIDs)
+                {
+                    _questionnaireIDList.Add(Guid.Parse(item));
+                }
+            }
+            //開啟警告畫面
             this.divDeleteMsg.Visible = true;
         }
 
@@ -115,27 +130,17 @@ namespace Questionnaire202204.SystemAdmin
             Response.Redirect("Detail.aspx?ID=" + newQuestionnaireID + "&State=1");
         }
 
+
         protected void btnDelete_Click(object sender, EventArgs e)
         {
             if (sender == this.btnDeleteYes)
             {
-                List<Guid> questionnaireIDList = new List<Guid>();
-                var questionnaire = Request.Form["checkboxQus"].Split(',');
-                foreach (var item in questionnaire)
+                if (_questionnaireIDList.Count != 0)
                 {
-                    questionnaireIDList.Add(Guid.Parse(item));
+                    QuestionnaireManager.DeleteQuestionnaireList(_questionnaireIDList);
                 }
-                if (questionnaire != null)
-                {
-                    QuestionnaireManager.DeleteQuestionnaireList(questionnaireIDList);
-                    this.divDeleteMsg.Visible = false;
-
-                }
-                else
-                {
-                    this.divDeleteMsg.Visible = false;
-
-                }
+                this.divDeleteMsg.Visible = false;
+                Response.Redirect(Request.RawUrl);
             }
             else if (sender == this.btnDeleteNo)
             {
