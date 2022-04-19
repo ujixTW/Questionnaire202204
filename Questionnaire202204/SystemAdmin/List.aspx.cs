@@ -105,17 +105,8 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void btnDelete_Click(object sender, ImageClickEventArgs e)
         {
-            List<CheckBox> checkBoxeList = new List<CheckBox>();
-            foreach (var temp in this.Controls.OfType<CheckBox>())
-            {
-                if (temp.Checked)
-                    checkBoxeList.Add(temp);
-            }
+            List<CheckBox> checkBoxList = new List<CheckBox>();
             this.divDeleteMsg.Visible = true;
-            foreach (var item in checkBoxeList)
-            {
-                item.Checked = true;
-            }
         }
 
         protected void btnAdd_Click(object sender, ImageClickEventArgs e)
@@ -129,7 +120,11 @@ namespace Questionnaire202204.SystemAdmin
             if (sender == this.btnDeleteYes)
             {
                 List<Guid> questionnaireIDList = new List<Guid>();
-                var questionnaire = Request.Form["checkboxQus"];
+                var questionnaire = Request.Form["checkboxQus"].Split(',');
+                foreach (var item in questionnaire)
+                {
+                    questionnaireIDList.Add(Guid.Parse(item));
+                }
                 if (questionnaire != null)
                 {
                     QuestionnaireManager.DeleteQuestionnaireList(questionnaireIDList);

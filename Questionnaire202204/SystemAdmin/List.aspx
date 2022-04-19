@@ -25,6 +25,8 @@
             width: 25px;
             height: 25px;
             margin: 3px 10px;
+            border:0px;
+            background:none;
         }
 
         .divDeleteMsg {
@@ -127,9 +129,8 @@
         <br />
         <%--刪除按鍵--%>
         <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Image/trash3-fill.svg" CssClass="btnImage" OnClick="btnDelete_Click" />
-
         <%--彈跳警告視窗--%>
-        <div id="divDeleteMsg" runat="server" class="divDeleteMsg" visible="false">
+        <div id="divDeleteMsg" runat="server" class="divDeleteMsg" visible="false" >
             <div>
                 <h2>確定要刪除這些檔案嗎?</h2>
                 <br />
