@@ -21,11 +21,11 @@ namespace Questionnaire202204.Models
         {
             get
             {
-                string temp=string.Empty;
+                string temp = string.Empty;
                 switch (QusType)
                 {
                     case 1:
-                        temp="文字方塊";
+                        temp = "文字方塊";
                         break;
                     case 2:
                         temp = "文字方塊 (數字) ";
@@ -47,6 +47,23 @@ namespace Questionnaire202204.Models
             }
         }
         public string QuestionContent { get; set; }
+        /// <summary>
+        /// 於清單中顯示問題的短內容
+        /// </summary>
+        public string ShortQuestionContent
+        {
+            get
+            {
+                if (QuestionContent.Length > 10)
+                {
+                    return QuestionContent.Substring(0, 10) + "...";
+                }
+                else
+                {
+                    return QuestionContent;
+                }
+            }
+        }
         public string OptionContent { get; set; }
         /// <summary>
         /// 選項是否為必填

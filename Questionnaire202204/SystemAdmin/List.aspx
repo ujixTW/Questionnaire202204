@@ -165,11 +165,11 @@
                             <td>
                                 <input type="checkbox" name="checkboxQus" value="<%#Eval("QuestionnaireID") %>" /></td>
                             <td><%# Eval("NO") %></td>
-                            <td><a href="Detail.aspx?ID=<%# Eval("QuestionnaireID") %>"><%# Eval("Title") %></a></td>
+                            <td><a href="Detail.aspx?ID=<%# Eval("QuestionnaireID") %>&State=Questionnaire"><%# Eval("Title") %></a></td>
                             <td><%# Eval("IsEnableText") %></td>
                             <td><%# Eval("StartTimeText") %></td>
                             <td><%# Eval("EndTimeText") %></td>
-                            <td><a href="Detail.aspx?ID=<%#Eval("QuestionnaireID") %>&State=statistics">前往</a></td>
+                            <td><a href="Detail.aspx?ID=<%#Eval("QuestionnaireID") %>&State=Statistics">前往</a></td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>

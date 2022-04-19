@@ -221,11 +221,11 @@
                         <asp:Repeater ID="rptQusList" runat="server">
                             <ItemTemplate>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="checkbox" name="checkboxQus" value="<%# Eval("QuestionID") %>" /></td>
+                                    <td><%# Eval("NO") %></td>
+                                    <td><%# Eval("ShortQuestionContent") %></td>
+                                    <td><%# Eval("QusTypeText") %></td>
+                                    <td><input type="checkbox" checked="<%# Eval("IsRequired") %>" onclick="return false" /></td>
                                     <td></td>
                                 </tr>
                             </ItemTemplate>

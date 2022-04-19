@@ -169,6 +169,52 @@ namespace Questionnaire202204.Managers
                 throw;
             }
         }
+        /// <summary>
+        /// 後台查詢單筆問卷資料
+        /// </summary>
+        /// <param name="questionnaireID">問卷ID</param>
+        /// <returns></returns>
+        public static QuestionnaireModel GetQuestionnaireData(Guid questionnaireID)
+        {
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                SELECT TOP (1000) 
+                                    [QuestionnaireID],[NO],[Title],[Briefly],[StartTime]
+                                     ,[EndTime],[CreateTime],[IsEnable]
+                                FROM [Questionnaire202204].[dbo].[Questionnaire]
+                                WHERE [QuestionnaireID] = @questionnaireID
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@questionnaireID", questionnaireID);
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        QuestionnaireModel model = new QuestionnaireModel();
+                        //將資料取出放到List中
+                        if (reader.Read())
+                        {
+                            model.QuestionnaireID = questionnaireID;
+                            model.NO = (int)reader["NO"];
+                            model.Title = reader["Title"] as string;
+                            model.Briefly = reader["Briefly"] as string;
+                            model.StartTime = (DateTime)reader["StartTime"];
+                            model.EndTime = (DateTime?)reader["EndTime"];
+                            model.IsEnable = (bool)reader["IsEnable"];
+                        }
+                        return model;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireList", ex);
+                throw;
+            }
+        }
 
     }
 }
