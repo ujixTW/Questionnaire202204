@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
+        
         /*問卷CSS*/
         #questionnaireContent td {
             padding: 10px;
@@ -71,6 +72,7 @@
             .tableQusList > tbody tr {
                 background-color: #ddd;
             }
+
             .tableQusList tr:nth-child(even) {
                 background-color: #fff;
             }
@@ -95,60 +97,72 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
     <%--標籤--%>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="home" aria-selected="true">問卷</button>
+            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true">
+                問卷
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="questionContent-tab" data-bs-toggle="tab" data-bs-target="#questionContent" type="button" role="tab" aria-controls="profile" aria-selected="false">問題</button>
+            <button class="nav-link" id="questionContent-tab" data-bs-toggle="tab" data-bs-target="#questionContent" type="button" role="tab" aria-controls="questionContent" aria-selected="false">
+                問題
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="userAnswerContent-tab" data-bs-toggle="tab" data-bs-target="#userAnswerContent" type="button" role="tab" aria-controls="contact" aria-selected="false">填寫資料</button>
+            <button class="nav-link" id="userAnswerContent-tab" data-bs-toggle="tab" data-bs-target="#userAnswerContent" type="button" role="tab" aria-controls="userAnswerContent" aria-selected="false">
+                填寫資料
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="statisticsContent-tab" data-bs-toggle="tab" data-bs-target="#statisticsContent" type="button" role="tab" aria-controls="contact" aria-selected="false">統計</button>
+            <button class="nav-link" id="statisticsContent-tab" data-bs-toggle="tab" data-bs-target="#statisticsContent" type="button" role="tab" aria-controls="statisticsContent" aria-selected="false">
+                統計
+            </button>
         </li>
     </ul>
+
     <%--內容--%>
     <div class="tab-content" id="myTabContent">
 
         <%--問卷--%>
-        <div class="tab-pane fade show active" id="questionnaireContent" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active" id="questionnaireContent" role="tabpanel" aria-labelledby="questionnaireContent-tab">
 
             <table>
                 <tr>
                     <td class="txtInputTitle">問題名稱</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server"></asp:TextBox>
-
+                        <%--<asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server"></asp:TextBox>--%>
+                        <input type="text" id="txtQuestionnaireTitle" class="txtInput" />
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">描述內容</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine"></asp:TextBox>
-
+                        <%--<asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine"></asp:TextBox>--%>
+                        <textarea ID="txtQuestionnaireContent" class="txtContentInput" ></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">開始時間</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server"></asp:TextBox>
+                        <%--<asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server"></asp:TextBox>--%>
+                        <input type="text" id="txtQuestionnaireStartDate" class="txtInput" />
 
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">結束時間</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server"></asp:TextBox>
+                        <%--<asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server"></asp:TextBox>--%>
+                        <input type="text" id="txtQuestionnaireEndDate" class="txtInput" />
 
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle"></td>
                     <td>
-                        <input type="checkbox" id="checkIsEnable" runat="server" />
+                        <input type="checkbox" id="checkIsEnable" />
                         已啟用
                     </td>
                 </tr>
@@ -169,7 +183,7 @@
         </div>
 
         <%--問題--%>
-        <div class="tab-pane fade" id="questionContent" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade" id="questionContent" role="tabpanel" aria-labelledby="questionContent-tab">
 
             <%--新增、詳細編輯問題的區域--%>
             <div id="questionEditArea">
@@ -222,11 +236,13 @@
                         <asp:Repeater ID="rptQusList" runat="server">
                             <ItemTemplate>
                                 <tr>
-                                    <td><input type="checkbox" name="checkboxQus" value="<%# Eval("QuestionID") %>" /></td>
+                                    <td>
+                                        <input type="checkbox" name="checkboxQus" value="<%# Eval("QuestionID") %>" /></td>
                                     <td><%# Eval("NO") %></td>
                                     <td><%# Eval("ShortQuestionContent") %></td>
                                     <td><%# Eval("QusTypeText") %></td>
-                                    <td><input type="checkbox" checked="<%# Eval("IsRequired") %>" onclick="return false" /></td>
+                                    <td>
+                                        <input type="checkbox" checked="<%# Eval("IsRequired") %>" onclick="return false" /></td>
                                     <td></td>
                                 </tr>
                             </ItemTemplate>
@@ -254,17 +270,138 @@
         </div>
 
         <%--填寫資料--%>
-        <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="userAnswerContent-tab">
             <h1>填寫資料</h1>
 
         </div>
 
         <%--統計--%>
-        <div class="tab-pane fade" id="statisticsContent" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="tab-pane fade" id="statisticsContent" role="tabpanel" aria-labelledby="statisticsContent-tab">
             <h1>統計</h1>
 
         </div>
     </div>
 
+    <script>
+        var questionnaireID ="<%=this.questionnaireID%>";
+        var state ="<%=this.Request.QueryString["State"]%>";
+        $(document).ready(function () {
+
+            //判斷並顯示對應畫面
+            switch (state) {
+                case "Questionnaire":
+                    QuestionnairePage();
+                    break;
+                case "Question":
+                    break;
+                case "UserData":
+                    break;
+                case "Statistics":
+                    break;
+                default:
+                    //狀況全不符合，自動導向問卷畫面
+                    QuestionnairePage();
+                    return;
+            }
+            //重置所有Tab狀態
+            function ResetTabState() {
+                //重置Class
+                $("#questionnaireContent-tab").attr("class", "nav-link");
+                $("#questionContent-tab").attr("class", "nav-link");
+                $("#userAnswerContent-tab").attr("class", "nav-link");
+                $("#statisticsContent-tab").attr("class", "nav-link");
+
+                $("#questionnaireContent").attr("class", "tab-pane fade");
+                $("#questionContent").attr("class", "tab-pane fade");
+                $("#userAnswerContent").attr("class", "tab-pane fade");
+                $("#statisticsContent").attr("class", "tab-pane fade");
+
+                //重置aria-selected
+                $("#questionnaireContent-tab").attr("aria-selected", "false");
+                $("#questionContent-tab").attr("aria-selected", "false");
+                $("#userAnswerContent-tab").attr("aria-selected", "false");
+                $("#statisticsContent-tab").attr("aria-selected", "false");
+
+            }
+            //啟用特定Tab
+            function SetTab(pageState) {
+                var idText = "";
+                switch (pageState) {
+                    case "Questionnaire":
+                        idText = "questionnaireContent";
+                        break;
+                    case "Question":
+                        idText = "questionContent";
+                        break;
+                    case "UserData":
+                        idText = "userAnswerContent";
+                        break;
+                    case "Statistics":
+                        idText = "statisticsContent";
+                        break;
+                }
+                $(`#${idText}-tab`).attr("class", "nav-link active");
+                $(`#${idText}`).attr("class", "tab-pane fade show active");
+                $(`#${idText}-tab`).attr("aria-selected", "true");
+            }
+            //問卷
+            function QuestionnairePage() {
+                state = "Questionnaire";
+                var postData = {
+                    "questionnaireID":questionnaireID
+                }
+                $.ajax({
+                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                    method: "POST",
+                    data: postData,
+                    success: function (objData) {
+                        ResetTabState();
+                        //切換為指定TAB
+                        SetTab(state);
+
+                        //問卷標題
+                        $("#txtQuestionnaireTitle").attr("value", objData.Title);
+                        //問卷描述
+                        $("#txtQuestionnaireContent").empty();
+                        $("#txtQuestionnaireContent").append(objData.Briefly);
+                        //開始時間
+                        $("#txtQuestionnaireStartDate").attr("value", objData.StartTimeText);
+                        //結束時間
+                        $("#txtQuestionnaireEndDate").attr("value", objData.EndTimeText);
+
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                        alert("連線失敗，請聯絡管理員。");
+                    }
+                    
+                });
+            }
+            //問題
+            function QuestionPage() {
+                state = "Question";
+                var postData = {
+                    "questionnaireID": questionnaireID
+                }
+                $.ajax({
+                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                    method: "POST",
+                    data: postData,
+                    success: function (objData) {
+                        ResetTabState();
+                        //切換為指定TAB
+                        SetTab(state);
+
+
+
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                        alert("連線失敗，請聯絡管理員。");
+                    }
+                });
+            }
+        });
+    </script>
 
 </asp:Content>
