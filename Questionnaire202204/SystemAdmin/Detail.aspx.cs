@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Questionnaire202204.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -48,7 +49,7 @@ namespace Questionnaire202204.SystemAdmin
 
         }
         /// <summary>
-        /// 判斷現在使用者位在哪個功能
+        /// 判斷並導向現在使用者位在哪個功能
         /// </summary>
         /// <param name="pageState">QS裡State的值</param>
         private void _PageState(string pageState)
@@ -56,8 +57,10 @@ namespace Questionnaire202204.SystemAdmin
             switch (pageState)
             {
                 case "Questionnaire":
+                    _PageQuestionnaire();
                     break;
                 case "Question":
+                    _PageQuestion();
                     break;
                 case "UserData":
                     break;
@@ -69,7 +72,38 @@ namespace Questionnaire202204.SystemAdmin
                     return;
             }
         }
+        /// <summary>
+        /// 問卷頁面
+        /// </summary>
+        private void _PageQuestionnaire()
+        {
+            var questionnaireData = QuestionnaireManager.GetQuestionnaireData(_questionnaireID);
+            if (questionnaireData.QuestionnaireID != null)
+            {
+                this.txtQuestionnaireTitle.Text = questionnaireData.Title;
+                this.txtQuestionnaireContent.Text = questionnaireData.Briefly;
+                this.txtQuestionnaireStartDate.Text = questionnaireData.StartTimeText;
+                this.txtQuestionnaireEndDate.Text = questionnaireData.EndTimeText;
+                this.checkIsEnable.Checked = questionnaireData.IsEnable;
+            }
+        }
+        private void _PageQuestion()
+        {
+            var questionData = QuestionManager.GetQuestionList(_questionnaireID);
+            if (questionData.Count != 0)
+            {
+                this.rptQusList.Visible = true;
+                this.trNoData.Visible = false;
 
+                this.rptQusList.DataSource = questionData;
+                this.rptQusList.DataBind();
+            }
+            else
+            {
+                this.rptQusList.Visible = false;
+                this.trNoData.Visible = true;
+            }
+        }
 
     }
 }

@@ -1,5 +1,9 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ucDeleteButton.ascx.cs" Inherits="Questionnaire202204.ShareControls.ucDeleteButton" %>
 
+<%--刪除按鈕，會刪除被勾選checkbox的資料
+checkbox的name必須為 checkboxQus 
+value必須為欲刪除資料的ID--%>
+
 <style>
     .btnImage {
             width: 25px;

@@ -11,6 +11,28 @@ namespace Questionnaire202204.ShareControls
     public partial class ucDeleteButton : System.Web.UI.UserControl
     {
         private static List<Guid> _questionnaireIDList = new List<Guid>();
+        private static List<string> _questionIDList = new List<string>();
+        private static string[] _UrlArray = new string[] { "List.aspx","Detail.aspx"};
+        //當前頁數，對應_UrlArray位置的值
+        private static int _page = -1;
+
+        /// <summary>
+        /// 判斷現在為哪個頁面
+        /// </summary>
+        /// <param name="page">現在的頁面</param>
+        private void _PageCheck( out int page)
+        {
+            var url = this.Request.RawUrl;
+            for (var i = 0; i < _UrlArray.Length; i++)
+            {
+                if (url.Contains(_UrlArray[i]))
+                {
+                    page = i;
+                    return;
+                }
+            }
+            page = -1;
+        }
 
         /// <summary>
         /// 開啟刪除確認視窗，存入待刪除資料
@@ -18,6 +40,26 @@ namespace Questionnaire202204.ShareControls
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void btnDelete_Click(object sender, ImageClickEventArgs e)
+        {
+            _PageCheck(out _page);
+
+            switch(_page)
+            {
+                case 0:
+                    _ShowWindowAdminQuestionnaireList();
+                    break;
+                case 1:
+                    _ShowWindowAdminOptionList();
+                    break;
+            }
+            //開啟警告畫面
+            this.divDeleteMsg.Visible = true;
+        }
+
+        /// <summary>
+        /// 後台問卷清單
+        /// </summary>
+        private void _ShowWindowAdminQuestionnaireList()
         {
             //重置選取的ID資料
             _questionnaireIDList.Clear();
@@ -32,9 +74,27 @@ namespace Questionnaire202204.ShareControls
                     _questionnaireIDList.Add(Guid.Parse(item));
                 }
             }
-            //開啟警告畫面
-            this.divDeleteMsg.Visible = true;
         }
+        /// <summary>
+        /// 後台選項清單
+        /// </summary>
+        private void _ShowWindowAdminOptionList()
+        {
+            //重置選取的ID資料
+            _questionIDList.Clear();
+            //讀取被選取的checkbox的value
+            var question = Request["checkboxQus"];
+
+            if (question != null)
+            {
+                var questionIDs = question.ToString().Split(',');
+                foreach (var item in questionIDs)
+                {
+                    _questionIDList.Add(item);
+                }
+            }
+        }
+
         /// <summary>
         /// 刪除資料或取消
         /// </summary>
@@ -44,9 +104,14 @@ namespace Questionnaire202204.ShareControls
         {
             if (sender == this.btnDeleteYes)
             {
-                if (_questionnaireIDList.Count != 0)
+                switch(_page)
                 {
-                    QuestionnaireManager.DeleteQuestionnaireList(_questionnaireIDList);
+                    case 0:
+                        _DeleteAdminQuestionnaireList();
+                        break;
+                    case 1:
+                        _DeleteAdminQuestionList();
+                        break;
                 }
                 this.divDeleteMsg.Visible = false;
                 Response.Redirect(Request.RawUrl);
@@ -54,6 +119,29 @@ namespace Questionnaire202204.ShareControls
             else if (sender == this.btnDeleteNo)
             {
                 this.divDeleteMsg.Visible = false;
+            }
+        }
+        /// <summary>
+        /// 刪除多筆問卷資料
+        /// </summary>
+        private void _DeleteAdminQuestionnaireList()
+        {
+            if (_questionnaireIDList.Count != 0)
+            {
+                QuestionnaireManager.DeleteQuestionnaireList(_questionnaireIDList);
+            }
+        }
+
+        /// <summary>
+        /// 刪除多筆問題資料
+        /// </summary>
+        private void _DeleteAdminQuestionList()
+        {
+            if (_questionIDList.Count != 0)
+            {
+                var QuestionnaireIDText = this.Request.QueryString["ID"];
+                Guid questionnaireID = Guid.Parse(QuestionnaireIDText);
+                QuestionManager.DeleteQuestionList(_questionIDList,questionnaireID);
             }
         }
 

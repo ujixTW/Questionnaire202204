@@ -27,12 +27,19 @@ namespace Questionnaire202204.Models
         /// <summary>
         /// 顯示於介面上的投票開始時間
         /// </summary>
-        public string StartTimeText 
+        public string StartTimeText
         {
-            get 
+            get
             {
-                return StartTime.ToString("d");
-            } 
+                if (StartTime.Year <2000)
+                {
+                    return DateTime.Now.ToString("d");
+                }
+                else
+                {
+                    return StartTime.ToString("d");
+                }
+            }
         }
         /// <summary>
         /// 投票結束時間
@@ -48,7 +55,8 @@ namespace Questionnaire202204.Models
                 if (EndTime == null)
                 {
                     return "-";
-                }else
+                }
+                else
                 {
                     DateTime temp = (DateTime)EndTime;
                     return temp.ToString("d");

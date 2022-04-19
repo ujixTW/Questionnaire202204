@@ -12,6 +12,51 @@ namespace Questionnaire202204.Managers
     {
         //增加
         //刪除
+        /// <summary>
+        /// 軟刪除所選擇的問題
+        /// </summary>
+        /// <param name="questionIDList">問卷ID</param>
+        public static void DeleteQuestionList(List<string> questionIDList,Guid QuestionnaireID)
+        {
+            string idText = string.Empty;
+            for (var i = 0; i < questionIDList.Count; i++)
+            {
+                if (i != 0)
+                    idText += "," + $"'{questionIDList[i]}'";
+                else
+                    idText += $"'{questionIDList[i]}'";
+            }
+
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                DELETE [Questionnaire]
+                                WHERE
+                                    [QuestionID] IN (@idText) AND
+                                    [QuestionnaireID] = @questionnaireID
+                                ";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@idText", idText);
+                        command.Parameters.AddWithValue("@questionnaireID", QuestionnaireID);
+                        conn.Open();
+                        command.ExecuteNonQuery();
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireList", ex);
+                throw;
+            }
+
+        }
         //修改
         //查詢
         /// <summary>
