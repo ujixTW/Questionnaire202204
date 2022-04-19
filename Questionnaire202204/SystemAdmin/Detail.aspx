@@ -201,9 +201,10 @@
                     </tr>
                 </table>
             </div>
-
+            <br />
             <%--選擇或刪除問題的區域--%>
             <div id="questionChoiseArea">
+
                 <table class="tableQusList">
                     <%--表格標題--%>
                     <thead>

@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="List.aspx.cs" Inherits="Questionnaire202204.SystemAdmin.List" %>
 
 <%@ Register Src="~/ShareControls/ucPageChange.ascx" TagPrefix="uc1" TagName="ucPageChange" %>
+<%@ Register Src="~/ShareControls/ucDeleteButton.ascx" TagPrefix="uc1" TagName="ucDeleteButton" %>
+
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
@@ -29,34 +31,6 @@
             background:none;
         }
 
-        .divDeleteMsg {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(0,0,0,0.5);
-        }
-
-            .divDeleteMsg > div {
-                position:absolute;
-                top: 50%;
-                left: 50%;
-                width: 400px;
-                height: 150px;
-                background-color: rgb(240,240,240);
-                transform:translate(-50%,-50%);
-                border-radius:5px;
-                padding:10px;
-                text-align:center;
-            }
-            .divDeleteMsg input[type=submit]{
-                width:100px;
-                border-radius:5px;
-            }
-            .btnDeleteYes{
-                background-color:rgb(255,150,150);
-            }
         /*問卷清單*/
         .tableQusList {
             border: 3px solid #000;
@@ -128,16 +102,7 @@
     <div class="DeleteAddBtnBar">
         <br />
         <%--刪除按鍵--%>
-        <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/Image/trash3-fill.svg" CssClass="btnImage" OnClick="btnDelete_Click" />
-        <%--彈跳警告視窗--%>
-        <div id="divDeleteMsg" runat="server" class="divDeleteMsg" visible="false" >
-            <div>
-                <h2>確定要刪除這些檔案嗎?</h2>
-                <br />
-                <asp:Button ID="btnDeleteYes" runat="server" CssClass="btnDeleteYes" Text="是" OnClick="btnDelete_Click" />
-                <asp:Button ID="btnDeleteNo" runat="server" Text="否" OnClick="btnDelete_Click" />
-            </div>
-        </div>
+        <uc1:ucDeleteButton runat="server" id="ucDeleteButton" />
 
         <%--新增按鍵--%>
         <asp:ImageButton ID="btnAdd" runat="server" ImageUrl="~/Image/plus-lg.svg" CssClass="btnImage" OnClick="btnAdd_Click" />

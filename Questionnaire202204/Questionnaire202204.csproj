@@ -76,6 +76,7 @@
     <Content Include="Image\trash3-fill.svg" />
     <Content Include="JavaScript\bootstrap\bootstrap.min.js" />
     <Content Include="JavaScript\jquery\jquery.min.js" />
+    <Content Include="ShareControls\ucDeleteButton.ascx" />
     <Content Include="ShareControls\ucPageChange.ascx" />
     <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
     <Content Include="SystemAdmin\CommonlyQuestionList.aspx" />
@@ -94,6 +95,13 @@
     <Compile Include="Models\QuestionModel.cs" />
     <Compile Include="Models\QuestionnaireModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShareControls\ucDeleteButton.ascx.cs">
+      <DependentUpon>ucDeleteButton.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShareControls\ucDeleteButton.ascx.designer.cs">
+      <DependentUpon>ucDeleteButton.ascx</DependentUpon>
+    </Compile>
     <Compile Include="ShareControls\ucPageChange.ascx.cs">
       <DependentUpon>ucPageChange.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

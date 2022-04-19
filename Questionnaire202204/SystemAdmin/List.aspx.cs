@@ -13,7 +13,6 @@ namespace Questionnaire202204.SystemAdmin
     {
         private const int _pageSize = 10;
 
-        private static List<Guid> _questionnaireIDList = new List<Guid>();
         protected void Page_Load(object sender, EventArgs e)
         {
             int pageIndex;  //目前頁數
@@ -105,24 +104,7 @@ namespace Questionnaire202204.SystemAdmin
             this.Response.Redirect("List.aspx" + qs + caption + startTime + endTime);
         }
 
-        protected void btnDelete_Click(object sender, ImageClickEventArgs e)
-        {
-            //重置選取的ID資料
-            _questionnaireIDList.Clear();
-            //讀取被選取的checkbox的value
-            var questionnaire = Request["checkboxQus"];
-
-            if (questionnaire != null)
-            {
-                var questionnaireIDs = questionnaire.ToString().Split(',');
-                foreach (var item in questionnaireIDs)
-                {
-                    _questionnaireIDList.Add(Guid.Parse(item));
-                }
-            }
-            //開啟警告畫面
-            this.divDeleteMsg.Visible = true;
-        }
+       
 
         protected void btnAdd_Click(object sender, ImageClickEventArgs e)
         {
@@ -131,21 +113,6 @@ namespace Questionnaire202204.SystemAdmin
         }
 
 
-        protected void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (sender == this.btnDeleteYes)
-            {
-                if (_questionnaireIDList.Count != 0)
-                {
-                    QuestionnaireManager.DeleteQuestionnaireList(_questionnaireIDList);
-                }
-                this.divDeleteMsg.Visible = false;
-                Response.Redirect(Request.RawUrl);
-            }
-            else if (sender == this.btnDeleteNo)
-            {
-                this.divDeleteMsg.Visible = false;
-            }
-        }
+        
     }
 }
