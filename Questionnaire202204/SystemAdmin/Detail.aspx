@@ -2,7 +2,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        
         /*問卷CSS*/
         #questionnaireContent td {
             padding: 10px;
@@ -101,22 +100,22 @@
     <%--標籤--%>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true" onclick="MyTab_Click(Questionnaire)">
+            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true" onclick="MyTab_Click('Questionnaire')">
                 問卷
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="questionContent-tab" data-bs-toggle="tab" data-bs-target="#questionContent" type="button" role="tab" aria-controls="questionContent" aria-selected="false" onclick="MyTab_Click(Question)">
+            <button class="nav-link" id="questionContent-tab" data-bs-toggle="tab" data-bs-target="#questionContent" type="button" role="tab" aria-controls="questionContent" aria-selected="false" onclick="MyTab_Click('Question')">
                 問題
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="userAnswerContent-tab" data-bs-toggle="tab" data-bs-target="#userAnswerContent" type="button" role="tab" aria-controls="userAnswerContent" aria-selected="false" onclick="MyTab_Click(UserAnswer)">
+            <button class="nav-link" id="userAnswerContent-tab" data-bs-toggle="tab" data-bs-target="#userAnswerContent" type="button" role="tab" aria-controls="userAnswerContent" aria-selected="false" onclick="MyTab_Click('UserAnswer')">
                 填寫資料
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="statisticsContent-tab" data-bs-toggle="tab" data-bs-target="#statisticsContent" type="button" role="tab" aria-controls="statisticsContent" aria-selected="false" onclick="MyTab_Click(Statistics)">
+            <button class="nav-link" id="statisticsContent-tab" data-bs-toggle="tab" data-bs-target="#statisticsContent" type="button" role="tab" aria-controls="statisticsContent" aria-selected="false" onclick="MyTab_Click('Statistics')">
                 統計
             </button>
         </li>
@@ -140,7 +139,7 @@
                     <td class="txtInputTitle">描述內容</td>
                     <td>
                         <%--<asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine"></asp:TextBox>--%>
-                        <textarea ID="txtQuestionnaireContent" class="txtContentInput" ></textarea>
+                        <textarea id="txtQuestionnaireContent" class="txtContentInput"></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -172,10 +171,10 @@
             <div class="btnActionBar">
                 <ul>
                     <li>
-                        <asp:Button ID="btnCancel" runat="server" Text="取消" />
+                        <asp:Button ID="btnQuestionnaireCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
                     <li>
-                        <asp:Button ID="btnSave" runat="server" Text="確定" />
+                        <asp:Button ID="btnQuestionnaireSave" runat="server" Text="確定" OnClick="btnSave_Click" />
                     </li>
                 </ul>
             </div>
@@ -192,6 +191,16 @@
                         <td>種類</td>
                         <td>
                             <asp:DropDownList ID="listCommonlyQuestionType" runat="server"></asp:DropDownList>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="btnCommonlyQuestionType" data-bs-toggle="dropdown" aria-expanded="false">
+                                    自訂問題
+                                </button>
+                                <ul id="ulCommonlyQuestion" class="dropdown-menu" aria-labelledby="btnCommonlyQuestionType">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
 
@@ -232,8 +241,8 @@
                         </tr>
                     </thead>
                     <%--表格內容--%>
-                    <tbody>
-                        <asp:Repeater ID="rptQusList" runat="server">
+                    <tbody id="tbodyQuestionList">
+                        <%--<asp:Repeater ID="rptQusList" runat="server">
                             <ItemTemplate>
                                 <tr>
                                     <td>
@@ -246,11 +255,11 @@
                                     <td></td>
                                 </tr>
                             </ItemTemplate>
-                        </asp:Repeater>
+                        </asp:Repeater>--%>
                         <%--查無資料--%>
-                        <tr id="trNoData" runat="server" visible="false">
+                        <%--<tr id="trNoData" runat="server" visible="false">
                             <td align="center" colspan="6">查無資料</td>
-                        </tr>
+                        </tr>--%>
                     </tbody>
                 </table>
             </div>
@@ -258,11 +267,11 @@
             <%--確認按鈕--%>
             <div class="btnActionBar">
                 <ul>
-                    <li>
-                        <asp:Button ID="Button1" runat="server" Text="取消" />
+                     <li>
+                        <asp:Button ID="btnQuestionListCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
                     <li>
-                        <asp:Button ID="Button2" runat="server" Text="確定" />
+                        <asp:Button ID="btnQuestionListSave" runat="server" Text="確定" />
                     </li>
                 </ul>
             </div>
@@ -284,9 +293,9 @@
 
     <script>
         var questionnaireID ="<%=this.questionnaireID%>";
-        var state ="<%=this.Request.QueryString["State"]%>";
+        var state = "<%=this.Request.QueryString["State"]%>";
+        
         $(document).ready(function () {
-
             //初次進入時判斷並顯示對應畫面
             switch (state) {
                 case "Questionnaire":
@@ -295,8 +304,8 @@
                 case "Question":
                     QuestionPage();
                     break;
-                case "UserData":
-                    UserData();
+                case "UserAnswer":
+                    UserAnswer();
                     break;
                 case "Statistics":
                     Statistics();
@@ -306,176 +315,210 @@
                     QuestionnairePage();
                     return;
             }
-
-            //按下不同Tab時判斷並顯示對應畫面
-            function MyTab_Click(tabName) {
-                switch (tabName) {
-                    case "Questionnaire":
-                        QuestionnairePage();
-                        break;
-                    case "Question":
-                        QuestionPage();
-                        break;
-                    case "UserData":
-                        UserData();
-                        break;
-                    case "Statistics":
-                        Statistics();
-                        break;
-                    default:
-                        //狀況全不符合，自動導向問卷畫面
-                        QuestionnairePage();
-                        return;
-                }
-            }
-
-            //重置所有Tab狀態
-            function ResetTabState() {
-                //重置Class
-                $("#questionnaireContent-tab").attr("class", "nav-link");
-                $("#questionContent-tab").attr("class", "nav-link");
-                $("#userAnswerContent-tab").attr("class", "nav-link");
-                $("#statisticsContent-tab").attr("class", "nav-link");
-
-                $("#questionnaireContent").attr("class", "tab-pane fade");
-                $("#questionContent").attr("class", "tab-pane fade");
-                $("#userAnswerContent").attr("class", "tab-pane fade");
-                $("#statisticsContent").attr("class", "tab-pane fade");
-
-                //重置aria-selected
-                $("#questionnaireContent-tab").attr("aria-selected", "false");
-                $("#questionContent-tab").attr("aria-selected", "false");
-                $("#userAnswerContent-tab").attr("aria-selected", "false");
-                $("#statisticsContent-tab").attr("aria-selected", "false");
-
-            }
-            //啟用特定Tab
-            function SetTab(pageState) {
-                var idText = "";
-                switch (pageState) {
-                    case "Questionnaire":
-                        idText = "questionnaireContent";
-                        break;
-                    case "Question":
-                        idText = "questionContent";
-                        break;
-                    case "UserData":
-                        idText = "userAnswerContent";
-                        break;
-                    case "Statistics":
-                        idText = "statisticsContent";
-                        break;
-                }
-                $(`#${idText}-tab`).attr("class", "nav-link active");
-                $(`#${idText}`).attr("class", "tab-pane fade show active");
-                $(`#${idText}-tab`).attr("aria-selected", "true");
-            }
-            //問卷
-            function QuestionnairePage() {
-                state = "Questionnaire";
-                var postData = {
-                    "questionnaireID":questionnaireID
-                }
-                $.ajax({
-                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
-                    method: "POST",
-                    data: postData,
-                    success: function (objData) {
-                        ResetTabState();
-                        //切換為指定TAB
-                        SetTab(state);
-
-                        //問卷標題
-                        $("#txtQuestionnaireTitle").attr("value", objData.Title);
-                        //問卷描述
-                        $("#txtQuestionnaireContent").empty();
-                        $("#txtQuestionnaireContent").append(objData.Briefly);
-                        //開始時間
-                        $("#txtQuestionnaireStartDate").attr("value", objData.StartTimeText);
-                        //結束時間
-                        $("#txtQuestionnaireEndDate").attr("value", objData.EndTimeText);
-
-                    },
-                    error: function (msg) {
-                        console.log(msg);
-                        alert("連線失敗，請聯絡管理員。");
-                    }
-                    
-                });
-            }
-            //問題
-            function QuestionPage() {
-                state = "Question";
-                var postData = {
-                    "questionnaireID": questionnaireID
-                }
-                $.ajax({
-                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
-                    method: "POST",
-                    data: postData,
-                    success: function (objData) {
-                        ResetTabState();
-                        //切換為指定TAB
-                        SetTab(state);
-
-
-
-                    },
-                    error: function (msg) {
-                        console.log(msg);
-                        alert("連線失敗，請聯絡管理員。");
-                    }
-                });
-            }
-            //填寫資料
-            function UserData() {
-                state = "UserData";
-                var postData = {
-                    "questionnaireID": questionnaireID
-                }
-                $.ajax({
-                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
-                    method: "POST",
-                    data: postData,
-                    success: function (objData) {
-                        ResetTabState();
-                        //切換為指定TAB
-                        SetTab(state);
-
-
-
-                    },
-                    error: function (msg) {
-                        console.log(msg);
-                        alert("連線失敗，請聯絡管理員。");
-                    }
-                });
-            }
-            //統計
-            function Statistics() {
-                state = "Statistics";
-                var postData = {
-                    "questionnaireID": questionnaireID
-                }
-                $.ajax({
-                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
-                    method: "POST",
-                    data: postData,
-                    success: function (objData) {
-                        ResetTabState();
-                        //切換為指定TAB
-                        SetTab(state);
-
-
-
-                    },
-                    error: function (msg) {
-                        console.log(msg);
-                        alert("連線失敗，請聯絡管理員。");
-                    }
-                });
-            }
         });
+
+        //按下不同Tab時判斷並顯示對應畫面
+        function MyTab_Click(tabName) {
+            switch (tabName) {
+                case "Questionnaire":
+                    QuestionnairePage();
+                    break;
+                case "Question":
+                    QuestionPage();
+                    break;
+                case "UserAnswer":
+                    UserAnswer();
+                    break;
+                case "Statistics":
+                    Statistics();
+                    break;
+                default:
+                    //狀況全不符合，自動導向問卷畫面
+                    QuestionnairePage();
+                    return;
+            }
+        }
+
+        //重置所有Tab狀態
+        function ResetTabState() {
+            //重置Class
+            $("#questionnaireContent-tab").attr("class", "nav-link");
+            $("#questionContent-tab").attr("class", "nav-link");
+            $("#userAnswerContent-tab").attr("class", "nav-link");
+            $("#statisticsContent-tab").attr("class", "nav-link");
+
+            $("#questionnaireContent").attr("class", "tab-pane fade");
+            $("#questionContent").attr("class", "tab-pane fade");
+            $("#userAnswerContent").attr("class", "tab-pane fade");
+            $("#statisticsContent").attr("class", "tab-pane fade");
+
+            //重置aria-selected
+            $("#questionnaireContent-tab").attr("aria-selected", "false");
+            $("#questionContent-tab").attr("aria-selected", "false");
+            $("#userAnswerContent-tab").attr("aria-selected", "false");
+            $("#statisticsContent-tab").attr("aria-selected", "false");
+
+        }
+        //啟用特定Tab
+        function SetTab(pageState) {
+            var idText = "";
+            switch (pageState) {
+                case "Questionnaire":
+                    idText = "questionnaireContent";
+                    break;
+                case "Question":
+                    idText = "questionContent";
+                    break;
+                case "UserAnswer":
+                    idText = "userAnswerContent";
+                    break;
+                case "Statistics":
+                    idText = "statisticsContent";
+                    break;
+            }
+            $(`#${idText}-tab`).attr("class", "nav-link active");
+            $(`#${idText}`).attr("class", "tab-pane fade show active");
+            $(`#${idText}-tab`).attr("aria-selected", "true");
+        }
+        //問卷
+        function QuestionnairePage() {
+            state = "Questionnaire";
+            var postData = {
+                "questionnaireID": questionnaireID
+            }
+            $.ajax({
+                url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                method: "POST",
+                data: postData,
+                success: function (objData) {
+                    ResetTabState();
+                    //切換為指定TAB
+                    SetTab(state);
+
+                    //問卷標題
+                    $("#txtQuestionnaireTitle").attr("value", objData.Title);
+                    //問卷描述
+                    $("#txtQuestionnaireContent").empty();
+                    $("#txtQuestionnaireContent").append(objData.Briefly);
+                    //開始時間
+                    $("#txtQuestionnaireStartDate").attr("value", objData.StartTimeText);
+                    //結束時間
+                    $("#txtQuestionnaireEndDate").attr("value", objData.EndTimeText);
+                    //是否啟用
+                    $("#checkIsEnable").attr("checked", objData.IsEnable);
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+
+            });
+        }
+        //問題
+        function QuestionPage() {
+            state = "Question";
+            var postData = {
+                "questionnaireID": questionnaireID
+            }
+            $.ajax({
+                url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                method: "POST",
+                data: postData,
+                success: function (objData) {
+                    ResetTabState();
+                    //切換為指定TAB
+                    SetTab(state);
+
+                    //變更DropDownList
+                    var qusCommonlyDropDownText = "";
+                    for (var item in objData) {
+                        qusCommonlyDropDownText += `<li><a class="dropdown-item" href="#">${item}</a></li>`
+                    }
+
+                    //變更問題清單
+                    var qusListText = "";
+                    if (objData.Count != 0) {
+                        for (var item in objData) {
+                            qusListText += `
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="checkboxQus" value="${item.QuestionID}" /></td>
+                                            <td>${item.NO}</td>
+                                            <td>${item.ShortQuestionContent}</td>
+                                            <td>${item.QusTypeText}</td>
+                                            <td>
+                                                <input type="checkbox" checked="${item.IsRequired}" onclick="return false" /></td>
+                                            <td></td>
+                                        </tr>
+                                        `;
+                        }
+                    } else {
+                        qusListText = `
+                                    <tr runat="server" visible="false">
+                                        <td align="center" colspan="6">查無資料</td>
+                                    </tr>
+                                    `;
+                    }
+                    $("#tbodyQuestionList").empty();
+                    $("#tbodyQuestionList").append(qusListText);
+
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
+        }
+        //填寫資料
+        function UserAnswer() {
+            state = "UserAnswer";
+            var postData = {
+                "questionnaireID": questionnaireID
+            }
+            $.ajax({
+                url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                method: "POST",
+                data: postData,
+                success: function (objData) {
+                    ResetTabState();
+                    //切換為指定TAB
+                    SetTab(state);
+
+
+
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
+        }
+        //統計
+        function Statistics() {
+            state = "Statistics";
+            var postData = {
+                "questionnaireID": questionnaireID
+            }
+            $.ajax({
+                url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                method: "POST",
+                data: postData,
+                success: function (objData) {
+                    ResetTabState();
+                    //切換為指定TAB
+                    SetTab(state);
+
+
+
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
+        }
+
+        
     </script>
 
 </asp:Content>

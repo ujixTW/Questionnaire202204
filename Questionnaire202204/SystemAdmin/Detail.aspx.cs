@@ -11,10 +11,12 @@ namespace Questionnaire202204.SystemAdmin
     public partial class Detail : System.Web.UI.Page
     {
         public Guid questionnaireID;
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                
                 string questionnaireIDText = this.Request.QueryString["ID"];
                 string pageState = this.Request.QueryString["State"];
                 //檢查QS上的ID是否正確
@@ -48,6 +50,9 @@ namespace Questionnaire202204.SystemAdmin
 
 
         }
+
+
+
         /// <summary>
         /// 判斷並導向現在使用者位在哪個功能
         /// </summary>
@@ -92,21 +97,42 @@ namespace Questionnaire202204.SystemAdmin
         /// </summary>
         private void _PageQuestion()
         {
-            var questionData = QuestionManager.GetQuestionList(questionnaireID);
-            if (questionData.Count != 0)
-            {
-                this.rptQusList.Visible = true;
-                this.trNoData.Visible = false;
+            //var questionData = QuestionManager.GetQuestionList(questionnaireID);
+            //if (questionData.Count != 0)
+            //{
+            //    this.rptQusList.Visible = true;
+            //    this.trNoData.Visible = false;
 
-                this.rptQusList.DataSource = questionData;
-                this.rptQusList.DataBind();
-            }
-            else
-            {
-                this.rptQusList.Visible = false;
-                this.trNoData.Visible = true;
-            }
+            //    this.rptQusList.DataSource = questionData;
+            //    this.rptQusList.DataBind();
+            //}
+            //else
+            //{
+            //    this.rptQusList.Visible = false;
+            //    this.trNoData.Visible = true;
+            //}
         }
 
+        /// <summary>
+        /// 取消對問卷的改動並導向清單列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Session.Clear();
+            Response.Redirect("List.aspx");
+        }
+        /// <summary>
+        /// 儲存資料並導向清單列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+
+            this.Session.Clear();
+            Response.Redirect("List.aspx");
+        }
     }
 }

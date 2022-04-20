@@ -15,22 +15,22 @@ namespace Questionnaire202204.SystemAdmin
     {
 
         /// <summary>
-        /// btnCancel 控制項。
+        /// btnQuestionnaireCancel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancel;
+        protected global::System.Web.UI.WebControls.Button btnQuestionnaireCancel;
 
         /// <summary>
-        /// btnSave 控制項。
+        /// btnQuestionnaireSave 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSave;
+        protected global::System.Web.UI.WebControls.Button btnQuestionnaireSave;
 
         /// <summary>
         /// listCommonlyQuestionType 控制項。
@@ -87,39 +87,21 @@ namespace Questionnaire202204.SystemAdmin
         protected global::System.Web.UI.WebControls.Button btnAddQuestion;
 
         /// <summary>
-        /// rptQusList 控制項。
+        /// btnQuestionListCancel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptQusList;
+        protected global::System.Web.UI.WebControls.Button btnQuestionListCancel;
 
         /// <summary>
-        /// trNoData 控制項。
+        /// btnQuestionListSave 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow trNoData;
-
-        /// <summary>
-        /// Button1 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
-
-        /// <summary>
-        /// Button2 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button2;
+        protected global::System.Web.UI.WebControls.Button btnQuestionListSave;
     }
 }
