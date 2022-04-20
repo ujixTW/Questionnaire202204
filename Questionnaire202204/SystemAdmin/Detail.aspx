@@ -517,7 +517,10 @@
                 }
             });
         }
+        //問卷事件
+        $("#txtQuestionnaireTitle").change(function () {
 
+        });
         
     </script>
 

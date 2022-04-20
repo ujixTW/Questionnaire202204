@@ -11,7 +11,7 @@ namespace Questionnaire202204.Models
         /// <summary>
         /// 問卷編號
         /// </summary>
-        public int NO { get; set; }
+        public int? NO { get; set; }
         /// <summary>
         /// 問卷標題
         /// </summary>
@@ -31,14 +31,7 @@ namespace Questionnaire202204.Models
         {
             get
             {
-                if (StartTime.Year <2000)
-                {
-                    return DateTime.Now.ToString("d");
-                }
-                else
-                {
-                    return StartTime.ToString("d");
-                }
+                return StartTime.ToString("d");
             }
         }
         /// <summary>

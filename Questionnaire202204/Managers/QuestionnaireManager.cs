@@ -10,13 +10,70 @@ namespace Questionnaire202204.Managers
 {
     public class QuestionnaireManager
     {
+        /// <summary>
+        /// 儲存單筆問卷資料
+        /// </summary>
+        /// <param name="questionnaire">存入的問卷資料</param>
+        public static void SaveQuestionnaireData(QuestionnaireModel questionnaire)
+        {
+            //判斷是否為新問卷
+            if (questionnaire.NO == null)
+            {
+                //新
+                CreateQuestionnaireData(questionnaire);
+            }else
+            {
+                //已有
+                UpDateQuestionnaireDeta(questionnaire);
+            }
+        }
         //增加
+        /// <summary>
+        /// 新增單筆問卷資料
+        /// </summary>
+        /// <param name="questionnaire">存入的問卷資料</param>
+        public static void CreateQuestionnaireData(QuestionnaireModel questionnaire)
+        {
+           
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                INSERT INTO [Questionnaire]
+                                    ( [QuestionnaireID], [Title], [Briefly], [StartTime], [EndTime], [IsEnable], [IsDelete])
+                                VALUES
+                                    ( @questionnaireID, @title, @briefly, @startTime, @endTime, @isEnable,'false' )
+                                ";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@questionnaireID", questionnaire.QuestionnaireID);
+                        command.Parameters.AddWithValue("@title", (object)questionnaire.Title ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@briefly", (object)questionnaire.Briefly ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@startTime", questionnaire.StartTime);
+                        command.Parameters.AddWithValue("@endTime", (object)questionnaire.EndTime ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@isEnable", questionnaire.IsEnable);
+                        conn.Open();
+                        command.ExecuteNonQuery();
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.CreateQuestionnaireData", ex);
+                throw;
+            }
+        }
 
         //刪除
         /// <summary>
         /// 軟刪除所選擇的問卷
         /// </summary>
-        /// <param name="questionnaireIDList">問卷ID</param>
+        /// <param name="questionnaireIDList">被刪除的問卷ID</param>
         public static void DeleteQuestionnaireList(List<Guid> questionnaireIDList)
         {
             string idText = string.Empty;
@@ -53,12 +110,57 @@ namespace Questionnaire202204.Managers
             }
             catch (Exception ex)
             {
-                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireList", ex);
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.DeleteQuestionnaireList", ex);
                 throw;
             }
 
         }
         //修改
+        /// <summary>
+        /// 更新單筆現有問卷資料
+        /// </summary>
+        /// <param name="questionnaire">更新的問卷資料</param>
+        public static void UpDateQuestionnaireDeta(QuestionnaireModel questionnaire)
+        {
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                UPDATE [Questionnaire]
+                                SET
+                                    [Title] = @title,
+                                    [Briefly] = @briefly,
+                                    [StartTime] = @startTime,
+                                    [EndTime] = @endTime,
+                                    [IsEnable] = @isEnable
+                                WHERE
+                                    [QuestionnaireID] = @questionnaireID
+                                ";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@questionnaireID", questionnaire.QuestionnaireID);
+                        command.Parameters.AddWithValue("@title", questionnaire.Title);
+                        command.Parameters.AddWithValue("@briefly", questionnaire.Briefly);
+                        command.Parameters.AddWithValue("@startTime", questionnaire.StartTime);
+                        command.Parameters.AddWithValue("@endTime", questionnaire.EndTime);
+                        command.Parameters.AddWithValue("@isEnable", questionnaire.IsEnable);
+                        conn.Open();
+                        command.ExecuteNonQuery();
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.UpDateQuestionnaireDeta", ex);
+                throw;
+            }
+
+        }
         //查詢
         /// <summary>
         /// 查詢多筆問卷資料
@@ -141,6 +243,7 @@ namespace Questionnaire202204.Managers
                         //將資料取出放到List中
                         while (reader.Read())
                         {
+                           
                             QuestionnaireModel info = new QuestionnaireModel()
                             {
                                 QuestionnaireID = (Guid)reader["QuestionnaireID"],
@@ -148,7 +251,7 @@ namespace Questionnaire202204.Managers
                                 Title = reader["Title"] as string,
                                 Briefly = reader["Briefly"] as string,
                                 StartTime = (DateTime)reader["StartTime"],
-                                EndTime = (DateTime?)reader["EndTime"],
+                                EndTime = reader["EndTime"] as DateTime?,
                                 IsEnable = (bool)reader["IsEnable"]
                             };
                             QuestionnaireDataList.Add(info);
@@ -198,12 +301,18 @@ namespace Questionnaire202204.Managers
                         if (reader.Read())
                         {
                             model.QuestionnaireID = questionnaireID;
-                            model.NO = (int)reader["NO"];
+                            model.NO = (int?)reader["NO"];
                             model.Title = reader["Title"] as string;
                             model.Briefly = reader["Briefly"] as string;
                             model.StartTime = (DateTime)reader["StartTime"];
-                            model.EndTime = (DateTime?)reader["EndTime"];
+                            model.EndTime = reader["EndTime"] as DateTime?;
                             model.IsEnable = (bool)reader["IsEnable"];
+                        }
+                        else
+                        {
+                            model.QuestionnaireID = questionnaireID;
+                            model.StartTime = DateTime.Today;
+                            model.IsEnable = true;
                         }
                         return model;
                     }
@@ -211,7 +320,7 @@ namespace Questionnaire202204.Managers
             }
             catch (Exception ex)
             {
-                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireList", ex);
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireData", ex);
                 throw;
             }
         }

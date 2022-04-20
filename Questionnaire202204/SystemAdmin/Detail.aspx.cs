@@ -1,4 +1,5 @@
 ﻿using Questionnaire202204.Managers;
+using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace Questionnaire202204.SystemAdmin
     public partial class Detail : System.Web.UI.Page
     {
         public Guid questionnaireID;
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                
+
                 string questionnaireIDText = this.Request.QueryString["ID"];
                 string pageState = this.Request.QueryString["State"];
                 //檢查QS上的ID是否正確
@@ -36,6 +37,7 @@ namespace Questionnaire202204.SystemAdmin
                     Response.Redirect("List.aspx");
                     return;
                 }
+
                 ////檢查若QS上的State為空值則自動導向問卷畫面
                 //if (string.IsNullOrWhiteSpace(pageState))
                 //{
@@ -130,9 +132,15 @@ namespace Questionnaire202204.SystemAdmin
         /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            if (sender == this.btnQuestionnaireSave)
+            {
+                QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
+                QuestionnaireManager.SaveQuestionnaireData(model);
+            }
+            else if (sender == this.btnQuestionListSave)
+            {
 
-            this.Session.Clear();
-            Response.Redirect("List.aspx");
+            }
         }
     }
 }
