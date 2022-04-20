@@ -131,37 +131,39 @@
                 <tr>
                     <td class="txtInputTitle">問題名稱</td>
                     <td>
-                        <%--<asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server"></asp:TextBox>--%>
-                        <input type="text" id="txtQuestionnaireTitle" class="txtInput" />
+                        <asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
+                        <%--<input type="text" id="txtQuestionnaireTitle" class="txtInput" onchange="QuestionnaireTextBox_Change('title')" />--%>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">描述內容</td>
                     <td>
-                        <%--<asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine"></asp:TextBox>--%>
-                        <textarea id="txtQuestionnaireContent" class="txtContentInput"></textarea>
+                        <asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
+                        <%--<textarea id="txtQuestionnaireContent" class="txtContentInput" onchange="QuestionnaireTextBox_Change('content')"></textarea>--%>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">開始時間</td>
                     <td>
-                        <%--<asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server"></asp:TextBox>--%>
-                        <input type="text" id="txtQuestionnaireStartDate" class="txtInput" />
+                        <asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
+                        <%--<input type="text" id="txtQuestionnaireStartDate" class="txtInput" onchange="QuestionnaireTextBox_Change('startDate')" />--%>
 
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">結束時間</td>
                     <td>
-                        <%--<asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server"></asp:TextBox>--%>
-                        <input type="text" id="txtQuestionnaireEndDate" class="txtInput" />
-
+                        <asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
+                        <%--<input type="text" id="txtQuestionnaireEndDate" class="txtInput" onchange="QuestionnaireTextBox_Change('endDate')" />--%>
+                        <br />
+                        <asp:Literal ID="ltlQuestionnaireEndDateMsg" runat="server">日期格式錯誤，請輸入包含年月日的日期，並以 - / 空格任一種符號隔開年月日。</asp:Literal>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle"></td>
                     <td>
-                        <input type="checkbox" id="checkIsEnable" />
+                        <%--<input type="checkbox" id="checkIsEnable" />--%>
+                        <asp:CheckBox ID="checkIsEnable" runat="server" />
                         已啟用
                     </td>
                 </tr>
@@ -316,7 +318,21 @@
                     return;
             }
         });
+        window.onbeforeunload = function () {
 
+            $.ajax({
+                url: `../API/QuestionnaireDetailHandler.ashx?Action=ClosePage`,
+                method: "GET",
+                success: function (objData) {
+
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+
+            });
+        };
         //按下不同Tab時判斷並顯示對應畫面
         function MyTab_Click(tabName) {
             switch (tabName) {
@@ -394,18 +410,22 @@
                     ResetTabState();
                     //切換為指定TAB
                     SetTab(state);
-
+                    var tittleID ='<%=this.txtQuestionnaireTitle.ClientID%>';
+                    var contentID ='<%=this.txtQuestionnaireContent.ClientID%>';
+                    var startDateID ='<%=this.txtQuestionnaireStartDate.ClientID%>';
+                    var endDateID ='<%=this.txtQuestionnaireEndDate.ClientID%>';
+                    var checkBoxID = '<%=this.checkIsEnable.ClientID%>';
                     //問卷標題
-                    $("#txtQuestionnaireTitle").attr("value", objData.Title);
+                    $(`#${tittleID}`).attr("value", objData.Title);
                     //問卷描述
-                    $("#txtQuestionnaireContent").empty();
-                    $("#txtQuestionnaireContent").append(objData.Briefly);
+                    $(`#${contentID}`).empty();
+                    $(`#${contentID}`).append(objData.Briefly);
                     //開始時間
-                    $("#txtQuestionnaireStartDate").attr("value", objData.StartTimeText);
+                    $(`#${startDateID}`).attr("value", objData.StartTimeText);
                     //結束時間
-                    $("#txtQuestionnaireEndDate").attr("value", objData.EndTimeText);
+                    $(`#${endDateID}`).attr("value", objData.EndTimeText);
                     //是否啟用
-                    $("#checkIsEnable").attr("checked", objData.IsEnable);
+                    $(`#${checkBoxID}`).attr("checked", objData.IsEnable);
                 },
                 error: function (msg) {
                     console.log(msg);
@@ -517,10 +537,7 @@
                 }
             });
         }
-        //問卷事件
-        $("#txtQuestionnaireTitle").change(function () {
-
-        });
+        
         
     </script>
 

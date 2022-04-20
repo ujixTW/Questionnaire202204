@@ -82,6 +82,16 @@ namespace Questionnaire202204.API
                 return;
             }
 
+
+            //當離開這個網頁時
+            if (string.Compare("GET", context.Request.HttpMethod, true) == 0 &&
+                string.Compare("ClosePage", context.Request.QueryString["Action"], true) == 0)
+            {
+                context.Session.Clear();
+                context.Response.ContentType = "text/plain";
+                context.Response.Write("OK");
+                return;
+            }
         }
 
         public bool IsReusable

@@ -50,7 +50,7 @@ namespace Questionnaire202204.SystemAdmin
 
             }
 
-
+            
         }
 
 
@@ -122,7 +122,6 @@ namespace Questionnaire202204.SystemAdmin
         /// <param name="e"></param>
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Session.Clear();
             Response.Redirect("List.aspx");
         }
         /// <summary>
@@ -141,6 +140,47 @@ namespace Questionnaire202204.SystemAdmin
             {
 
             }
+        }
+
+        protected void txtQuestionnaire_TextChanged(object sender, EventArgs e)
+        {
+            //取出session
+            QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
+            if (model == null)
+            {
+                return;
+            }
+            //改動特定資料
+            if (sender == this.txtQuestionnaireTitle)
+            {
+                model.Title = this.txtQuestionnaireTitle.Text;
+            }else if (sender == this.txtQuestionnaireContent)
+            {
+                model.Briefly = this.txtQuestionnaireContent.Text;
+            }else if (sender == this.txtQuestionnaireStartDate)
+            {
+                model.StartTime =DateTime.Parse( this.txtQuestionnaireStartDate.Text);
+            }else if (sender == this.txtQuestionnaireEndDate)
+            {
+                if (DateTime.TryParse(this.txtQuestionnaireEndDate.Text, out DateTime date))
+                {
+                    model.EndTime = date;
+                    this.ltlQuestionnaireEndDateMsg.Visible = false;
+
+                }
+                else if (string.IsNullOrWhiteSpace(this.txtQuestionnaireEndDate.Text))
+                {
+                    model.EndTime = null;
+                    this.ltlQuestionnaireEndDateMsg.Visible = false;
+                }
+                else
+                {
+                    this.ltlQuestionnaireEndDateMsg.Visible = true;
+                }
+            }
+            //重新放回session
+            this.Session["questionnaireData"] = model;
+
         }
     }
 }

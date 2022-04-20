@@ -15,6 +15,60 @@ namespace Questionnaire202204.SystemAdmin
     {
 
         /// <summary>
+        /// txtQuestionnaireTitle 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtQuestionnaireTitle;
+
+        /// <summary>
+        /// txtQuestionnaireContent 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtQuestionnaireContent;
+
+        /// <summary>
+        /// txtQuestionnaireStartDate 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtQuestionnaireStartDate;
+
+        /// <summary>
+        /// txtQuestionnaireEndDate 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtQuestionnaireEndDate;
+
+        /// <summary>
+        /// ltlQuestionnaireEndDateMsg 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlQuestionnaireEndDateMsg;
+
+        /// <summary>
+        /// checkIsEnable 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox checkIsEnable;
+
+        /// <summary>
         /// btnQuestionnaireCancel 控制項。
         /// </summary>
         /// <remarks>
