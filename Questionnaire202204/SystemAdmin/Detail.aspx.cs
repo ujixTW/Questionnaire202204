@@ -122,6 +122,7 @@ namespace Questionnaire202204.SystemAdmin
         /// <param name="e"></param>
         protected void btnCancel_Click(object sender, EventArgs e)
         {
+            this.Session.Clear();
             Response.Redirect("List.aspx");
         }
         /// <summary>

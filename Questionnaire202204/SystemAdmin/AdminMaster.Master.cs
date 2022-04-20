@@ -13,5 +13,17 @@ namespace Questionnaire202204.SystemAdmin
         {
 
         }
+
+        protected void linkbtnList_Click(object sender, EventArgs e)
+        {
+            this.Session.Clear();
+            Response.Redirect("List.aspx");
+        }
+
+        protected void linkbtnCommonlyQuestionList_Click(object sender, EventArgs e)
+        {
+            this.Session.Clear();
+            Response.Redirect("CommonlyQuestionList.aspx");
+        }
     }
 }

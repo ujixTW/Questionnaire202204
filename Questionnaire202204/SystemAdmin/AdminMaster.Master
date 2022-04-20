@@ -10,19 +10,22 @@
     <script src="../JavaScript/jquery/jquery.min.js"></script>
     <title></title>
     <style>
-        .Page{
-            margin:30px;
+        .Page {
+            margin: 30px;
         }
-        #PageTitle{
-            font-size:50pt;
+
+        #PageTitle {
+            font-size: 50pt;
         }
-        .LeftBar{
-            float:left;
-            width:10%;
+
+        .LeftBar {
+            float: left;
+            width: 10%;
         }
-        .Main{
-            float:right;
-            width:80%;
+
+        .Main {
+            float: right;
+            width: 80%;
         }
     </style>
     <asp:ContentPlaceHolder ID="head" runat="server">
@@ -34,8 +37,8 @@
             <h1 id="PageTitle"></h1>
             <br />
             <div class="LeftBar">
-                <a href="List.aspx">問卷管理</a><br />
-                <a href="CommonlyQuestionList.aspx">常用問題管理</a>
+                <asp:LinkButton ID="linkbtnList" runat="server" OnClick="linkbtnList_Click">問卷管理</asp:LinkButton><br />
+                <asp:LinkButton ID="linkbtnCommonlyQuestionList" runat="server" OnClick="linkbtnCommonlyQuestionList_Click">問卷管理</asp:LinkButton>
             </div>
             <div class="Main">
 
@@ -67,5 +70,5 @@
         }
     </script>
 </body>
-    
+
 </html>

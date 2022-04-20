@@ -81,7 +81,10 @@
         #myTabContent {
             padding: 10px;
         }
-
+        /*警告文字*/
+        .errorMsg{
+            color:#faa;
+        }
         /*確認、取消按鍵區域*/
         .btnActionBar ul li {
             display: inline;
@@ -147,6 +150,7 @@
                     <td>
                         <asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
                         <%--<input type="text" id="txtQuestionnaireStartDate" class="txtInput" onchange="QuestionnaireTextBox_Change('startDate')" />--%>
+                        <asp:Literal ID="ltlQuestionnaireStartDateMsg" runat="server" Visible="false"><p class="errorMsg">日期格式錯誤，請輸入包含年月日的日期，並以 - / 空格任一種符號隔開年月日。</p></asp:Literal>
 
                     </td>
                 </tr>
@@ -156,7 +160,7 @@
                         <asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
                         <%--<input type="text" id="txtQuestionnaireEndDate" class="txtInput" onchange="QuestionnaireTextBox_Change('endDate')" />--%>
                         <br />
-                        <asp:Literal ID="ltlQuestionnaireEndDateMsg" runat="server">日期格式錯誤，請輸入包含年月日的日期，並以 - / 空格任一種符號隔開年月日。</asp:Literal>
+                        <asp:Literal ID="ltlQuestionnaireEndDateMsg" runat="server" Visible="false"><p class="errorMsg">日期格式錯誤，請輸入包含年月日的日期，並以 - / 空格任一種符號隔開年月日。</p></asp:Literal>
                     </td>
                 </tr>
                 <tr>
@@ -318,21 +322,7 @@
                     return;
             }
         });
-        window.onbeforeunload = function () {
-
-            $.ajax({
-                url: `../API/QuestionnaireDetailHandler.ashx?Action=ClosePage`,
-                method: "GET",
-                success: function (objData) {
-
-                },
-                error: function (msg) {
-                    console.log(msg);
-                    alert("連線失敗，請聯絡管理員。");
-                }
-
-            });
-        };
+        
         //按下不同Tab時判斷並顯示對應畫面
         function MyTab_Click(tabName) {
             switch (tabName) {
