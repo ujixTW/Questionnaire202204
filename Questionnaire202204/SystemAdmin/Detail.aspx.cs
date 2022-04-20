@@ -47,72 +47,9 @@ namespace Questionnaire202204.SystemAdmin
 
                 //_PageState(pageState);
 
-
+                
             }
-
-
-        }
-
-
-
-        /// <summary>
-        /// 判斷並導向現在使用者位在哪個功能
-        /// </summary>
-        /// <param name="pageState">QS裡State的值</param>
-        private void _PageState(string pageState)
-        {
-            switch (pageState)
-            {
-                case "Questionnaire":
-                    _PageQuestionnaire();
-                    break;
-                case "Question":
-                    _PageQuestion();
-                    break;
-                case "UserData":
-                    break;
-                case "Statistics":
-                    break;
-                default:
-                    //狀況全不符合，自動導向問卷畫面
-                    this.Response.Redirect($"Detail.aspx?ID={questionnaireID}&State=Questionnaire");
-                    return;
-            }
-        }
-        /// <summary>
-        /// 問卷頁面
-        /// </summary>
-        private void _PageQuestionnaire()
-        {
-            var questionnaireData = QuestionnaireManager.GetQuestionnaireData(questionnaireID);
-            if (questionnaireData.QuestionnaireID != null)
-            {
-                //this.txtQuestionnaireTitle.Text = questionnaireData.Title;
-                //this.txtQuestionnaireContent.Text = questionnaireData.Briefly;
-                //this.txtQuestionnaireStartDate.Text = questionnaireData.StartTimeText;
-                //this.txtQuestionnaireEndDate.Text = questionnaireData.EndTimeText;
-                //this.checkIsEnable.Checked = questionnaireData.IsEnable;
-            }
-        }
-        /// <summary>
-        /// 問題頁面
-        /// </summary>
-        private void _PageQuestion()
-        {
-            //var questionData = QuestionManager.GetQuestionList(questionnaireID);
-            //if (questionData.Count != 0)
-            //{
-            //    this.rptQusList.Visible = true;
-            //    this.trNoData.Visible = false;
-
-            //    this.rptQusList.DataSource = questionData;
-            //    this.rptQusList.DataBind();
-            //}
-            //else
-            //{
-            //    this.rptQusList.Visible = false;
-            //    this.trNoData.Visible = true;
-            //}
+            
         }
 
         /// <summary>
@@ -142,10 +79,12 @@ namespace Questionnaire202204.SystemAdmin
 
             }
             this.ltlSaveMsg.Visible = true;
+            
         }
         //變更問卷文字方塊內文字
         protected void txtQuestionnaire_TextChanged(object sender, EventArgs e)
         {
+            this.ltlSaveMsg.Visible = false;
             //取出session
             QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
             if (model == null)
@@ -225,6 +164,7 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void checkIsEnable_CheckedChanged(object sender, EventArgs e)
         {
+            this.ltlSaveMsg.Visible = false;
             QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
             model.IsEnable = this.checkIsEnable.Checked;
             this.Session["questionnaireData"] = model;
