@@ -82,8 +82,25 @@
             padding: 10px;
         }
         /*警告文字*/
-        .errorMsg{
-            color:#faa;
+        .errorMsg {
+            color: #f88;
+        }
+
+        /*儲存成功訊息*/
+        .saveMsg {
+            width:240px;
+            height:120px;
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            transform:translate(-270px,-150px);
+            border:1px solid #cef;
+            background-color:#fafafa;
+            box-shadow:0px 0px 8px rgb(200,230,255,0.8);
+            border-radius:5px;
+            color:#056;
+            text-align:center;
+            line-height:120px;
         }
         /*確認、取消按鍵區域*/
         .btnActionBar ul li {
@@ -134,23 +151,32 @@
                 <tr>
                     <td class="txtInputTitle">問題名稱</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
+                        <asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server" MaxLength="50" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
                         <%--<input type="text" id="txtQuestionnaireTitle" class="txtInput" onchange="QuestionnaireTextBox_Change('title')" />--%>
+                        <asp:Literal ID="ltlQuestionnaireTitleMsg" runat="server" Visible="false">
+                            <p class="errorMsg">
+                                此欄位為必填。
+                            </p>
+                        </asp:Literal>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">描述內容</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
+                        <asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
                         <%--<textarea id="txtQuestionnaireContent" class="txtContentInput" onchange="QuestionnaireTextBox_Change('content')"></textarea>--%>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">開始時間</td>
                     <td>
-                        <asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged"></asp:TextBox>
+                        <asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
                         <%--<input type="text" id="txtQuestionnaireStartDate" class="txtInput" onchange="QuestionnaireTextBox_Change('startDate')" />--%>
-                        <asp:Literal ID="ltlQuestionnaireStartDateMsg" runat="server" Visible="false"><p class="errorMsg">日期格式錯誤，請輸入包含年月日的日期，並以 - / 空格任一種符號隔開年月日。</p></asp:Literal>
+                        <asp:Literal ID="ltlQuestionnaireStartDateMsg" runat="server" Visible="false">
+                            <p class="errorMsg">
+                            日期格式錯誤，請輸入包含年月日的日期，且日期介於今日即結束日期之間(若有填入結束時間)，並以 - / 空格 任一種符號隔開年月日。
+                            </p>
+                        </asp:Literal>
 
                     </td>
                 </tr>
@@ -160,14 +186,18 @@
                         <asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
                         <%--<input type="text" id="txtQuestionnaireEndDate" class="txtInput" onchange="QuestionnaireTextBox_Change('endDate')" />--%>
                         <br />
-                        <asp:Literal ID="ltlQuestionnaireEndDateMsg" runat="server" Visible="false"><p class="errorMsg">日期格式錯誤，請輸入包含年月日的日期，並以 - / 空格任一種符號隔開年月日。</p></asp:Literal>
+                        <asp:Literal ID="ltlQuestionnaireEndDateMsg" runat="server" Visible="false">
+                            <p class="errorMsg">
+                                日期格式錯誤，請輸入包含年月日且大於開始時間的日期，並以 - / 空格 任一種符號隔開年月日。
+                            </p>
+                        </asp:Literal>
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle"></td>
                     <td>
                         <%--<input type="checkbox" id="checkIsEnable" />--%>
-                        <asp:CheckBox ID="checkIsEnable" runat="server" />
+                        <asp:CheckBox ID="checkIsEnable" runat="server" OnCheckedChanged="checkIsEnable_CheckedChanged" />
                         已啟用
                     </td>
                 </tr>
@@ -273,7 +303,7 @@
             <%--確認按鈕--%>
             <div class="btnActionBar">
                 <ul>
-                     <li>
+                    <li>
                         <asp:Button ID="btnQuestionListCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
                     <li>
@@ -296,11 +326,16 @@
 
         </div>
     </div>
+    <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false">
+        <div class="saveMsg">
+            儲存成功!
+        </div>
+    </asp:Literal>
 
     <script>
         var questionnaireID ="<%=this.questionnaireID%>";
         var state = "<%=this.Request.QueryString["State"]%>";
-        
+
         $(document).ready(function () {
             //初次進入時判斷並顯示對應畫面
             switch (state) {
@@ -322,7 +357,7 @@
                     return;
             }
         });
-        
+
         //按下不同Tab時判斷並顯示對應畫面
         function MyTab_Click(tabName) {
             switch (tabName) {
@@ -527,8 +562,8 @@
                 }
             });
         }
-        
-        
+
+
     </script>
 
 </asp:Content>

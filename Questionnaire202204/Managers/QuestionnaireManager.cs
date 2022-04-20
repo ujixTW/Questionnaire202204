@@ -143,9 +143,9 @@ namespace Questionnaire202204.Managers
                     {
                         command.Parameters.AddWithValue("@questionnaireID", questionnaire.QuestionnaireID);
                         command.Parameters.AddWithValue("@title", questionnaire.Title);
-                        command.Parameters.AddWithValue("@briefly", questionnaire.Briefly);
+                        command.Parameters.AddWithValue("@briefly", (object)questionnaire.Briefly ?? DBNull.Value);
                         command.Parameters.AddWithValue("@startTime", questionnaire.StartTime);
-                        command.Parameters.AddWithValue("@endTime", questionnaire.EndTime);
+                        command.Parameters.AddWithValue("@endTime", (object)questionnaire.EndTime ?? DBNull.Value);
                         command.Parameters.AddWithValue("@isEnable", questionnaire.IsEnable);
                         conn.Open();
                         command.ExecuteNonQuery();
@@ -311,6 +311,7 @@ namespace Questionnaire202204.Managers
                         else
                         {
                             model.QuestionnaireID = questionnaireID;
+                            model.Title = "新問卷";
                             model.StartTime = DateTime.Today;
                             model.IsEnable = true;
                         }

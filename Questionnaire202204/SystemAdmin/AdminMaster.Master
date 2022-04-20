@@ -38,7 +38,7 @@
             <br />
             <div class="LeftBar">
                 <asp:LinkButton ID="linkbtnList" runat="server" OnClick="linkbtnList_Click">問卷管理</asp:LinkButton><br />
-                <asp:LinkButton ID="linkbtnCommonlyQuestionList" runat="server" OnClick="linkbtnCommonlyQuestionList_Click">問卷管理</asp:LinkButton>
+                <asp:LinkButton ID="linkbtnCommonlyQuestionList" runat="server" OnClick="linkbtnCommonlyQuestionList_Click">常用問題管理</asp:LinkButton>
             </div>
             <div class="Main">
 

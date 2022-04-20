@@ -50,7 +50,7 @@ namespace Questionnaire202204.SystemAdmin
 
             }
 
-            
+
         }
 
 
@@ -126,7 +126,7 @@ namespace Questionnaire202204.SystemAdmin
             Response.Redirect("List.aspx");
         }
         /// <summary>
-        /// 儲存資料並導向清單列表
+        /// 儲存資料
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -141,8 +141,9 @@ namespace Questionnaire202204.SystemAdmin
             {
 
             }
+            this.ltlSaveMsg.Visible = true;
         }
-
+        //變更問卷文字方塊內文字
         protected void txtQuestionnaire_TextChanged(object sender, EventArgs e)
         {
             //取出session
@@ -154,22 +155,60 @@ namespace Questionnaire202204.SystemAdmin
             //改動特定資料
             if (sender == this.txtQuestionnaireTitle)
             {
-                model.Title = this.txtQuestionnaireTitle.Text;
-            }else if (sender == this.txtQuestionnaireContent)
+                if (string.IsNullOrWhiteSpace(this.txtQuestionnaireTitle.Text))
+                {
+                    this.ltlQuestionnaireTitleMsg.Visible = true;
+                }
+                else
+                {
+                    model.Title = this.txtQuestionnaireTitle.Text;
+                    this.ltlQuestionnaireTitleMsg.Visible = false;
+                }
+            }
+            else if (sender == this.txtQuestionnaireContent)
             {
                 model.Briefly = this.txtQuestionnaireContent.Text;
-            }else if (sender == this.txtQuestionnaireStartDate)
+            }
+            else if (sender == this.txtQuestionnaireStartDate)
             {
-                model.StartTime =DateTime.Parse( this.txtQuestionnaireStartDate.Text);
-            }else if (sender == this.txtQuestionnaireEndDate)
+                //如果格式不正確就顯示警告視窗
+                //不正確格式:日期未包含年月日、日期未分割、輸入非數字及符號、日期未在規定範圍內
+                if (DateTime.TryParse(this.txtQuestionnaireStartDate.Text, out DateTime date))
+                {
+                    if ((model.EndTime==null||date<model.EndTime)&& date >= DateTime.Today)
+                    {
+                        model.StartTime = date;
+                        this.ltlQuestionnaireStartDateMsg.Visible = false;
+                    }
+                    else
+                    {
+                        this.ltlQuestionnaireStartDateMsg.Visible = true;
+                    }
+                }
+                else
+                {
+                    this.ltlQuestionnaireStartDateMsg.Visible = true;
+                }
+            }
+            else if (sender == this.txtQuestionnaireEndDate)
             {
+                //如果格式不正確就顯示警告視窗
+                //不正確格式:日期未包含年月日、日期未分割、輸入非數字及符號、日期未在規定範圍內
                 if (DateTime.TryParse(this.txtQuestionnaireEndDate.Text, out DateTime date))
                 {
-                    model.EndTime = date;
-                    this.ltlQuestionnaireEndDateMsg.Visible = false;
+                    //檢查時間是否小於起始時間
+                    if (date > model.StartTime)
+                    {
+                        model.EndTime = date;
+                        this.ltlQuestionnaireEndDateMsg.Visible = false;
+                    }
+                    else
+                    {
+                        this.ltlQuestionnaireEndDateMsg.Visible = true;
+                    }
 
                 }
-                else if (string.IsNullOrWhiteSpace(this.txtQuestionnaireEndDate.Text))
+                else if (string.IsNullOrWhiteSpace(this.txtQuestionnaireEndDate.Text) || (string.Compare(this.txtQuestionnaireEndDate.Text, "-") == 0))
                 {
                     model.EndTime = null;
                     this.ltlQuestionnaireEndDateMsg.Visible = false;
@@ -183,5 +222,14 @@ namespace Questionnaire202204.SystemAdmin
             this.Session["questionnaireData"] = model;
 
         }
+
+        protected void checkIsEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
+            model.IsEnable = this.checkIsEnable.Checked;
+            this.Session["questionnaireData"] = model;
+        }
+
+        
     }
 }
