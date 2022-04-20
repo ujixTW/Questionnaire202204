@@ -101,22 +101,22 @@
     <%--標籤--%>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true">
+            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true" onclick="MyTab_Click(Questionnaire)">
                 問卷
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="questionContent-tab" data-bs-toggle="tab" data-bs-target="#questionContent" type="button" role="tab" aria-controls="questionContent" aria-selected="false">
+            <button class="nav-link" id="questionContent-tab" data-bs-toggle="tab" data-bs-target="#questionContent" type="button" role="tab" aria-controls="questionContent" aria-selected="false" onclick="MyTab_Click(Question)">
                 問題
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="userAnswerContent-tab" data-bs-toggle="tab" data-bs-target="#userAnswerContent" type="button" role="tab" aria-controls="userAnswerContent" aria-selected="false">
+            <button class="nav-link" id="userAnswerContent-tab" data-bs-toggle="tab" data-bs-target="#userAnswerContent" type="button" role="tab" aria-controls="userAnswerContent" aria-selected="false" onclick="MyTab_Click(UserAnswer)">
                 填寫資料
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="statisticsContent-tab" data-bs-toggle="tab" data-bs-target="#statisticsContent" type="button" role="tab" aria-controls="statisticsContent" aria-selected="false">
+            <button class="nav-link" id="statisticsContent-tab" data-bs-toggle="tab" data-bs-target="#statisticsContent" type="button" role="tab" aria-controls="statisticsContent" aria-selected="false" onclick="MyTab_Click(Statistics)">
                 統計
             </button>
         </li>
@@ -287,22 +287,48 @@
         var state ="<%=this.Request.QueryString["State"]%>";
         $(document).ready(function () {
 
-            //判斷並顯示對應畫面
+            //初次進入時判斷並顯示對應畫面
             switch (state) {
                 case "Questionnaire":
                     QuestionnairePage();
                     break;
                 case "Question":
+                    QuestionPage();
                     break;
                 case "UserData":
+                    UserData();
                     break;
                 case "Statistics":
+                    Statistics();
                     break;
                 default:
                     //狀況全不符合，自動導向問卷畫面
                     QuestionnairePage();
                     return;
             }
+
+            //按下不同Tab時判斷並顯示對應畫面
+            function MyTab_Click(tabName) {
+                switch (tabName) {
+                    case "Questionnaire":
+                        QuestionnairePage();
+                        break;
+                    case "Question":
+                        QuestionPage();
+                        break;
+                    case "UserData":
+                        UserData();
+                        break;
+                    case "Statistics":
+                        Statistics();
+                        break;
+                    default:
+                        //狀況全不符合，自動導向問卷畫面
+                        QuestionnairePage();
+                        return;
+                }
+            }
+
             //重置所有Tab狀態
             function ResetTabState() {
                 //重置Class
@@ -380,6 +406,54 @@
             //問題
             function QuestionPage() {
                 state = "Question";
+                var postData = {
+                    "questionnaireID": questionnaireID
+                }
+                $.ajax({
+                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                    method: "POST",
+                    data: postData,
+                    success: function (objData) {
+                        ResetTabState();
+                        //切換為指定TAB
+                        SetTab(state);
+
+
+
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                        alert("連線失敗，請聯絡管理員。");
+                    }
+                });
+            }
+            //填寫資料
+            function UserData() {
+                state = "UserData";
+                var postData = {
+                    "questionnaireID": questionnaireID
+                }
+                $.ajax({
+                    url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
+                    method: "POST",
+                    data: postData,
+                    success: function (objData) {
+                        ResetTabState();
+                        //切換為指定TAB
+                        SetTab(state);
+
+
+
+                    },
+                    error: function (msg) {
+                        console.log(msg);
+                        alert("連線失敗，請聯絡管理員。");
+                    }
+                });
+            }
+            //統計
+            function Statistics() {
+                state = "Statistics";
                 var postData = {
                     "questionnaireID": questionnaireID
                 }
