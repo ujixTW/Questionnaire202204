@@ -215,8 +215,7 @@
                     <tr class="lg">
                         <td>種類</td>
                         <td>
-                            <asp:DropDownList ID="listCommonlyQuestionType" runat="server" AutoPostBack="true">
-                                <asp:ListItem Selected="True" Value="">自訂問題</asp:ListItem>
+                            <asp:DropDownList ID="listCommonlyQuestionType" runat="server" OnSelectedIndexChanged="listCommonlyQuestionType_SelectedIndexChanged" AutoPostBack="true">
                             </asp:DropDownList>
                         </td>
                     </tr>
