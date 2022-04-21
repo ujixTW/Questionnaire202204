@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="Detail.aspx.cs" Inherits="Questionnaire202204.SystemAdmin.Detail" %>
 
+<%@ Register Src="~/ShareControls/ucDeleteButton.ascx" TagPrefix="uc1" TagName="ucDeleteButton" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         /*問卷CSS*/
@@ -29,10 +32,13 @@
         /*問卷CSS結束*/
 
         /*問題CSS*/
+        #questionContent {
+            padding: 0px 50px;
+        }
+
         #questionEditArea {
             height: 45%;
             width: 100%;
-            padding: 4px 10px 0px 50px;
         }
 
             #questionEditArea td {
@@ -135,7 +141,7 @@
                     <td class="txtInputTitle">問題名稱</td>
                     <td>
                         <asp:TextBox ID="txtQuestionnaireTitle" CssClass="txtInput" runat="server" MaxLength="50" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
-                        
+
                         <asp:Literal ID="ltlQuestionnaireTitleMsg" runat="server" Visible="false">
                             <p class="errorMsg">
                                 此欄位為必填。
@@ -147,14 +153,14 @@
                     <td class="txtInputTitle">描述內容</td>
                     <td>
                         <asp:TextBox ID="txtQuestionnaireContent" CssClass="txtContentInput" runat="server" TextMode="MultiLine" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
-                       
+
                     </td>
                 </tr>
                 <tr>
                     <td class="txtInputTitle">開始時間</td>
                     <td>
                         <asp:TextBox ID="txtQuestionnaireStartDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
-                       
+
                         <asp:Literal ID="ltlQuestionnaireStartDateMsg" runat="server" Visible="false">
                             <p class="errorMsg">
                             日期格式錯誤，請輸入包含年月日的日期，且日期介於今日即結束日期之間(若有填入結束時間)，並以 - / 空格 任一種符號隔開年月日。
@@ -167,7 +173,7 @@
                     <td class="txtInputTitle">結束時間</td>
                     <td>
                         <asp:TextBox ID="txtQuestionnaireEndDate" CssClass="txtInput" runat="server" OnTextChanged="txtQuestionnaire_TextChanged" AutoPostBack="true"></asp:TextBox>
-                        
+
                         <br />
                         <asp:Literal ID="ltlQuestionnaireEndDateMsg" runat="server" Visible="false">
                             <p class="errorMsg">
@@ -179,7 +185,7 @@
                 <tr>
                     <td class="txtInputTitle"></td>
                     <td>
-                       
+
                         <asp:CheckBox ID="checkIsEnable" runat="server" OnCheckedChanged="checkIsEnable_CheckedChanged" />
                         已啟用
                     </td>
@@ -193,7 +199,7 @@
                         <asp:Button ID="btnQuestionnaireCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
                     <li>
-                        <asp:Button ID="btnQuestionnaireSave" runat="server" Text="確定" OnClick="btnSave_Click" />
+                        <asp:Button ID="btnQuestionnaireSave" runat="server" Text="送出" OnClick="btnSave_Click" />
                     </li>
                 </ul>
             </div>
@@ -209,17 +215,9 @@
                     <tr class="lg">
                         <td>種類</td>
                         <td>
-                            <asp:DropDownList ID="listCommonlyQuestionType" runat="server"></asp:DropDownList>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="btnCommonlyQuestionType" data-bs-toggle="dropdown" aria-expanded="false">
-                                    自訂問題
-                                </button>
-                                <ul id="ulCommonlyQuestion" class="dropdown-menu" aria-labelledby="btnCommonlyQuestionType">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
+                            <asp:DropDownList ID="listCommonlyQuestionType" runat="server" AutoPostBack="true">
+                                <asp:ListItem Selected="True" Value="">自訂問題</asp:ListItem>
+                            </asp:DropDownList>
                         </td>
                     </tr>
 
@@ -227,8 +225,16 @@
                         <td>問題</td>
                         <td>
                             <asp:TextBox ID="txtQuestionContent" runat="server"></asp:TextBox>&emsp;
-                            <asp:DropDownList ID="listQuestionType" runat="server"></asp:DropDownList>&emsp;
-                            <input type="checkbox" id="checkIsRequired" runat="server" />&nbsp;
+                            <%--問題類型選單--%>
+                            <asp:DropDownList ID="listQuestionType" runat="server">
+                                <asp:ListItem Selected="True" Value="1">文字方塊</asp:ListItem>
+                                <asp:ListItem Value="2">文字方塊 (數字)</asp:ListItem>
+                                <asp:ListItem Value="3">文字方塊(Email)</asp:ListItem>
+                                <asp:ListItem Value="4">文字方塊 (日期)</asp:ListItem>
+                                <asp:ListItem Value="5">單選方塊</asp:ListItem>
+                                <asp:ListItem Value="6">複選方塊</asp:ListItem>
+                            </asp:DropDownList>&emsp;
+                            <asp:CheckBox ID="checkIsRequired" runat="server" />&nbsp;
                             必填
                         </td>
                     </tr>
@@ -238,12 +244,13 @@
                         <td>
                             <asp:TextBox ID="txtQuestionOption" runat="server"></asp:TextBox>&emsp;
                             (多個答案以 ; 分隔)&emsp;
-                            <asp:Button ID="btnAddQuestion" runat="server" Text="加入" />
+                            <asp:Button ID="btnAddQuestion" runat="server" Text="加入" OnClick="btnAddQuestion_Click" />
                         </td>
                     </tr>
                 </table>
             </div>
             <br />
+            <uc1:ucDeleteButton runat="server" ID="ucDeleteButton" />
             <%--選擇或刪除問題的區域--%>
             <div id="questionChoiseArea">
 
@@ -261,24 +268,6 @@
                     </thead>
                     <%--表格內容--%>
                     <tbody id="tbodyQuestionList">
-                        <%--<asp:Repeater ID="rptQusList" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="checkboxQus" value="<%# Eval("QuestionID") %>" /></td>
-                                    <td><%# Eval("NO") %></td>
-                                    <td><%# Eval("ShortQuestionContent") %></td>
-                                    <td><%# Eval("QusTypeText") %></td>
-                                    <td>
-                                        <input type="checkbox" checked="<%# Eval("IsRequired") %>" onclick="return false" /></td>
-                                    <td></td>
-                                </tr>
-                            </ItemTemplate>
-                        </asp:Repeater>--%>
-                        <%--查無資料--%>
-                        <%--<tr id="trNoData" runat="server" visible="false">
-                            <td align="center" colspan="6">查無資料</td>
-                        </tr>--%>
                     </tbody>
                 </table>
             </div>
@@ -290,7 +279,7 @@
                         <asp:Button ID="btnQuestionListCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
                     <li>
-                        <asp:Button ID="btnQuestionListSave" runat="server" Text="確定" />
+                        <asp:Button ID="btnQuestionListSave" runat="server" Text="送出" />
                     </li>
                 </ul>
             </div>
@@ -437,17 +426,15 @@
                     ResetTabState();
                     //切換為指定TAB
                     SetTab(state);
-
-                    //變更DropDownList
-                    var qusCommonlyDropDownText = "";
-                    for (var item in objData) {
-                        qusCommonlyDropDownText += `<li><a class="dropdown-item" href="#">${item}</a></li>`
-                    }
-
+                    
                     //變更問題清單
                     var qusListText = "";
-                    if (objData.Count != 0) {
-                        for (var item in objData) {
+                    if (objData.length != 0) {
+                        for (var item of objData) {
+                            var isRequiredCheckText = "";
+                            if (item.IsRequired) {
+                                isRequiredCheckText = " checked='checked'";
+                            }
                             qusListText += `
                                         <tr>
                                             <td>
@@ -456,17 +443,15 @@
                                             <td>${item.ShortQuestionContent}</td>
                                             <td>${item.QusTypeText}</td>
                                             <td>
-                                                <input type="checkbox" checked="${item.IsRequired}" onclick="return false" /></td>
-                                            <td></td>
+                                                <input type="checkbox" ${isRequiredCheckText} onclick="return false" /></td>
+                                            <td>
+                                                <a href="Detail.aspx?ID=${questionnaireID}&State=${state}&QusID=${item.QuestionID}">編輯</a>
+                                            </td>
                                         </tr>
                                         `;
                         }
                     } else {
-                        qusListText = `
-                                    <tr runat="server" visible="false">
-                                        <td align="center" colspan="6">查無資料</td>
-                                    </tr>
-                                    `;
+                        qusListText = `<tr><td align='center' colspan='6'>查無資料</td></tr>`;
                     }
                     $("#tbodyQuestionList").empty();
                     $("#tbodyQuestionList").append(qusListText);
@@ -527,7 +512,9 @@
             });
         }
 
-
+        function a_click() {
+            alert('aaaa');
+        }
     </script>
 
 </asp:Content>

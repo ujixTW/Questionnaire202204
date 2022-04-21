@@ -1,4 +1,5 @@
 ﻿using Questionnaire202204.Managers;
+using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Questionnaire202204.ShareControls
     {
         private static List<Guid> _questionnaireIDList = new List<Guid>();
         private static List<string> _questionIDList = new List<string>();
-        private static string[] _UrlArray = new string[] { "List.aspx","Detail.aspx"};
+        private static string[] _UrlArray = new string[] { "List.aspx", "Detail.aspx" };
         //當前頁數，對應_UrlArray位置的值
         private static int _page = -1;
 
@@ -20,7 +21,7 @@ namespace Questionnaire202204.ShareControls
         /// 判斷現在為哪個頁面
         /// </summary>
         /// <param name="page">現在的頁面</param>
-        private void _PageCheck( out int page)
+        private void _PageCheck(out int page)
         {
             var url = this.Request.RawUrl;
             for (var i = 0; i < _UrlArray.Length; i++)
@@ -43,7 +44,7 @@ namespace Questionnaire202204.ShareControls
         {
             _PageCheck(out _page);
 
-            switch(_page)
+            switch (_page)
             {
                 case 0:
                     _ShowWindowAdminQuestionnaireList();
@@ -104,7 +105,7 @@ namespace Questionnaire202204.ShareControls
         {
             if (sender == this.btnDeleteYes)
             {
-                switch(_page)
+                switch (_page)
                 {
                     case 0:
                         _DeleteAdminQuestionnaireList();
@@ -137,12 +138,31 @@ namespace Questionnaire202204.ShareControls
         /// </summary>
         private void _DeleteAdminQuestionList()
         {
+            var questionnaireID = this.Request.QueryString["ID"];
             if (_questionIDList.Count != 0)
             {
-                var QuestionnaireIDText = this.Request.QueryString["ID"];
-                Guid questionnaireID = Guid.Parse(QuestionnaireIDText);
-                QuestionManager.DeleteQuestionList(_questionIDList,questionnaireID);
+                List<QuestionModel> modelList = (List<QuestionModel>)this.Session["questionDataList"];
+                for (var i = 0; i < _questionIDList.Count; i++)
+                {
+                    for (var j = 0; j < modelList.Count; j++)
+                    {
+                        if (_questionIDList[i] == modelList[j].QuestionID)
+                        {
+                            modelList.RemoveAt(j);
+                            j -= 1;
+                            break;
+                        }
+                    }
+                }
+                for (var i = 0; i < modelList.Count; i++)
+                {
+                    modelList[i].NO = i + 1;
+                }
+                this.Session["questionDataList"] = modelList;
+
             }
+            //重新整理以更新畫面
+            Response.Redirect(Request.Path + $"?ID={questionnaireID}&State=Question");
         }
 
     }

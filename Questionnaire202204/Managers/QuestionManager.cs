@@ -11,6 +11,50 @@ namespace Questionnaire202204.Managers
     public class QuestionManager
     {
         //增加
+        public static void SaveQuestionList(List<QuestionModel> questionList)
+        {
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = "";
+            for (var i = 0; i < questionList.Count; i++)
+            {
+                commandText += $@"
+                                INSERT INTO [Question]
+                                    ( [QuestionID], [QuestionnaireID], [NO], [Type], [QuestionContent], [OptionContent], [IsRequired] )
+                                VALUES
+                                    ( @QuestionID{i}, @QuestionnaireID, @NO{i}, @QusType{i}, @QuestionContent{i}, @OptionContent{i}, @IsRequired{i} )
+                                ";
+            }
+            
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                       for (var i = 0; i < questionList.Count; i++)
+                        {
+                            command.Parameters.AddWithValue("@QuestionID" + i, questionList[i].QuestionID);
+                            command.Parameters.AddWithValue("@QuestionnaireID", questionList[i].QuestionnaireID);
+                            command.Parameters.AddWithValue("@NO" + i, questionList[i].NO);
+                            command.Parameters.AddWithValue("@QusType" + i, questionList[i].QusType);
+                            command.Parameters.AddWithValue("@QuestionContent" + i, questionList[i].QuestionContent);          
+                            command.Parameters.AddWithValue("@OptionContent" + i, questionList[i].OptionContent);
+                            command.Parameters.AddWithValue("@IsRequired" + i, questionList[i].IsRequired);
+                        }
+                        conn.Open();
+                        command.ExecuteNonQuery();
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.CreateQuestionnaireData", ex);
+                throw;
+            }
+        }
         //刪除
         /// <summary>
         /// 軟刪除所選擇的問題

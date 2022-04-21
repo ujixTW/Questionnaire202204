@@ -41,6 +41,7 @@ namespace Questionnaire202204.API
                 context.Response.Write(jsonText);
                 return;
             }
+
             //問題
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("Question", context.Request.QueryString["Page"], true) == 0)
@@ -60,6 +61,8 @@ namespace Questionnaire202204.API
                     jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(questionDataList);
                     //將資料存入session
                     context.Session["questionDataList"] = questionDataList;
+                    //紀錄DB內問題清單長度
+                    context.Session["DBQuestionDataListCount"] = questionDataList.Count;
                 }
 
 
@@ -67,6 +70,7 @@ namespace Questionnaire202204.API
                 context.Response.Write(jsonText);
                 return;
             }
+
             //填寫資料
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("UserData", context.Request.QueryString["Page"], true) == 0)
@@ -74,6 +78,7 @@ namespace Questionnaire202204.API
 
                 return;
             }
+
             //統計
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                 string.Compare("Statistics", context.Request.QueryString["Page"], true) == 0)
