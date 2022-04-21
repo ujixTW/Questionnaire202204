@@ -10,10 +10,15 @@ using System.Web.UI.WebControls;
 
 namespace Questionnaire202204.SystemAdmin
 {
+
     public partial class Detail : System.Web.UI.Page
     {
+        //存有session
+        //questionnaireData 問卷頁面資料
+        //questionDataList 問題頁面清單資料
+        //commonlyQuestionList 常用問題資料清單
+
         public Guid questionnaireID;
-        //class dropDownDeta { public string type { get; set; } public string id { get; set; } }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -54,69 +59,7 @@ namespace Questionnaire202204.SystemAdmin
         }
 
 
-        /// <summary>
-        /// 問題頁面，自動套用資料進新增、詳細編輯問題的區域
-        /// </summary>
-        private void _InputQuestionEditAreaDeta()
-        {
-            //編輯中的問題ID
-            var qusID = this.Request.QueryString["QusID"];
-            //問題
-            QuestionModel question = new QuestionModel();
-            //問題清單
-            List<QuestionModel> qusList = (List<QuestionModel>)this.Session["questionDataList"];
-            var qusListCount = (qusList == null) ? 0 : qusList.Count;
-            //找到是哪筆問題
-            for (var i = 0; i < qusListCount; i++)
-            {
-                if (qusList[i].QuestionID == qusID)
-                {
-                    question = qusList[i];
-                    i = qusList.Count + 10;
-                }
-            }
-
-            //套用資料進DropDownList
-            //建立DropDownList用臨時DataTable
-            DataTable dropDownData = new DataTable();
-            dropDownData.Columns.Add(new DataColumn("Text", typeof(string)));
-            dropDownData.Columns.Add(new DataColumn("Value", typeof(string)));
-            //代入自訂/編輯問題至臨時DataTable中
-            DataRow customizeData = dropDownData.NewRow();
-            customizeData["Text"] = "自訂問題";
-            customizeData["Value"] = qusID;
-            dropDownData.Rows.Add(customizeData);
-            //判斷session中是否有commonlyQuestion資料
-            List<CommonlyQuestionModel> commonlyQuestionModelList = new List<CommonlyQuestionModel>();
-            if (this.Session["commonlyQuestionList"] != null)
-            {
-                commonlyQuestionModelList = (List<CommonlyQuestionModel>)this.Session["commonlyQuestionList"];
-            }else
-            {
-                commonlyQuestionModelList = CommonlyQuestionManager.GetCommonlyQuestionList();
-                this.Session["commonlyQuestionList"] = commonlyQuestionModelList;
-            }
-            //將commonlyQuestion資料代入臨時DataTable中
-            for (var i = 0; i < commonlyQuestionModelList.Count; i++)
-            {
-                DataRow data = dropDownData.NewRow();
-                data["Text"] = commonlyQuestionModelList[i].Name;
-                data["Value"] = commonlyQuestionModelList[i].QuestionID;
-                dropDownData.Rows.Add(data);
-            }
-            //套用資料進DropDownList
-            this.listCommonlyQuestionType.DataSource = dropDownData;
-            this.listCommonlyQuestionType.DataTextField = "Text";
-            this.listCommonlyQuestionType.DataValueField = "Value";
-            this.listCommonlyQuestionType.DataBind();
-
-            //更新其他表格
-            this.txtQuestionContent.Text = question.QuestionContent;
-            this.listQuestionType.SelectedIndex = question.QusType - 1;
-            this.checkIsRequired.Checked = question.IsRequired;
-            this.txtQuestionOption.Text = question.OptionContent;
-
-        }
+        #region 問卷頁簽
 
         /// <summary>
         /// 取消對問卷的改動並導向清單列表
@@ -236,6 +179,79 @@ namespace Questionnaire202204.SystemAdmin
             model.IsEnable = this.checkIsEnable.Checked;
             this.Session["questionnaireData"] = model;
         }
+
+        #endregion
+
+        #region 問題頁簽
+
+        /// <summary>
+        /// 問題頁面，自動套用資料進新增、詳細編輯問題的區域
+        /// </summary>
+        private void _InputQuestionEditAreaDeta()
+        {
+            //加入、編輯按鈕文字
+            var btnEditText = "加入";
+            //編輯中的問題ID
+            var qusID = this.Request.QueryString["QusID"];
+            //問題
+            QuestionModel question = new QuestionModel();
+            //問題清單
+            List<QuestionModel> qusList = (List<QuestionModel>)this.Session["questionDataList"];
+            var qusListCount = (qusList == null) ? 0 : qusList.Count;
+            //找到是哪筆問題
+            for (var i = 0; i < qusListCount; i++)
+            {
+                if (qusList[i].QuestionID == qusID)
+                {
+                    btnEditText = "編輯";
+                    question = qusList[i];
+                    i = qusList.Count + 10;
+                }
+            }
+
+            //套用資料進DropDownList
+            //建立DropDownList用臨時DataTable
+            DataTable dropDownData = new DataTable();
+            dropDownData.Columns.Add(new DataColumn("Text", typeof(string)));
+            dropDownData.Columns.Add(new DataColumn("Value", typeof(string)));
+            //代入自訂/編輯問題至臨時DataTable中
+            DataRow customizeData = dropDownData.NewRow();
+            customizeData["Text"] = "自訂問題";
+            customizeData["Value"] = qusID;
+            dropDownData.Rows.Add(customizeData);
+            //判斷session中是否有commonlyQuestion資料
+            List<CommonlyQuestionModel> commonlyQuestionModelList = new List<CommonlyQuestionModel>();
+            if (this.Session["commonlyQuestionList"] != null)
+            {
+                commonlyQuestionModelList = (List<CommonlyQuestionModel>)this.Session["commonlyQuestionList"];
+            }
+            else
+            {
+                commonlyQuestionModelList = CommonlyQuestionManager.GetCommonlyQuestionList();
+                this.Session["commonlyQuestionList"] = commonlyQuestionModelList;
+            }
+            //將commonlyQuestion資料代入臨時DataTable中
+            for (var i = 0; i < commonlyQuestionModelList.Count; i++)
+            {
+                DataRow data = dropDownData.NewRow();
+                data["Text"] = commonlyQuestionModelList[i].Name;
+                data["Value"] = commonlyQuestionModelList[i].QuestionID;
+                dropDownData.Rows.Add(data);
+            }
+            //套用資料進DropDownList
+            this.listCommonlyQuestionType.DataSource = dropDownData;
+            this.listCommonlyQuestionType.DataTextField = "Text";
+            this.listCommonlyQuestionType.DataValueField = "Value";
+            this.listCommonlyQuestionType.DataBind();
+
+            //更新其他表格
+            this.txtQuestionContent.Text = question.QuestionContent;
+            this.listQuestionType.SelectedIndex = question.QusType - 1;
+            this.checkIsRequired.Checked = question.IsRequired;
+            this.txtQuestionOption.Text = question.OptionContent;
+            this.btnAddQuestion.Text = btnEditText;
+        }
+
         //加入問卷問題按鈕
         protected void btnAddQuestion_Click(object sender, EventArgs e)
         {
@@ -246,6 +262,20 @@ namespace Questionnaire202204.SystemAdmin
             //取得問題ID及NO
             if (string.IsNullOrWhiteSpace(this.listCommonlyQuestionType.SelectedValue))
             {
+                //如果是新問題
+                var random = new Random();
+                var randomResult = string.Empty;
+                for (var i = 0; i < 6; i++)
+                {
+                    randomResult += random.Next(0, 10);
+                }
+                var temp = DateTime.Now.ToString("yyyyMMddhhmmss") + randomResult;
+                questionID = temp;
+                questionNO = questionDataList.Count + 1;
+            }
+            else if (Guid.TryParse(this.listCommonlyQuestionType.SelectedValue, out Guid qusGuid))
+            {
+                //如果是常用問題(新問題)
                 var random = new Random();
                 var randomResult = string.Empty;
                 for (var i = 0; i < 6; i++)
@@ -258,6 +288,7 @@ namespace Questionnaire202204.SystemAdmin
             }
             else
             {
+                //如果是舊問題
                 questionID = this.listCommonlyQuestionType.SelectedValue;
                 //取得NO
                 for (var i = 0; i < questionDataList.Count; i++)
@@ -304,35 +335,45 @@ namespace Questionnaire202204.SystemAdmin
             Response.Redirect(Request.Path + $"?ID={questionnaireID}&State=Question");
         }
 
+        //變換常用問題/自訂問題種類
         protected void listCommonlyQuestionType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //所選的問題ID
             string qusID = this.listCommonlyQuestionType.SelectedValue;
-            if (Guid.TryParse(qusID, out Guid commonlyQusID))
-            {
-
-            }else
-            {
-
-            }
             //問題
             QuestionModel question = new QuestionModel();
-            //問題清單
-            List<QuestionModel> qusList = (List<QuestionModel>)this.Session["questionDataList"];
-            var qusListCount = (qusList == null) ? 0 : qusList.Count;
-            //找到是哪筆問題
-            for (var i = 0; i < qusListCount; i++)
+
+            if (Guid.TryParse(qusID, out Guid commonlyQusID))
             {
-                if (qusList[i].QuestionID == qusID)
+                //常用問題
+                List<CommonlyQuestionModel> commonlyQusList = (List<CommonlyQuestionModel>)this.Session["commonlyQuestionList"];
+                //找到是套用哪筆常用問題
+                for (var i = 0; i < commonlyQusList.Count; i++)
                 {
-                    question = qusList[i];
-                    i = qusList.Count + 10;
+                    if (commonlyQusList[i].QuestionID == commonlyQusID)
+                    {
+                        question.QuestionContent = commonlyQusList[i].QuestionContent;
+                        question.QusType = commonlyQusList[i].Type;
+                        question.IsRequired = commonlyQusList[i].IsRequired;
+                        question.OptionContent = commonlyQusList[i].QuestionOption;
+                        i = commonlyQusList.Count + 10;
+                    }
                 }
             }
+            else
+            {
+                Response.Redirect(Request.Path + $"?ID={questionnaireID}&State=Question");
+            }
+
+
             //更新其他表格
             this.txtQuestionContent.Text = question.QuestionContent;
             this.listQuestionType.SelectedIndex = question.QusType - 1;
             this.checkIsRequired.Checked = question.IsRequired;
             this.txtQuestionOption.Text = question.OptionContent;
+            this.btnAddQuestion.Text = "加入";
         }
+
+        #endregion
     }
 }
