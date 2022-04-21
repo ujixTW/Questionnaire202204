@@ -93,8 +93,10 @@
     </Compile>
     <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Managers\CommonlyQuestionManager.cs" />
     <Compile Include="Managers\QuestionManager.cs" />
     <Compile Include="Managers\QuestionnaireManager.cs" />
+    <Compile Include="Models\CommonlyQuestionModel.cs" />
     <Compile Include="Models\QuestionModel.cs" />
     <Compile Include="Models\QuestionnaireModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
