@@ -30,5 +30,12 @@ namespace Questionnaire202204.Models
         public string Email { get; set; }
         public int Age { get; set; }
         public DateTime CreateTime { get; set; }
+        public string CreateTimeText 
+        { 
+            get 
+            { 
+                return CreateTime.ToString("yyyy/MM/dd HH:mm");
+                    } 
+        }
     }
 }

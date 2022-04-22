@@ -18,9 +18,12 @@ namespace Questionnaire202204.SystemAdmin
         //questionDataList 問題頁面清單資料
         //commonlyQuestionList 常用問題資料清單
         //DBQuestionDataListCount 紀錄DB內問題清單長度
+        //userDataList 單一問卷填寫紀錄
+        //userDataListCount 單一問卷填寫者數量
 
         public Guid QuestionnaireID;
         private const int _pageSize = 10;
+        public int PageIndex;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -391,23 +394,27 @@ namespace Questionnaire202204.SystemAdmin
         #endregion
 
         #region 填寫資料頁簽
+        /// <summary>
+        /// 判斷頁數並動態更改頁數選擇內容、QS的狀態
+        /// </summary>
+        /// <param name="pageState">網頁頁簽</param>
         private void _ChangeUserAnswerPage(string pageState)
         {
-            int pageIndex;  //目前頁數
-                            //判斷當前頁數
+            
+            //判斷當前頁數
             string pageIndexText = this.Request.QueryString["Page"];
             List<string> keyQS = new List<string>() { "ID", "State" };
             List<string> keyQSValue = new List<string>() { QuestionnaireID.ToString(), pageState };
-            if (string.IsNullOrWhiteSpace(pageIndexText) || !int.TryParse(pageIndexText, out pageIndex))
-                pageIndex = 1;
+            if (string.IsNullOrWhiteSpace(pageIndexText) || !int.TryParse(pageIndexText, out PageIndex))
+                PageIndex = 1;
             else
-                pageIndex = Convert.ToInt32(pageIndexText);
-            int totalRows;
-            //取得考題資料清單
-            var questionnaireList = UserAnswerManager.GetUserDataList(QuestionnaireID, out totalRows);
+                PageIndex = Convert.ToInt32(pageIndexText);
 
-            //this.ucPageChange.TotalRows = totalRows;
-            this.ucPageChange.PageIndex = pageIndex;
+            var sessionUserDataCount = this.Session["userDataListCount"];
+            int totalRows = (sessionUserDataCount != null) ? (int)sessionUserDataCount : 0;
+
+            this.ucPageChange.TotalRows = totalRows;
+            this.ucPageChange.PageIndex = PageIndex;
             this.ucPageChange.PageSize = _pageSize;
             this.ucPageChange.Bind(keyQS, keyQSValue);
         }

@@ -300,7 +300,8 @@
             
             <%--匯出按鈕--%>
             <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" />
-
+            <br />
+            <br />
             <%--使用者資料清單--%>
             <div id="userAnswerListArea">
 
@@ -502,7 +503,8 @@
         function UserAnswer() {
             state = "UserAnswer";
             var postData = {
-                "questionnaireID": questionnaireID
+                "questionnaireID": questionnaireID,
+                "page":'<%=this.PageIndex%>'
             }
             $.ajax({
                 url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
@@ -516,13 +518,14 @@
                     //變更問題清單
                     var ListText = "";
                     if (objData.length != 0) {
+
                         for (var item of objData) {
                             
                             ListText += `
                                         <tr>
                                             <td>${item.NO}</td>
                                             <td>${item.Name}</td>
-                                            <td>${item.CreateTime}</td>
+                                            <td>${item.CreateTimeText}</td>
                                             <td>
                                                 <a href="Detail.aspx?ID=${questionnaireID}&State=${state}&QusID=${item.UserID}">前往</a>
                                             </td>
@@ -533,7 +536,7 @@
                         qusListText = `<tr><td align='center' colspan='4'>查無資料</td></tr>`;
                     }
                     $("#tbodyUserAnsList").empty();
-                    $("#tbodyUserAnsList").append(qusListText);
+                    $("#tbodyUserAnsList").append(ListText);
 
                 },
                 error: function (msg) {

@@ -1,4 +1,5 @@
 ﻿using Questionnaire202204.Managers;
+using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,13 +80,25 @@ namespace Questionnaire202204.API
 
             //填寫資料
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
-                 string.Compare("UserData", context.Request.QueryString["Page"], true) == 0)
+                 string.Compare("UserAnswer", context.Request.QueryString["Page"], true) == 0)
             {
                 string jsonText;
-                if (context.Session["questionDataList"] != null)
+                if (context.Session["userDataList"] != null)
                 {
                     //從session取值
-                    var userDataList = context.Session["userDataList"];
+                    List<UserDataModel> sessionUserDataList = (List<UserDataModel>)context.Session["userDataList"];
+                    //取得現在頁數
+                    var nowPage = int.Parse(context.Request.Form["page"]);
+                    var pageDataStart = (nowPage - 1) * 10;
+                    //取得資料總筆數
+                    var totalDataCount = (int)context.Session["userDataListCount"];
+                    //計算迴圈i最大值
+                    var maxDataCount = ((totalDataCount - pageDataStart) < 9) ? totalDataCount : pageDataStart + 9;
+                    List<UserDataModel> userDataList = new List<UserDataModel>();
+                    for (var i = pageDataStart; i < maxDataCount; i++)
+                    {
+                        userDataList.Add(sessionUserDataList[i]);
+                    }
 
                     jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
                 }
@@ -93,7 +106,7 @@ namespace Questionnaire202204.API
                 {
                     //從DB取值，並輸出
                     Guid questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
-                    var userDataList = UserAnswerManager.GetUserDataList(questionnaireID,out int userDataListCount);
+                    var userDataList = UserAnswerManager.GetUserDataList(questionnaireID, out int userDataListCount);
                     jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
                     //將資料存入session
                     context.Session["userDataList"] = userDataList;
