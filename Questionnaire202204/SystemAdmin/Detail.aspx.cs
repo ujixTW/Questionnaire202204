@@ -404,7 +404,7 @@ namespace Questionnaire202204.SystemAdmin
                 pageIndex = Convert.ToInt32(pageIndexText);
             int totalRows;
             //取得考題資料清單
-            var questionnaireList = UserAnswerManager.GetUserDataList(QuestionnaireID, _pageSize, pageIndex, out totalRows);
+            var questionnaireList = UserAnswerManager.GetUserDataList(QuestionnaireID, out totalRows);
 
             //this.ucPageChange.TotalRows = totalRows;
             this.ucPageChange.PageIndex = pageIndex;

@@ -18,31 +18,20 @@ namespace Questionnaire202204.Managers
         /// 查詢單筆問卷的填寫紀錄
         /// </summary>
         /// <param name="questionnaireID">查詢問卷ID</param>
-        /// <param name="pageSize">每頁最大筆數</param>
-        /// <param name="pageIndex">目前頁數</param>
         /// <param name="totalRows">實際筆數</param>
-        public static List<UserDataModel> GetUserDataList(Guid questionnaireID, int pageSize, int pageIndex, out int totalRows)
+        public static List<UserDataModel> GetUserDataList(Guid questionnaireID, out int totalRows)
         {
-            //計算跳頁數
-            int skip = pageSize * (pageIndex - 1);
-            if (skip < 0)
-                skip = 0;
+           
 
             //連接資料庫用文字
             string connStr = ConfigHelper.GetConnectionString();
             string commandText = $@"
-                                 SELECT TOP ({pageSize})
-                                    [UserID], [QuestionnaireID], [Name], [Mobile],
+                                 SELECT
+                                    [UserID], [QuestionnaireID], [NO], [Name], [Mobile],
                                     [Email], [Age], [CreateTime]
                                  FROM [UserData]
                                  WHERE 
-                                       [QuestionnaireID] = @QuestionnaireID AND
-                                       [UserData].[UserID] NOT IN(
-                                             SELECT TOP {skip} [UserID]
-                                             FROM [UserData] 
-                                             WHERE [QuestionnaireID] = @QuestionnaireID
-                                             ORDER BY [CreateTime] DESC
-                                       ) 
+                                       [QuestionnaireID] = @QuestionnaireID 
                                  ORDER BY [CreateTime] DESC
                                  ";
             string commandCountText =
@@ -69,6 +58,7 @@ namespace Questionnaire202204.Managers
                             {
                                 UserID = (Guid)reader["UserID"],
                                 QuestionnaireID = (Guid)reader["QuestionnaireID"],
+                                NO=(int)reader["NO"],
                                 Name = reader["Name"] as string,
                                 Mobile = reader["Mobile"] as string,
                                 Email = reader["Email"] as string,

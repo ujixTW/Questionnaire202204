@@ -16,6 +16,8 @@ namespace Questionnaire202204.API
         //questionDataList 問題頁面清單資料
         //commonlyQuestionList 常用問題資料清單
         //DBQuestionDataListCount 紀錄DB內問題清單長度
+        //userDataList 單一問卷填寫紀錄
+        //userDataListCount 單一問卷填寫者數量
 
         public void ProcessRequest(HttpContext context)
         {
@@ -79,7 +81,29 @@ namespace Questionnaire202204.API
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("UserData", context.Request.QueryString["Page"], true) == 0)
             {
+                string jsonText;
+                if (context.Session["questionDataList"] != null)
+                {
+                    //從session取值
+                    var userDataList = context.Session["userDataList"];
 
+                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
+                }
+                else
+                {
+                    //從DB取值，並輸出
+                    Guid questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
+                    var userDataList = UserAnswerManager.GetUserDataList(questionnaireID,out int userDataListCount);
+                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
+                    //將資料存入session
+                    context.Session["userDataList"] = userDataList;
+                    //紀錄資料總數
+                    context.Session["userDataListCount"] = userDataListCount;
+                }
+
+
+                context.Response.ContentType = "application/json";
+                context.Response.Write(jsonText);
                 return;
             }
 

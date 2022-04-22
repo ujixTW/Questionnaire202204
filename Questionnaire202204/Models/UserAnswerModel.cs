@@ -23,6 +23,8 @@ namespace Questionnaire202204.Models
     {
         public Guid UserID { get; set; }
         public Guid QuestionnaireID { get; set; }
+        
+        public int NO { get; set; }
         public string Name { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
