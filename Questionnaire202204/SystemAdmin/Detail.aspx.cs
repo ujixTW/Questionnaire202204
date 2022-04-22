@@ -17,6 +17,7 @@ namespace Questionnaire202204.SystemAdmin
         //questionnaireData 問卷頁面資料
         //questionDataList 問題頁面清單資料
         //commonlyQuestionList 常用問題資料清單
+        //DBQuestionDataListCount 紀錄DB內問題清單長度
 
         public Guid questionnaireID;
 
@@ -58,8 +59,31 @@ namespace Questionnaire202204.SystemAdmin
 
         }
 
+        /// <summary>
+        /// 儲存資料
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            if (sender == this.btnQuestionnaireSave)
+            {
+                QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
+                if (model.StartTime > model.EndTime)
+                {
+                    this.ltlSaveFailMsg.Visible = true;
+                    return;
+                }
+                QuestionnaireManager.SaveQuestionnaireData(model);
+            }
+            else if (sender == this.btnQuestionListSave)
+            {
+                List<QuestionModel> models = (List<QuestionModel>)this.Session["questionDataList"];
+                QuestionManager.UpDateQuestionList(models, (int)this.Session["DBQuestionDataListCount"]);
+            }
+            this.ltlSaveMsg.Visible = true;
 
-        #region 問卷頁簽
+        }
 
         /// <summary>
         /// 取消對問卷的改動並導向清單列表
@@ -71,26 +95,9 @@ namespace Questionnaire202204.SystemAdmin
             this.Session.Clear();
             Response.Redirect("List.aspx");
         }
-        /// <summary>
-        /// 儲存資料
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void btnSave_Click(object sender, EventArgs e)
-        {
-            if (sender == this.btnQuestionnaireSave)
-            {
-                QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
-                QuestionnaireManager.SaveQuestionnaireData(model);
-            }
-            else if (sender == this.btnQuestionListSave)
-            {
-                List<QuestionModel> models = (List<QuestionModel>)this.Session["questionDataList"];
 
-            }
-            this.ltlSaveMsg.Visible = true;
+        #region 問卷頁簽
 
-        }
         //變更問卷文字方塊內文字
         protected void txtQuestionnaire_TextChanged(object sender, EventArgs e)
         {

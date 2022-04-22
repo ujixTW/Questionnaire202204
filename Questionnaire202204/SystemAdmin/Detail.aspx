@@ -84,6 +84,14 @@
 
         /*問題CSS結束*/
 
+        /*填寫資料CSS開始*/
+
+        #userAnswerContent{
+            padding:20px 30px;
+        }
+
+        /*填寫資料CSS結束*/
+
         #myTabContent {
             padding: 10px;
         }
@@ -96,7 +104,7 @@
             display: inline;
             float: left;
             width: 50%;
-            height: 10%;
+            height: 60px;
             text-align: right;
             padding: 0px 10px;
         }
@@ -278,7 +286,7 @@
                         <asp:Button ID="btnQuestionListCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
                     <li>
-                        <asp:Button ID="btnQuestionListSave" runat="server" Text="送出" />
+                        <asp:Button ID="btnQuestionListSave" runat="server" Text="送出" OnClick="btnSave_Click" />
                     </li>
                 </ul>
             </div>
@@ -287,8 +295,8 @@
 
         <%--填寫資料--%>
         <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="userAnswerContent-tab">
-            <h1>填寫資料</h1>
-
+            
+            <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" />
         </div>
 
         <%--統計--%>
@@ -296,7 +304,8 @@
             <h1>統計</h1>
 
         </div>
-        <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false"><div style="text-align:right;margin:5px 0px;">儲存成功!</div></asp:Literal>
+        <asp:Literal ID="ltlSaveFailMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存失敗!</p></div></asp:Literal>
+        <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存成功!</p></div></asp:Literal>
     </div>
 
 
@@ -511,9 +520,7 @@
             });
         }
 
-        function a_click() {
-            alert('aaaa');
-        }
+        
     </script>
 
 </asp:Content>

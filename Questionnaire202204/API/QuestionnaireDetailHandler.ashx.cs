@@ -11,8 +11,12 @@ namespace Questionnaire202204.API
     /// </summary>
     public class QuestionnaireDetailHandler : IHttpHandler, System.Web.SessionState.IRequiresSessionState
     {
-        //儲存的session
-        //questionnaireData 問卷頁面資料, questionDataList 問題頁面清單資料
+        //存有session
+        //questionnaireData 問卷頁面資料
+        //questionDataList 問題頁面清單資料
+        //commonlyQuestionList 常用問題資料清單
+        //DBQuestionDataListCount 紀錄DB內問題清單長度
+
         public void ProcessRequest(HttpContext context)
         {
             //問卷

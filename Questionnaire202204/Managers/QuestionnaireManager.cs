@@ -304,7 +304,7 @@ namespace Questionnaire202204.Managers
                             model.NO = (int?)reader["NO"];
                             model.Title = reader["Title"] as string;
                             model.Briefly = reader["Briefly"] as string;
-                            model.StartTime = (DateTime)reader["StartTime"];
+                            model.StartTime = DateTime.Today;
                             model.EndTime = reader["EndTime"] as DateTime?;
                             model.IsEnable = (bool)reader["IsEnable"];
                         }
