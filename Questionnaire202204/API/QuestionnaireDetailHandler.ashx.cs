@@ -89,7 +89,7 @@ namespace Questionnaire202204.API
                     List<UserDataModel> sessionUserDataList = (List<UserDataModel>)context.Session["userDataList"];
                     //取得現在頁數
                     var nowPage = int.Parse(context.Request.Form["page"]);
-                    var pageDataStart = (nowPage - 1) * 10;
+                    var pageDataStart = (nowPage != 0) ? (nowPage - 1) * 10 : 0;
                     //取得資料總筆數
                     var totalDataCount = (int)context.Session["userDataListCount"];
                     //計算迴圈i最大值
