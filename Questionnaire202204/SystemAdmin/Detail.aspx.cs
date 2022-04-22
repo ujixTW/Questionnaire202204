@@ -19,7 +19,8 @@ namespace Questionnaire202204.SystemAdmin
         //commonlyQuestionList 常用問題資料清單
         //DBQuestionDataListCount 紀錄DB內問題清單長度
 
-        public Guid questionnaireID;
+        public Guid QuestionnaireID;
+        private const int _pageSize = 10;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -30,7 +31,7 @@ namespace Questionnaire202204.SystemAdmin
             if (!string.IsNullOrWhiteSpace(questionnaireIDText))
             {
                 //檢查QS傳遞內容是否為GUID
-                if (!Guid.TryParse(questionnaireIDText, out questionnaireID))
+                if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID))
                 {
                     //不符條件，送回列表頁
                     Response.Redirect("List.aspx");
@@ -53,11 +54,17 @@ namespace Questionnaire202204.SystemAdmin
                         //如果為問題頁面，自動套用資料進新增、詳細編輯問題的區域
                         _InputQuestionEditAreaDeta();
                         break;
+                    case "UserAnswer":
+                        //如果為填寫資料頁面，套用資料進切換頁面的UC中
+                        _ChangeUserAnswerPage(pageState);
+                        break;
                 }
 
             }
 
         }
+
+
 
         /// <summary>
         /// 儲存資料
@@ -319,7 +326,7 @@ namespace Questionnaire202204.SystemAdmin
                 QuestionModel model = new QuestionModel()
                 {
                     QuestionID = questionID,
-                    QuestionnaireID = questionnaireID,
+                    QuestionnaireID = QuestionnaireID,
                     NO = questionNO,
                     QusType = questionType,
                     QuestionContent = questionContent,
@@ -339,7 +346,7 @@ namespace Questionnaire202204.SystemAdmin
             //將資料存回session中
             this.Session["questionDataList"] = questionDataList;
             //重整以更新畫面
-            Response.Redirect(Request.Path + $"?ID={questionnaireID}&State=Question");
+            Response.Redirect(Request.Path + $"?ID={QuestionnaireID}&State=Question");
         }
 
         //變換常用問題/自訂問題種類
@@ -369,7 +376,7 @@ namespace Questionnaire202204.SystemAdmin
             }
             else
             {
-                Response.Redirect(Request.Path + $"?ID={questionnaireID}&State=Question");
+                Response.Redirect(Request.Path + $"?ID={QuestionnaireID}&State=Question");
             }
 
 
@@ -381,6 +388,29 @@ namespace Questionnaire202204.SystemAdmin
             this.btnAddQuestion.Text = "加入";
         }
 
+        #endregion
+
+        #region 填寫資料頁簽
+        private void _ChangeUserAnswerPage(string pageState)
+        {
+            int pageIndex;  //目前頁數
+                            //判斷當前頁數
+            string pageIndexText = this.Request.QueryString["Page"];
+            List<string> keyQS = new List<string>() { "ID", "State" };
+            List<string> keyQSValue = new List<string>() { QuestionnaireID.ToString(), pageState };
+            if (string.IsNullOrWhiteSpace(pageIndexText) || !int.TryParse(pageIndexText, out pageIndex))
+                pageIndex = 1;
+            else
+                pageIndex = Convert.ToInt32(pageIndexText);
+            int totalRows;
+            //取得考題資料清單
+            var questionnaireList = UserAnswerManager.GetUserDataList(QuestionnaireID, _pageSize, pageIndex, out totalRows);
+
+            //this.ucPageChange.TotalRows = totalRows;
+            this.ucPageChange.PageIndex = pageIndex;
+            this.ucPageChange.PageSize = _pageSize;
+            this.ucPageChange.Bind(keyQS, keyQSValue);
+        }
         #endregion
     }
 }

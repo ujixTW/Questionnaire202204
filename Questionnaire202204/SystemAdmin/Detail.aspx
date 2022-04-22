@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="Detail.aspx.cs" Inherits="Questionnaire202204.SystemAdmin.Detail" %>
 
 <%@ Register Src="~/ShareControls/ucDeleteButton.ascx" TagPrefix="uc1" TagName="ucDeleteButton" %>
+<%@ Register Src="~/ShareControls/ucPageChange.ascx" TagPrefix="uc1" TagName="ucPageChange" %>
+
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
@@ -55,39 +57,12 @@
             width: 100%;
         }
 
-        .tableQusList {
-            border: 3px solid #000;
-            width: 100%;
-        }
-
-            .tableQusList th {
-                border-left: 3px solid #000;
-                padding: 0px 3px;
-            }
-
-            .tableQusList td {
-                border-left: 3px solid #000;
-                padding: 3px;
-            }
-
-            .tableQusList > thead tr {
-                background-color: #bbb;
-            }
-
-            .tableQusList > tbody tr {
-                background-color: #ddd;
-            }
-
-            .tableQusList tr:nth-child(even) {
-                background-color: #fff;
-            }
-
         /*問題CSS結束*/
 
         /*填寫資料CSS開始*/
 
         #userAnswerContent{
-            padding:20px 30px;
+            padding:20px 100px 20px 30px;
         }
 
         /*填寫資料CSS結束*/
@@ -108,6 +83,33 @@
             text-align: right;
             padding: 0px 10px;
         }
+        /*清單固定格式*/
+        .tableList {
+            border: 3px solid #000;
+            width: 100%;
+        }
+
+            .tableList th {
+                border-left: 3px solid #000;
+                padding: 0px 3px;
+            }
+
+            .tableList td {
+                border-left: 3px solid #000;
+                padding: 3px;
+            }
+
+            .tableList > thead tr {
+                background-color: #bbb;
+            }
+
+            .tableList > tbody tr {
+                background-color: #ddd;
+            }
+
+            .tableList tr:nth-child(even) {
+                background-color: #fff;
+            }
     </style>
 
 </asp:Content>
@@ -261,7 +263,7 @@
             <%--選擇或刪除問題的區域--%>
             <div id="questionChoiseArea">
 
-                <table class="tableQusList">
+                <table class="tableList">
                     <%--表格標題--%>
                     <thead>
                         <tr>
@@ -296,7 +298,31 @@
         <%--填寫資料--%>
         <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="userAnswerContent-tab">
             
+            <%--匯出按鈕--%>
             <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" />
+
+            <%--使用者資料清單--%>
+            <div id="userAnswerListArea">
+
+                <table class="tableList">
+                    <%--表格標題--%>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>姓名&emsp;</th>
+                            <th>填寫時間&emsp;&emsp;</th>
+                            <th>觀看細節</th>
+                        </tr>
+                    </thead>
+                    <%--表格內容--%>
+                    <tbody id="tbodyUserAnsList">
+                    </tbody>
+                </table>
+            </div>
+
+            <%--頁數切換--%>
+            <uc1:ucPageChange runat="server" ID="ucPageChange" />
+
         </div>
 
         <%--統計--%>
@@ -304,6 +330,7 @@
             <h1>統計</h1>
 
         </div>
+
         <asp:Literal ID="ltlSaveFailMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存失敗!</p></div></asp:Literal>
         <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存成功!</p></div></asp:Literal>
     </div>
@@ -311,7 +338,7 @@
 
 
     <script>
-        var questionnaireID ="<%=this.questionnaireID%>";
+        var questionnaireID ="<%=this.QuestionnaireID%>";
         var state = "<%=this.Request.QueryString["State"]%>";
 
         $(document).ready(function () {
@@ -486,7 +513,27 @@
                     //切換為指定TAB
                     SetTab(state);
 
-
+                    //變更問題清單
+                    var ListText = "";
+                    if (objData.length != 0) {
+                        for (var item of objData) {
+                            
+                            ListText += `
+                                        <tr>
+                                            <td>${item.NO}</td>
+                                            <td>${item.Name}</td>
+                                            <td>${item.CreateTime}</td>
+                                            <td>
+                                                <a href="Detail.aspx?ID=${questionnaireID}&State=${state}&QusID=${item.UserID}">前往</a>
+                                            </td>
+                                        </tr>
+                                        `;
+                        }
+                    } else {
+                        qusListText = `<tr><td align='center' colspan='4'>查無資料</td></tr>`;
+                    }
+                    $("#tbodyUserAnsList").empty();
+                    $("#tbodyUserAnsList").append(qusListText);
 
                 },
                 error: function (msg) {
