@@ -21,8 +21,6 @@ namespace Questionnaire202204.Managers
         /// <param name="totalRows">實際筆數</param>
         public static List<UserDataModel> GetUserDataList(Guid questionnaireID, out int totalRows)
         {
-           
-
             //連接資料庫用文字
             string connStr = ConfigHelper.GetConnectionString();
             string commandText = $@"
@@ -58,7 +56,7 @@ namespace Questionnaire202204.Managers
                             {
                                 UserID = (Guid)reader["UserID"],
                                 QuestionnaireID = (Guid)reader["QuestionnaireID"],
-                                NO=(int)reader["NO"],
+                                NO = (int)reader["NO"],
                                 Name = reader["Name"] as string,
                                 Mobile = reader["Mobile"] as string,
                                 Email = reader["Email"] as string,
@@ -80,6 +78,62 @@ namespace Questionnaire202204.Managers
             catch (Exception ex)
             {
                 Logger.WriteLog("Questionnaire202204.Manager.UserAnswerManager.GetUserDataList", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 取得使用者作答的詳細資料
+        /// </summary>
+        /// <param name="userID">使用者ID</param>
+        /// <param name="questionnaireID">問卷ID</param>
+        /// <returns></returns>
+        public static List<UserAnswerModel> GetUserAnswerList(Guid userID, Guid questionnaireID)
+        {
+            //連接資料庫用文字
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                SELECT
+                                   [UserID], [UserAnswer].[QuestionnaireID], [UserAnswer].[QuestionID], [Answer]
+                                FROM [UserAnswer]
+                                INNER JOIN [Question]
+                                ON [UserAnswer].[QuestionID]=[Question].[QuestionID]
+                                WHERE
+                                    [UserAnswer].[UserID] = @UserID AND
+                                    [UserAnswer].[QuestionnaireID] = @QuestionnaireID
+                                ORDER BY [Question].[NO]
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@UserID", userID);
+                        command.Parameters.AddWithValue("@QuestionnaireID", questionnaireID);
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        List<UserAnswerModel> UserAnswerList = new List<UserAnswerModel>();
+                        //將資料取出放到List中
+                        while (reader.Read())
+                        {
+                            UserAnswerModel info = new UserAnswerModel()
+                            {
+                                UserID = (Guid)reader["UserID"],
+                                QuestionnaireID = (Guid)reader["QuestionnaireID"],
+                                QuestionID = reader["QuestionID"] as string,
+                                Answer = reader["Answer"] as string
+                            };
+                            UserAnswerList.Add(info);
+                        }
+
+                        return UserAnswerList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.UserAnswerManager.GetUserAnswerList", ex);
                 throw;
             }
         }

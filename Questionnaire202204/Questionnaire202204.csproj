@@ -76,6 +76,7 @@
     <Content Include="Image\trash3-fill.svg" />
     <Content Include="JavaScript\bootstrap\bootstrap.min.js" />
     <Content Include="JavaScript\jquery\jquery.min.js" />
+    <Content Include="ReadMe.txt" />
     <Content Include="ShareControls\ucDeleteButton.ascx" />
     <Content Include="ShareControls\ucPageChange.ascx" />
     <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
@@ -98,6 +99,7 @@
     <Compile Include="Managers\QuestionnaireManager.cs" />
     <Compile Include="Managers\UserAnswerManager.cs" />
     <Compile Include="Models\CommonlyQuestionModel.cs" />
+    <Compile Include="Models\QuestionAndUserAnswerModel.cs" />
     <Compile Include="Models\QuestionModel.cs" />
     <Compile Include="Models\QuestionnaireModel.cs" />
     <Compile Include="Models\UserAnswerModel.cs" />

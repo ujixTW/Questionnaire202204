@@ -61,8 +61,12 @@
 
         /*填寫資料CSS開始*/
 
-        #userAnswerContent{
-            padding:20px 100px 20px 30px;
+        #userAnswerContent {
+            padding: 20px 100px 20px 30px;
+        }
+
+        .userAnswerDetail {
+            width: 100%;
         }
 
         /*填寫資料CSS結束*/
@@ -297,14 +301,14 @@
 
         <%--填寫資料--%>
         <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="userAnswerContent-tab">
-            
+
             <%--匯出按鈕--%>
             <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" />
-            <br />
-            <br />
+
             <%--使用者資料清單--%>
             <div id="userAnswerListArea">
-
+                <br />
+                <br />
                 <table class="tableList">
                     <%--表格標題--%>
                     <thead>
@@ -323,7 +327,7 @@
 
             <%--頁數切換--%>
             <uc1:ucPageChange runat="server" ID="ucPageChange" />
-
+            
         </div>
 
         <%--統計--%>
@@ -335,7 +339,6 @@
         <asp:Literal ID="ltlSaveFailMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存失敗!</p></div></asp:Literal>
         <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存成功!</p></div></asp:Literal>
     </div>
-
 
 
     <script>
@@ -462,7 +465,7 @@
                     ResetTabState();
                     //切換為指定TAB
                     SetTab(state);
-                    
+
                     //變更問題清單
                     var qusListText = "";
                     if (objData.length != 0) {
@@ -502,32 +505,41 @@
         //填寫資料
         function UserAnswer() {
             state = "UserAnswer";
+            ResetTabState();
+            //切換為指定TAB
+            SetTab(state);
+
+            if ('<%=string.IsNullOrEmpty(this.Request.QueryString["UserID"])%>' === 'True') {
+                UserAnswerList();
+            } else {
+                UserAnswerDetail();
+            }
+        }
+        //填寫資料 清單列表
+        function UserAnswerList() {
             var postData = {
                 "questionnaireID": questionnaireID,
-                "page":'<%=this.PageIndex%>'
+                "page": '<%=this.PageIndex%>'
             }
             $.ajax({
                 url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
                 method: "POST",
                 data: postData,
                 success: function (objData) {
-                    ResetTabState();
-                    //切換為指定TAB
-                    SetTab(state);
-
+                    var listText = "";
+                    var tableText = "";
                     //變更問題清單
-                    var ListText = "";
                     if (objData.length != 0) {
 
                         for (var item of objData) {
-                            
-                            ListText += `
+
+                            tableText += `
                                         <tr>
                                             <td>${item.NO}</td>
                                             <td>${item.Name}</td>
                                             <td>${item.CreateTimeText}</td>
                                             <td>
-                                                <a href="Detail.aspx?ID=${questionnaireID}&State=${state}&QusID=${item.UserID}">前往</a>
+                                                <a href="Detail.aspx?ID=${questionnaireID}&State=${state}&UserID=${item.UserID}">前往</a>
                                             </td>
                                         </tr>
                                         `;
@@ -535,8 +547,28 @@
                     } else {
                         qusListText = `<tr><td align='center' colspan='4'>查無資料</td></tr>`;
                     }
-                    $("#tbodyUserAnsList").empty();
-                    $("#tbodyUserAnsList").append(ListText);
+                    //變更整個填寫資料頁簽畫面
+                    listText = `
+                <br />
+                <br />
+                <table class="tableList">
+                    <%--表格標題--%>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>姓名&emsp;</th>
+                            <th>填寫時間&emsp;&emsp;</th>
+                            <th>觀看細節</th>
+                        </tr>
+                    </thead>
+                    <%--表格內容--%>
+                    <tbody id="tbodyUserAnsList">
+                        ${tableText}
+                    </tbody>
+                </table>`;
+
+                    $("#userAnswerListArea").empty();
+                    $("#userAnswerListArea").append(listText);
 
                 },
                 error: function (msg) {
@@ -545,6 +577,126 @@
                 }
             });
         }
+        //填寫資料 詳細資訊
+        function UserAnswerDetail() {
+
+            var postData = {
+                "questionnaireID": questionnaireID,
+                "page": '<%=this.PageIndex%>',
+                "userID":'<%=this.Request.QueryString["UserID"]%>'
+            }
+            $.ajax({
+                url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}&Detail=UserData`,
+                method: "POST",
+                data: postData,
+                success: function (objDataList) {
+                    var userData = objDataList.userData;
+                    var questionList = objDataList.questionList;
+                    var userAnswerList = objDataList.userAnswerList;
+
+                    var userDataText = `
+                        <table class="userAnswerDetail">
+                            <tr>
+                                <td>姓名</td>
+                                <td>
+                                    <input type="text" readonly="readonly" value="${userData.Name}" />
+            
+                                </td>
+                                <td>手機</td>
+                                <td>
+                                    <input type="text" readonly="readonly" value="${userData.Mobile}" />
+            
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>
+                                    <input type="text" readonly="readonly" value="${userData.Email}" />
+            
+                                </td>
+                                <td>年齡</td>
+                                <td>
+                                    <input type="text" readonly="readonly" value="${userData.Age}" />
+            
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td colspan="2">填寫時間:${userData.CreateTimeText}</td>
+                            </tr>
+                        </table>`;
+                    var questionText = "";
+                    for (var i = 0; i < questionList.length; i++) {
+                        //判斷該題是否為必填
+                        var isRequiredText = "";
+                        if (questionList[i].IsRequired === true && questionList[i].QusType < 5) {
+                            isRequiredText = "(必填欄位)";
+                        } else if (questionList[i].IsRequired === true && questionList[i].QusType >= 5) {
+                            isRequiredText = "(必填)";
+                        } else {
+                            isRequiredText = "";
+                        }
+
+                        //判斷該題題型以顯示對應格式
+                        var qusTypeText = "";
+                        switch (questionList[i].QusTypeText) {
+                            case "文字方塊":
+                            case "文字方塊 (數字) ":
+                            case "文字方塊(Email)":
+                            case "文字方塊 (日期)":
+                                qusTypeText = `<input type="text" readonly="readonly" value="${userAnswerList[i].Answer}" />`;
+                                break;
+                            case "單選方塊":
+                                var optionText = `${questionList[i].OptionContent}`.split(';');
+                                var answerText = `${userAnswerList[i].Answer}`.split(';');
+                                for (var i = 0; i < optionText.length;i++) {
+                                    if (answerText[i] === 'True') {
+                                        qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[i]}`;
+                                    } else {
+                                        qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[i]}`;
+                                    }
+                                }
+                                break;
+                            case "複選方塊":
+                                var optionText = `${questionList[i].OptionContent}`.split(';');
+                                var answerText = `${userAnswerList[i].Answer}`.split(';');
+                                for (var i = 0; i < optionText.length; i++) {
+                                    if (answerText[i] === 'True') {
+                                        qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[i]}`;
+                                    } else {
+                                        qusTypeText += `<input type="radio" onclick="return false" />${optionText[i]}`;
+                                    }
+                                }
+                                break;
+                        }
+
+                        questionText += `
+                            <%--題目--%>
+                            <p>${questionList[i].NO}.${questionList[i].QuestionContent}${isRequiredText}</p>
+                            <%--答案--%>
+                            ${qusTypeText}<br/>
+                            `;
+                    }
+                    //變更整個填寫資料頁簽畫面
+                    var detailText = `
+                        <div id="userDataArea">
+                            ${userDataText}
+                        </div>
+                        <div id="userAnswerDetailArea">${questionText}</div>`;
+
+
+                    $("#userAnswerListArea").empty();
+                    $("#userAnswerListArea").append(detailText);
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
+
+        }
+
         //統計
         function Statistics() {
             state = "Statistics";
@@ -570,7 +722,7 @@
             });
         }
 
-        
+
     </script>
 
 </asp:Content>

@@ -10,17 +10,10 @@ using System.Web.UI.WebControls;
 
 namespace Questionnaire202204.SystemAdmin
 {
+    //Session請參考ReadMe.txt
 
     public partial class Detail : System.Web.UI.Page
     {
-        //存有session
-        //questionnaireData 問卷頁面資料
-        //questionDataList 問題頁面清單資料
-        //commonlyQuestionList 常用問題資料清單
-        //DBQuestionDataListCount 紀錄DB內問題清單長度
-        //userDataList 單一問卷填寫紀錄
-        //userDataListCount 單一問卷填寫者數量
-
         public Guid QuestionnaireID;
         private const int _pageSize = 10;
         public int PageIndex;
@@ -400,7 +393,22 @@ namespace Questionnaire202204.SystemAdmin
         /// <param name="pageState">網頁頁簽</param>
         private void _ChangeUserAnswerPage(string pageState)
         {
-            
+            if (this.Request.QueryString["UserID"] != null)
+            {
+                //如果使用者ID格式錯誤就自動跳回清單
+                if (!Guid.TryParse(this.Request.QueryString["UserID"], out Guid id))
+                {
+                    Response.Redirect(Request.Path+$"?ID={QuestionnaireID}&State={pageState}");
+                    return;
+                }
+                this.btnOutPutUserData.Visible = false;
+                this.ucPageChange.Visible = false;
+                
+            }else
+            {
+                this.btnOutPutUserData.Visible = true;
+                this.ucPageChange.Visible = true;
+            }
             //判斷當前頁數
             string pageIndexText = this.Request.QueryString["Page"];
             List<string> keyQS = new List<string>() { "ID", "State" };

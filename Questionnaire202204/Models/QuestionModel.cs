@@ -69,6 +69,8 @@ namespace Questionnaire202204.Models
         /// 選項是否為必填
         /// </summary>
         public bool IsRequired { get; set; }
+       
+
     }
 
 }
