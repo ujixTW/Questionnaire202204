@@ -303,7 +303,7 @@
         <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="userAnswerContent-tab">
 
             <%--匯出按鈕--%>
-            <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" />
+            <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" OnClick="btnOutPutUserData_Click"/>
 
             <%--使用者資料清單--%>
             <div id="userAnswerListArea">

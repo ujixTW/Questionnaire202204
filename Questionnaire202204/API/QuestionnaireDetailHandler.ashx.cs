@@ -128,7 +128,7 @@ namespace Questionnaire202204.API
                     context.Session["DBQuestionDataListCount"] = UserAnswerPageData.questionList.Count;
                 }
                 //填入使用者答案至暫存資料
-                UserAnswerPageData.userAnswerList = UserAnswerManager.GetUserAnswerList(userID, questionnaireID);
+                UserAnswerPageData.userAnswerList = UserAnswerManager.GetUserAnswer(userID, questionnaireID);
 
 
                 jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(UserAnswerPageData);

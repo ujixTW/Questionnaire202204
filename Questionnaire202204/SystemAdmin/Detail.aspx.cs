@@ -398,13 +398,14 @@ namespace Questionnaire202204.SystemAdmin
                 //如果使用者ID格式錯誤就自動跳回清單
                 if (!Guid.TryParse(this.Request.QueryString["UserID"], out Guid id))
                 {
-                    Response.Redirect(Request.Path+$"?ID={QuestionnaireID}&State={pageState}");
+                    Response.Redirect(Request.Path + $"?ID={QuestionnaireID}&State={pageState}");
                     return;
                 }
                 this.btnOutPutUserData.Visible = false;
                 this.ucPageChange.Visible = false;
-                
-            }else
+
+            }
+            else
             {
                 this.btnOutPutUserData.Visible = true;
                 this.ucPageChange.Visible = true;
@@ -426,6 +427,37 @@ namespace Questionnaire202204.SystemAdmin
             this.ucPageChange.PageSize = _pageSize;
             this.ucPageChange.Bind(keyQS, keyQSValue);
         }
+        /// <summary>
+        /// 點擊匯出按鈕
+        /// </summary>
+        protected void btnOutPutUserData_Click(object sender, EventArgs e)
+        {
+            //獲得所有資料
+            var outPutToCsvModelList = new List<QuestionAndUserAnswerModel>();
+            var userDataList = (List<UserDataModel>)this.Session["userDataList"];
+            var allUserAnswerList = UserAnswerManager.GetUserAnswerList(QuestionnaireID);
+            for (var i = 0; i < userDataList.Count; i++)
+            {
+                var tempUserAnswerList = new List<UserAnswerModel>();
+                var questionCount = (int)this.Session["DBQuestionDataListCount"];
+                for (var j = i * questionCount; j < (int)this.Session["userDataListCount"] + (i * questionCount); i++)
+                {
+                    tempUserAnswerList.Add(allUserAnswerList[j]);
+                }
+                QuestionAndUserAnswerModel model = new QuestionAndUserAnswerModel()
+                {
+                    userData = userDataList[i],
+                    questionList = (List<QuestionModel>)this.Session["questionDataList"],
+                    userAnswerList = tempUserAnswerList
+                };
+            }
+
+            //整理所有資料
+            //輸出成CSV檔
+        }
+
         #endregion
+
+
     }
 }

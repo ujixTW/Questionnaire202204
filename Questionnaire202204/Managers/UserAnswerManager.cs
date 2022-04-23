@@ -88,7 +88,7 @@ namespace Questionnaire202204.Managers
         /// <param name="userID">使用者ID</param>
         /// <param name="questionnaireID">問卷ID</param>
         /// <returns></returns>
-        public static List<UserAnswerModel> GetUserAnswerList(Guid userID, Guid questionnaireID)
+        public static List<UserAnswerModel> GetUserAnswer(Guid userID, Guid questionnaireID)
         {
             //連接資料庫用文字
             string connStr = ConfigHelper.GetConnectionString();
@@ -110,6 +110,67 @@ namespace Questionnaire202204.Managers
                     using (SqlCommand command = new SqlCommand(commandText, conn))
                     {
                         command.Parameters.AddWithValue("@UserID", userID);
+                        command.Parameters.AddWithValue("@QuestionnaireID", questionnaireID);
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        List<UserAnswerModel> UserAnswerList = new List<UserAnswerModel>();
+                        //將資料取出放到List中
+                        while (reader.Read())
+                        {
+                            UserAnswerModel info = new UserAnswerModel()
+                            {
+                                UserID = (Guid)reader["UserID"],
+                                QuestionnaireID = (Guid)reader["QuestionnaireID"],
+                                QuestionID = reader["QuestionID"] as string,
+                                Answer = reader["Answer"] as string
+                            };
+                            UserAnswerList.Add(info);
+                        }
+
+                        return UserAnswerList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.UserAnswerManager.GetUserAnswer", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 取得該問卷所有使用者作答的詳細資料
+        /// </summary>
+        /// <param name="questionnaireID">問卷ID</param>
+        /// <returns></returns>
+        public static List<UserAnswerModel> GetUserAnswerList(Guid questionnaireID)
+        {
+            //連接資料庫用文字
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                    SELECT
+                                       [UserID], [User].[QuestionnaireID], [User].[QuestionID], [Answer]
+                                    FROM [Question]
+                                    INNER JOIN (
+                                    SELECT
+                                      [UserAnswer].[UserID], [UserAnswer].[QuestionnaireID], [UserAnswer].[QuestionID], [Answer],[NO]
+                                    FROM [UserAnswer]
+                                    INNER JOIN [UserData]
+                                    ON [UserAnswer].[UserID]=[UserData].[UserID]
+                                    WHERE
+                                        [UserAnswer].[QuestionnaireID] = @QuestionnaireID
+                                    )  AS [User]
+                                    ON [User].[QuestionID]=[Question].[QuestionID]
+                                    WHERE
+                                        [User].[QuestionnaireID] = @QuestionnaireID
+                                    ORDER BY [User].[NO] , [Question].[NO]
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
                         command.Parameters.AddWithValue("@QuestionnaireID", questionnaireID);
                         conn.Open();
                         SqlDataReader reader = command.ExecuteReader();
