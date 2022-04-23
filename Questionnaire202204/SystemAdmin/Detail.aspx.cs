@@ -1,9 +1,11 @@
-﻿using Questionnaire202204.Managers;
+﻿using Questionnaire202204.Helpers;
+using Questionnaire202204.Managers;
 using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -433,6 +435,7 @@ namespace Questionnaire202204.SystemAdmin
         protected void btnOutPutUserData_Click(object sender, EventArgs e)
         {
             //獲得所有資料
+            #region 獲得所有資料
             var outPutToCsvModelList = new List<QuestionAndUserAnswerModel>();
             var userDataList = (List<UserDataModel>)this.Session["userDataList"];
             var allUserAnswerList = UserAnswerManager.GetUserAnswerList(QuestionnaireID);
@@ -440,20 +443,39 @@ namespace Questionnaire202204.SystemAdmin
             {
                 var tempUserAnswerList = new List<UserAnswerModel>();
                 var questionCount = (int)this.Session["DBQuestionDataListCount"];
-                for (var j = i * questionCount; j < (int)this.Session["userDataListCount"] + (i * questionCount); i++)
+            var tempQuestionList = (List<QuestionModel>)this.Session["questionDataList"];
+                var answerCount = (i + 1) * questionCount;
+                //將資料切分成單一答題者
+                for (var j = i * questionCount; j < answerCount; j++)
                 {
                     tempUserAnswerList.Add(allUserAnswerList[j]);
                 }
+                //將資料放入暫存List
                 QuestionAndUserAnswerModel model = new QuestionAndUserAnswerModel()
                 {
                     userData = userDataList[i],
-                    questionList = (List<QuestionModel>)this.Session["questionDataList"],
-                    userAnswerList = tempUserAnswerList
+                    userAnswerList = tempUserAnswerList,
+                    questionList=tempQuestionList
                 };
+                outPutToCsvModelList.Add(model);
             }
+            #endregion
 
-            //整理所有資料
+
             //輸出成CSV檔
+            #region 輸出成CSV檔
+
+            string fillPath = $@"D:\tmp\問卷{this.QuestionnaireID}.csv";
+            string fillFoldPath = @"D:\tmp";
+            List<string> dataTextList = new List<string>();
+            dataTextList.Add(outPutToCsvModelList[0].CSVTitle());
+            foreach (var item in outPutToCsvModelList)
+            {
+                dataTextList.Add(item.UserAnswerToString());
+            }
+            CSVHelper.CSVGenerator(fillFoldPath, fillPath, dataTextList);
+            #endregion
+
         }
 
         #endregion

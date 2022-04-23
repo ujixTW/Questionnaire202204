@@ -22,5 +22,32 @@ namespace Questionnaire202204.Models
         /// 使用者回答List
         /// </summary>
         public List<UserAnswerModel> userAnswerList { get; set; }
+
+        /// <summary>
+        /// 將使用者資料與答案組成一個以，號分開的字串
+        /// </summary>
+        /// <returns>以，號組合使用者資料與答案的字串</returns>
+        public string UserAnswerToString()
+        {
+            var tempText = "";
+            foreach (var item in userAnswerList)
+            {
+                tempText += $",{item.Answer}";
+            }
+            return $"{userData.Name},{userData.Age},{userData.Mobile},{userData.Email}{tempText}";
+        }
+        /// <summary>
+        /// 將使用者資料項目名稱與題目組成一個以，號分開的字串
+        /// </summary>
+        /// <returns>以，號組合使用者資料項目名稱與題目的字串</returns>
+        public string CSVTitle()
+        {
+            var tempText = "";
+            foreach (var item in questionList)
+            {
+                tempText += $",{item.QuestionContent}";
+            }
+            return $"姓名,年齡,手機號碼,信箱{tempText}";
+        }
     }
 }

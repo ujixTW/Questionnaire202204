@@ -112,21 +112,7 @@ namespace Questionnaire202204.API
                         i = userDataList.Count + 10;
                     }
                 }
-                //存入問題清單至暫存資料
-                if (context.Session["questionDataList"] != null)
-                {
-                    //從session取值
-                    UserAnswerPageData.questionList = (List<QuestionModel>)context.Session["questionDataList"];
-                }
-                else
-                {
-                    //從DB取值，並輸出
-                    UserAnswerPageData.questionList = QuestionManager.GetQuestionList(questionnaireID);
-                    //將資料存入session
-                    context.Session["questionDataList"] = UserAnswerPageData.questionList;
-                    //紀錄DB內問題清單長度
-                    context.Session["DBQuestionDataListCount"] = UserAnswerPageData.questionList.Count;
-                }
+
                 //填入使用者答案至暫存資料
                 UserAnswerPageData.userAnswerList = UserAnswerManager.GetUserAnswer(userID, questionnaireID);
 
@@ -174,6 +160,17 @@ namespace Questionnaire202204.API
                     context.Session["userDataListCount"] = userDataListCount;
                 }
 
+                //存入問題清單至暫存資料
+                if (context.Session["questionDataList"] == null)
+                {
+                    var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
+                    //從DB取值，並輸出
+                    var questionList = QuestionManager.GetQuestionList(questionnaireID);
+                    //將資料存入session
+                    context.Session["questionDataList"] = questionList;
+                    //紀錄DB內問題清單長度
+                    context.Session["DBQuestionDataListCount"] = questionList.Count;
+                }
 
                 context.Response.ContentType = "application/json";
                 context.Response.Write(jsonText);
@@ -181,7 +178,7 @@ namespace Questionnaire202204.API
             }
 
         }
-        
+
         public bool IsReusable
         {
             get

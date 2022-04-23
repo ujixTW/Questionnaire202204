@@ -93,6 +93,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ConfigHelper.cs" />
+    <Compile Include="Helpers\CSVHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Managers\CommonlyQuestionManager.cs" />
     <Compile Include="Managers\QuestionManager.cs" />
