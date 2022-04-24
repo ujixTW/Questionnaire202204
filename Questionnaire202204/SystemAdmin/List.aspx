@@ -90,6 +90,7 @@
                     </td>
                     <td>
                         <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click" />
+                        <asp:Literal ID="ltlSearchErrorMsg" runat="server" Visible="false">搜尋格式錯誤!</asp:Literal>
                     </td>
                 </tr>
 

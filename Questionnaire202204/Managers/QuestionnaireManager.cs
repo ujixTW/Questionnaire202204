@@ -182,26 +182,18 @@ namespace Questionnaire202204.Managers
             {
                 whereCondition = " AND Title LIKE '%'+@keyword+'%' ";
             }
-            else
-            {
-                keyword = string.Empty;
-            }
 
-            //帶入起始時間並將輸入內容轉換為DateTime
-            string startDate = string.Empty;
+            //帶入起始時間
             string whatTimeStartCondition = string.Empty;
             if (!string.IsNullOrWhiteSpace(startTime))
             {
-                startDate = DateTime.Parse(startTime).ToString("yyyy-MM-dd");
                 whatTimeStartCondition = " AND StartTime >= @startDate ";
             }
 
-            //帶入結束時間並將輸入內容轉換為DateTime
-            string endDate = string.Empty;
+            //帶入結束時間
             string whatTimeEndCondition = string.Empty;
             if (!string.IsNullOrWhiteSpace(endTime))
             {
-                endDate = DateTime.Parse(endTime).ToString("yyyy-MM-dd");
                 whatTimeEndCondition = " AND EndTime <= @endDate ";
             }
 
@@ -234,8 +226,8 @@ namespace Questionnaire202204.Managers
                     using (SqlCommand command = new SqlCommand(commandText, conn))
                     {
                         command.Parameters.AddWithValue("@keyword", keyword);
-                        command.Parameters.AddWithValue("@startDate", startDate);
-                        command.Parameters.AddWithValue("@endDate", endDate);
+                        command.Parameters.AddWithValue("@startDate", startTime);
+                        command.Parameters.AddWithValue("@endDate", endTime);
                         conn.Open();
                         SqlDataReader reader = command.ExecuteReader();
                         List<QuestionnaireModel> QuestionnaireDataList = new List<QuestionnaireModel>();
