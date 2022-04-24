@@ -2,6 +2,8 @@
 
 <%@ Register Src="~/ShareControls/ucPageChange.ascx" TagPrefix="uc1" TagName="ucPageChange" %>
 <%@ Register Src="~/ShareControls/ucDeleteButton.ascx" TagPrefix="uc1" TagName="ucDeleteButton" %>
+<%@ Register Src="~/ShareControls/ucQuestionnaireSearchBar.ascx" TagPrefix="uc1" TagName="ucQuestionnaireSearchBar" %>
+
 
 
 
@@ -66,38 +68,9 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
     <%--搜尋欄位--%>
-    <div class="SearchBar">
-        <table>
-            <tbody>
-                <tr>
-                    <td>問卷標題</td>
-                    <%--標題文字搜尋--%>
-                    <td colspan="2">
-                        <asp:TextBox ID="txtSearchText" runat="server"></asp:TextBox>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>開始／結束</td>
-                    <%--開始時間--%>
-                    <td>
-                        <asp:TextBox ID="txtStartTime" runat="server"></asp:TextBox>
-                    </td>
-                    <%--結束時間--%>
-                    <td>
-                        <asp:TextBox ID="txtEndTime" runat="server"></asp:TextBox>
-                    </td>
-                    <td>
-                        <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click" />
-                        <asp:Literal ID="ltlSearchErrorMsg" runat="server" Visible="false">搜尋格式錯誤!</asp:Literal>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-
-    </div>
+    <uc1:ucQuestionnaireSearchBar runat="server" ID="ucQuestionnaireSearchBar" />
 
     <%--新增/刪除按鈕--%>
     <div class="DeleteAddBtnBar">

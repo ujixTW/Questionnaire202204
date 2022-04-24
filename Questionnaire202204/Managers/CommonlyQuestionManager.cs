@@ -11,6 +11,10 @@ namespace Questionnaire202204.Managers
     public class CommonlyQuestionManager
     {
         //增加
+        public static void CreateCommonlyQuestion()
+        {
+
+        }
         //刪除
         //修改
         //查詢

@@ -15,49 +15,13 @@ namespace Questionnaire202204.SystemAdmin
     {
 
         /// <summary>
-        /// txtSearchText 控制項。
+        /// ucQuestionnaireSearchBar 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearchText;
-
-        /// <summary>
-        /// txtStartTime 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStartTime;
-
-        /// <summary>
-        /// txtEndTime 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEndTime;
-
-        /// <summary>
-        /// btnSearch 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
-
-        /// <summary>
-        /// ltlSearchErrorMsg 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal ltlSearchErrorMsg;
+        protected global::Questionnaire202204.ShareControls.ucQuestionnaireSearchBar ucQuestionnaireSearchBar;
 
         /// <summary>
         /// ucDeleteButton 控制項。
