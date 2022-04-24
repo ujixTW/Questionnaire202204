@@ -202,8 +202,8 @@ namespace Questionnaire202204.Managers
                 command.Parameters.AddWithValue("@QuestionnaireID" + i, questionList[i].QuestionnaireID);
                 command.Parameters.AddWithValue("@NO" + i, questionList[i].NO);
                 command.Parameters.AddWithValue("@QusType" + i, questionList[i].QusType);
-                command.Parameters.AddWithValue("@QuestionContent" + i, questionList[i].QuestionContent);
-                command.Parameters.AddWithValue("@OptionContent" + i, questionList[i].OptionContent);
+                command.Parameters.AddWithValue("@QuestionContent" + i, (object)questionList[i].QuestionContent ?? DBNull.Value);
+                command.Parameters.AddWithValue("@OptionContent" + i, (object)questionList[i].OptionContent ?? DBNull.Value);
                 command.Parameters.AddWithValue("@IsRequired" + i, questionList[i].IsRequired);
             }
         }

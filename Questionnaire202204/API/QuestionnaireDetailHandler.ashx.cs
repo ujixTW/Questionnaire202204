@@ -15,6 +15,18 @@ namespace Questionnaire202204.API
         //Session請參考ReadMe.txt
         public void ProcessRequest(HttpContext context)
         {
+            //存入問題清單至暫存資料，供問題、填寫資料、統計頁簽使用
+            if (context.Session["questionDataList"] == null)
+            {
+                var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
+                //從DB取值，並輸出
+                var questionList = QuestionManager.GetQuestionList(questionnaireID);
+                //將資料存入session
+                context.Session["questionDataList"] = questionList;
+                //紀錄DB內問題清單長度
+                context.Session["DBQuestionDataListCount"] = questionList.Count;
+            }
+
             //問卷
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("Questionnaire", context.Request.QueryString["Page"], true) == 0)
@@ -47,23 +59,10 @@ namespace Questionnaire202204.API
                  string.Compare("Question", context.Request.QueryString["Page"], true) == 0)
             {
                 string jsonText;
-                if (context.Session["questionDataList"] != null)
-                {
-                    //從session取值
-                    var questionDataList = context.Session["questionDataList"];
-                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(questionDataList);
-                }
-                else
-                {
-                    //從DB取值，並輸出
-                    Guid questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
-                    var questionDataList = QuestionManager.GetQuestionList(questionnaireID);
-                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(questionDataList);
-                    //將資料存入session
-                    context.Session["questionDataList"] = questionDataList;
-                    //紀錄DB內問題清單長度
-                    context.Session["DBQuestionDataListCount"] = questionDataList.Count;
-                }
+
+                //從session取值
+                var questionDataList = context.Session["questionDataList"];
+                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(questionDataList);
 
 
                 context.Response.ContentType = "application/json";
@@ -82,7 +81,19 @@ namespace Questionnaire202204.API
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
             string.Compare("Statistics", context.Request.QueryString["Page"], true) == 0)
             {
+                string jsonText;
+                var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
 
+                var userAnswerStatistics = UserAnswerManager.GetAnswerStatisticsList(questionnaireID);
+                var answerStatisticsPageData = new QuestionAndAnswerStatisticsModel()
+                {
+                    questionList = (List<QuestionModel>)context.Session["questionDataList"],
+                    answerStatisticsList = userAnswerStatistics
+                };
+                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(answerStatisticsPageData);
+
+                context.Response.ContentType = "application/json";
+                context.Response.Write(jsonText);
                 return;
             }
 
@@ -98,7 +109,7 @@ namespace Questionnaire202204.API
             {
                 string jsonText;
                 //暫存使用者資料、問題清單、使用者回答的Model
-                var UserAnswerPageData = new QuestionAndUserAnswerModel();
+                var userAnswerPageData = new QuestionAndUserAnswerModel();
                 var userID = Guid.Parse(context.Request.Form["userID"]);
                 var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
 
@@ -108,16 +119,16 @@ namespace Questionnaire202204.API
                 {
                     if (userID == userDataList[i].UserID)
                     {
-                        UserAnswerPageData.userData = userDataList[i];
+                        userAnswerPageData.userData = userDataList[i];
                         i = userDataList.Count + 10;
                     }
                 }
-
+                userAnswerPageData.questionList = (List<QuestionModel>)context.Session["questionDataList"];
                 //填入使用者答案至暫存資料
-                UserAnswerPageData.userAnswerList = UserAnswerManager.GetUserAnswer(userID, questionnaireID);
+                userAnswerPageData.userAnswerList = UserAnswerManager.GetUserAnswer(userID, questionnaireID);
 
 
-                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(UserAnswerPageData);
+                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userAnswerPageData);
 
                 context.Response.ContentType = "application/json";
                 context.Response.Write(jsonText);
@@ -158,18 +169,6 @@ namespace Questionnaire202204.API
                     context.Session["userDataList"] = userDataList;
                     //紀錄資料總數
                     context.Session["userDataListCount"] = userDataListCount;
-                }
-
-                //存入問題清單至暫存資料
-                if (context.Session["questionDataList"] == null)
-                {
-                    var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
-                    //從DB取值，並輸出
-                    var questionList = QuestionManager.GetQuestionList(questionnaireID);
-                    //將資料存入session
-                    context.Session["questionDataList"] = questionList;
-                    //紀錄DB內問題清單長度
-                    context.Session["DBQuestionDataListCount"] = questionList.Count;
                 }
 
                 context.Response.ContentType = "application/json";

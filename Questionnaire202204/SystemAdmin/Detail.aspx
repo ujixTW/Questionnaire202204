@@ -123,7 +123,7 @@
     <%--標籤--%>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true" onclick="MyTab_Click('Questionnaire')">
+            <button class="nav-link" id="questionnaireContent-tab" data-bs-toggle="tab" data-bs-target="#questionnaireContent" type="button" role="tab" aria-controls="questionnaireContent" aria-selected="true" onclick="MyTab_Click('Questionnaire')">
                 問卷
             </button>
         </li>
@@ -148,7 +148,7 @@
     <div class="tab-content" id="myTabContent">
 
         <%--問卷--%>
-        <div class="tab-pane fade show active" id="questionnaireContent" role="tabpanel" aria-labelledby="questionnaireContent-tab">
+        <div class="tab-pane fade" id="questionnaireContent" role="tabpanel" aria-labelledby="questionnaireContent-tab">
 
             <table>
                 <tr>
@@ -303,23 +303,20 @@
         <div class="tab-pane fade" id="userAnswerContent" role="tabpanel" aria-labelledby="userAnswerContent-tab">
 
             <%--匯出按鈕--%>
-            <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" OnClick="btnOutPutUserData_Click"/>
+            <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" OnClick="btnOutPutUserData_Click" />
             <asp:Literal ID="ltlUserAnswerOutPutSuccessMsg" runat="server" Visible="false"><span class="errorMsg">輸出成功!</span></asp:Literal>
             <asp:Literal ID="ltlUserAnswerOutPutFailMsg" runat="server" Visible="false"><span class="errorMsg">沒有資料!</span></asp:Literal>
             <%--使用者資料清單--%>
             <div id="userAnswerListArea">
-                
             </div>
 
             <%--頁數切換--%>
             <uc1:ucPageChange runat="server" ID="ucPageChange" />
-            
+
         </div>
 
         <%--統計--%>
         <div class="tab-pane fade" id="statisticsContent" role="tabpanel" aria-labelledby="statisticsContent-tab">
-            
-
         </div>
 
         <asp:Literal ID="ltlSaveFailMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存失敗!</p></div></asp:Literal>
@@ -626,32 +623,38 @@
 
                         //判斷該題題型以顯示對應格式
                         var qusTypeText = "";
-                        switch (questionList[i].QusTypeText) {
-                            case "文字方塊":
-                            case "文字方塊 (數字) ":
-                            case "文字方塊(Email)":
-                            case "文字方塊 (日期)":
-                                qusTypeText = `<input type="text" readonly="readonly" value="${userAnswerList[i].Answer}" />`;
+                        switch (questionList[i].QusType) {
+                            /*文字方塊*/
+                            case 1:
+                            /*文字方塊 (數字) */
+                            case 2:
+                            /*文字方塊(Email)*/
+                            case 3:
+                            /*文字方塊 (日期)*/
+                            case 4:
+                                qusTypeText = `<input type="text" readonly="readonly" value="${userAnswerList[i].Answer}" /><br/>`;
                                 break;
-                            case "單選方塊":
+                            /*單選方塊*/
+                            case 5:
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 var answerText = `${userAnswerList[i].Answer}`.split(';');
-                                for (var i = 0; i < optionText.length;i++) {
-                                    if (answerText[i] === 'True') {
-                                        qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[i]}`;
+                                for (var j = 0; j < optionText.length; j++) {
+                                    if (answerText[j] === 'True') {
+                                        qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
-                                        qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[i]}`;
+                                        qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[j]}<br/>`;
                                     }
                                 }
                                 break;
-                            case "複選方塊":
+                            /*複選方塊*/
+                            case 6:
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 var answerText = `${userAnswerList[i].Answer}`.split(';');
-                                for (var i = 0; i < optionText.length; i++) {
-                                    if (answerText[i] === 'True') {
-                                        qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[i]}`;
+                                for (var j = 0; j < optionText.length; j++) {
+                                    if (answerText[j] === 'True') {
+                                        qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
-                                        qusTypeText += `<input type="radio" onclick="return false" />${optionText[i]}`;
+                                        qusTypeText += `<input type="radio" onclick="return false" />${optionText[j]}<br/>`;
                                     }
                                 }
                                 break;
@@ -661,7 +664,7 @@
                             <%--題目--%>
                             <p>${questionList[i].NO}.${questionList[i].QuestionContent}${isRequiredText}</p>
                             <%--答案--%>
-                            ${qusTypeText}<br/>
+                            ${qusTypeText}
                             `;
                     }
                     //變更整個填寫資料頁簽畫面
@@ -698,8 +701,51 @@
                     //切換為指定TAB
                     SetTab(state);
 
+                    var questionList = objDataList.questionList;
+                    var answerStatisticsList = objDataList.answerStatisticsList;
+
                     var statisticsDataText = "";
-                    for (var item of objDataList) {
+
+                    //判斷該題題型以顯示對應格式
+                    var qusTypeText = "";
+                    for (var i = 0; i < questionList.length; i++) {
+
+                        //判斷該題是否為必填
+                        var isRequiredText = "";
+                        if (questionList[i].IsRequired === true && questionList[i].QusType < 5) {
+                            isRequiredText = "(必填欄位)";
+                        } else if (questionList[i].IsRequired === true && questionList[i].QusType >= 5) {
+                            isRequiredText = "(必填)";
+                        } else {
+                            isRequiredText = "";
+                        }
+
+                        switch (questionList[i].QusType) {
+                            /*文字方塊*/
+                            case 1:
+                            /*文字方塊 (數字) */
+                            case 2:
+                            /*文字方塊(Email)*/
+                            case 3:
+                            /*文字方塊 (日期)*/
+                            case 4:
+                                qusTypeText = "-<br/>";
+                                break;
+                            /*單選方塊*/
+                            case 5:
+                                qusTypeText = CreateStatisticsOptionText(i, questionList, answerStatisticsList, qusTypeText);
+                                break;
+                            /*複選方塊*/
+                            case 6:
+                                qusTypeText = CreateStatisticsOptionText(i, questionList, answerStatisticsList, qusTypeText);
+                                break;
+                        }
+                        statisticsDataText += `
+                            <%--題目--%>
+                            <p>${questionList[i].NO}.${questionList[i].QuestionContent}${isRequiredText}</p>
+                            <%--答案--%>
+                            ${qusTypeText}
+                            `;
 
                     }
 
@@ -712,7 +758,28 @@
                 }
             });
         }
+        //用作統計頁面編輯單一問題選項統計文字
+        //i 目前為第幾題, questionList 問題清單, answerStatisticsList 使用者回答統計資料清單, qusTypeText 輸出的結果
+        function CreateStatisticsOptionText(i, questionList, answerStatisticsList, qusTypeText) {
+            //選項文字陣列
+            var optionText = `${questionList[i].OptionContent}`.split(';');
+            var questionID = `${questionList[i].QuestionID}`;
+            var choiseNumList = [];
+            var choiseCount = 0;
+            for (var item of answerStatisticsList) {
+                //將問題選擇數量對上對應的問題選項
+                if (item.QuestionID === questionID) {
+                    choiseNumList[item.OptionNO - 1] = item.AnswerStatistics;
+                    choiseCount += item.AnswerStatistics;
+                }
+            }
 
+            for (var j = 0; j < optionText.length; j++) {
+                var choisePercent = (choiseCount <= 0) ? 0 : Math.round(choiseNumList[j] / choiseCount * 10000) / 100;
+                qusTypeText += `${optionText[j]} ${choisePercent}% (${choiseNumList[j]})<br/>`;
+            }
+            return qusTypeText;
+        }
 
     </script>
 

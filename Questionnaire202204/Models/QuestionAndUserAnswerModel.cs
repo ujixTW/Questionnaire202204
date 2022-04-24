@@ -50,4 +50,16 @@ namespace Questionnaire202204.Models
             return $"姓名,年齡,手機號碼,信箱{tempText}";
         }
     }
+
+    public class QuestionAndAnswerStatisticsModel
+    {
+        /// <summary>
+        /// 問題List
+        /// </summary>
+        public List<QuestionModel> questionList { get; set; }
+        /// <summary>
+        /// 使用者回答統計List
+        /// </summary>
+        public List<UserAnswerStatisticsModel> answerStatisticsList { get; set; }
+    }
 }

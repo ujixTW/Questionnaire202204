@@ -486,6 +486,9 @@ namespace Questionnaire202204.SystemAdmin
 
         #endregion
 
+        #region 統計
+
+        #endregion
 
     }
 }
