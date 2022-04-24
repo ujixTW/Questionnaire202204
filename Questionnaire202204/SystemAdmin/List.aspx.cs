@@ -94,7 +94,7 @@ namespace Questionnaire202204.SystemAdmin
             //關鍵字
             if (!string.IsNullOrWhiteSpace(this.txtSearchText.Text))
             {
-                caption = "Caption=" + this.txtSearchText.Text.Trim();
+                caption = "Caption=" + Server.UrlEncode(this.txtSearchText.Text.TrimStart().TrimEnd());
             }
             //開始時間
             //如果前面有值就加上&符號
