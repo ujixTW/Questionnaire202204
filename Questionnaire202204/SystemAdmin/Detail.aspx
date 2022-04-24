@@ -623,19 +623,14 @@
 
                         //判斷該題題型以顯示對應格式
                         var qusTypeText = "";
-                        switch (questionList[i].QusType) {
-                            /*文字方塊*/
-                            case 1:
-                            /*文字方塊 (數字) */
-                            case 2:
-                            /*文字方塊(Email)*/
-                            case 3:
-                            /*文字方塊 (日期)*/
-                            case 4:
+                        switch (questionList[i].QusTypeText) {
+                            case "文字方塊":
+                            case "文字方塊 (數字)":
+                            case "文字方塊(Email)":
+                            case "文字方塊 (日期)":
                                 qusTypeText = `<input type="text" readonly="readonly" value="${userAnswerList[i].Answer}" /><br/>`;
                                 break;
-                            /*單選方塊*/
-                            case 5:
+                            case "單選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 var answerText = `${userAnswerList[i].Answer}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
@@ -646,8 +641,7 @@
                                     }
                                 }
                                 break;
-                            /*複選方塊*/
-                            case 6:
+                            case "複選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 var answerText = `${userAnswerList[i].Answer}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
@@ -721,23 +715,17 @@
                         }
 
                         switch (questionList[i].QusType) {
-                            /*文字方塊*/
-                            case 1:
-                            /*文字方塊 (數字) */
-                            case 2:
-                            /*文字方塊(Email)*/
-                            case 3:
-                            /*文字方塊 (日期)*/
-                            case 4:
+                            case "文字方塊":
+                            case "文字方塊 (數字)":
+                            case "文字方塊(Email)":
+                            case "文字方塊 (日期)":
                                 qusTypeText = "-<br/>";
                                 break;
-                            /*單選方塊*/
-                            case 5:
-                                qusTypeText = CreateStatisticsOptionText(i, questionList, answerStatisticsList, qusTypeText);
+                            case "單選方塊":
+                                qusTypeText = CreateStatisticsOptionText(i, questionList, answerStatisticsList);
                                 break;
-                            /*複選方塊*/
-                            case 6:
-                                qusTypeText = CreateStatisticsOptionText(i, questionList, answerStatisticsList, qusTypeText);
+                            case "複選方塊":
+                                qusTypeText = CreateStatisticsOptionText(i, questionList, answerStatisticsList);
                                 break;
                         }
                         statisticsDataText += `
@@ -758,14 +746,15 @@
                 }
             });
         }
-        //用作統計頁面編輯單一問題選項統計文字
-        //i 目前為第幾題, questionList 問題清單, answerStatisticsList 使用者回答統計資料清單, qusTypeText 輸出的結果
-        function CreateStatisticsOptionText(i, questionList, answerStatisticsList, qusTypeText) {
+        //用作統計頁面編輯單一問題選項統計文字，輸出字串
+        //i 目前為第幾題, questionList 問題清單, answerStatisticsList 使用者回答統計資料清單
+        function CreateStatisticsOptionText(i, questionList, answerStatisticsList) {
             //選項文字陣列
             var optionText = `${questionList[i].OptionContent}`.split(';');
             var questionID = `${questionList[i].QuestionID}`;
             var choiseNumList = [];
             var choiseCount = 0;
+            var qusTypeText = "";
             for (var item of answerStatisticsList) {
                 //將問題選擇數量對上對應的問題選項
                 if (item.QuestionID === questionID) {
