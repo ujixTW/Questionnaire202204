@@ -434,11 +434,17 @@ namespace Questionnaire202204.SystemAdmin
         /// </summary>
         protected void btnOutPutUserData_Click(object sender, EventArgs e)
         {
+            var userDataList = (List<UserDataModel>)this.Session["userDataList"];
+            if (userDataList.Count == 0)
+            {
+                this.ltlUserAnswerOutPutFailMsg.Visible = true;
+                return;
+            }
             //獲得所有資料
             #region 獲得所有資料
             var outPutToCsvModelList = new List<QuestionAndUserAnswerModel>();
-            var userDataList = (List<UserDataModel>)this.Session["userDataList"];
             var allUserAnswerList = UserAnswerManager.GetUserAnswerList(QuestionnaireID);
+            
             for (var i = 0; i < userDataList.Count; i++)
             {
                 var tempUserAnswerList = new List<UserAnswerModel>();
@@ -475,7 +481,7 @@ namespace Questionnaire202204.SystemAdmin
             }
             CSVHelper.CSVGenerator(fillFoldPath, fillPath, dataTextList);
             #endregion
-
+            this.ltlUserAnswerOutPutSuccessMsg.Visible = true;
         }
 
         #endregion

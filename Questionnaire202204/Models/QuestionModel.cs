@@ -12,40 +12,11 @@ namespace Questionnaire202204.Models
         public int NO { get; set; }
         /// <summary>
         /// 問題種類
+        /// 1.文字方塊, 2.文字方塊 (數字), 3.文字方塊(Email)
+        /// 4.文字方塊 (日期), 5.單選方塊, 6.複選方塊
         /// </summary>
         public int QusType { get; set; }
-        /// <summary>
-        /// 問題種類顯示於網頁的文字
-        /// </summary>
-        public string QusTypeText
-        {
-            get
-            {
-                string temp = string.Empty;
-                switch (QusType)
-                {
-                    case 1:
-                        temp = "文字方塊";
-                        break;
-                    case 2:
-                        temp = "文字方塊 (數字) ";
-                        break;
-                    case 3:
-                        temp = "文字方塊(Email)";
-                        break;
-                    case 4:
-                        temp = "文字方塊 (日期)";
-                        break;
-                    case 5:
-                        temp = "單選方塊";
-                        break;
-                    case 6:
-                        temp = "複選方塊";
-                        break;
-                }
-                return temp;
-            }
-        }
+        
         public string QuestionContent { get; set; }
         /// <summary>
         /// 於清單中顯示問題的短內容
@@ -69,7 +40,23 @@ namespace Questionnaire202204.Models
         /// 選項是否為必填
         /// </summary>
         public bool IsRequired { get; set; }
-       
+    }
+    public class StatisticsQuestionAnswerModel
+    {
+        public int NO { get; set; }
+        /// <summary>
+        /// 問題種類
+        /// 1.文字方塊, 2.文字方塊 (數字), 3.文字方塊(Email)
+        /// 4.文字方塊 (日期), 5.單選方塊, 6.複選方塊
+        /// </summary>
+        public int QusType { get; set; }
+        public string QuestionContent { get; set; }
+        public string OptionContent { get; set; }
+        /// <summary>
+        /// 選項是否為必填
+        /// </summary>
+        public bool IsRequired { get; set; }
+        public string StatisticsAnswer { get; set; }
 
     }
 

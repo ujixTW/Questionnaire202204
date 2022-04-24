@@ -304,25 +304,11 @@
 
             <%--匯出按鈕--%>
             <asp:Button ID="btnOutPutUserData" runat="server" Text="匯出" OnClick="btnOutPutUserData_Click"/>
-
+            <asp:Literal ID="ltlUserAnswerOutPutSuccessMsg" runat="server" Visible="false"><span class="errorMsg">輸出成功!</span></asp:Literal>
+            <asp:Literal ID="ltlUserAnswerOutPutFailMsg" runat="server" Visible="false"><span class="errorMsg">沒有資料!</span></asp:Literal>
             <%--使用者資料清單--%>
             <div id="userAnswerListArea">
-                <br />
-                <br />
-                <table class="tableList">
-                    <%--表格標題--%>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>姓名&emsp;</th>
-                            <th>填寫時間&emsp;&emsp;</th>
-                            <th>觀看細節</th>
-                        </tr>
-                    </thead>
-                    <%--表格內容--%>
-                    <tbody id="tbodyUserAnsList">
-                    </tbody>
-                </table>
+                
             </div>
 
             <%--頁數切換--%>
@@ -332,7 +318,7 @@
 
         <%--統計--%>
         <div class="tab-pane fade" id="statisticsContent" role="tabpanel" aria-labelledby="statisticsContent-tab">
-            <h1>統計</h1>
+            
 
         </div>
 
@@ -707,13 +693,18 @@
                 url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
                 method: "POST",
                 data: postData,
-                success: function (objData) {
+                success: function (objDataList) {
                     ResetTabState();
                     //切換為指定TAB
                     SetTab(state);
 
+                    var statisticsDataText = "";
+                    for (var item of objDataList) {
 
+                    }
 
+                    $("#statisticsContent").empty();
+                    $("#statisticsContent").append(statisticsDataText);
                 },
                 error: function (msg) {
                     console.log(msg);
