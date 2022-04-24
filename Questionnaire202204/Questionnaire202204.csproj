@@ -79,6 +79,7 @@
     <Content Include="ReadMe.txt" />
     <Content Include="ShareControls\ucDeleteButton.ascx" />
     <Content Include="ShareControls\ucPageChange.ascx" />
+    <Content Include="ShareControls\ucQuestionnaireSearchBar.ascx" />
     <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
     <Content Include="SystemAdmin\CommonlyQuestionList.aspx" />
     <Content Include="SystemAdmin\Detail.aspx" />
@@ -95,6 +96,7 @@
     <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\CSVHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\PageSearchHelper.cs" />
     <Compile Include="Managers\CommonlyQuestionManager.cs" />
     <Compile Include="Managers\QuestionManager.cs" />
     <Compile Include="Managers\QuestionnaireManager.cs" />
@@ -118,6 +120,13 @@
     </Compile>
     <Compile Include="ShareControls\ucPageChange.ascx.designer.cs">
       <DependentUpon>ucPageChange.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ShareControls\ucQuestionnaireSearchBar.ascx.cs">
+      <DependentUpon>ucQuestionnaireSearchBar.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShareControls\ucQuestionnaireSearchBar.ascx.designer.cs">
+      <DependentUpon>ucQuestionnaireSearchBar.ascx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\AdminMaster.Master.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
