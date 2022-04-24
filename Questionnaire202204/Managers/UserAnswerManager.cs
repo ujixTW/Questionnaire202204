@@ -120,7 +120,7 @@ namespace Questionnaire202204.Managers
                                 UserID = (Guid)reader["UserID"],
                                 QuestionnaireID = (Guid)reader["QuestionnaireID"],
                                 QuestionID = reader["QuestionID"] as string,
-                                OptionNO = reader["OptionNO"] as int?,
+                                OptionNO = (int)reader["OptionNO"],
                                 Answer = reader["Answer"] as string
                             };
                             UserAnswerList.Add(info);
@@ -162,7 +162,7 @@ namespace Questionnaire202204.Managers
                                     ON [User].[QuestionID]=[Question].[QuestionID]
                                     WHERE
                                         [User].[QuestionnaireID] = @QuestionnaireID
-                                    ORDER BY [User].[NO] , [Question].[NO]
+                                    ORDER BY [User].[NO] , [Question].[NO], [User].[OptionNo]
                                 ";
             try
             {
@@ -182,7 +182,7 @@ namespace Questionnaire202204.Managers
                                 UserID = (Guid)reader["UserID"],
                                 QuestionnaireID = (Guid)reader["QuestionnaireID"],
                                 QuestionID = reader["QuestionID"] as string,
-                                OptionNO = reader["OptionNO"] as int?,
+                                OptionNO = (int)reader["OptionNO"],
                                 Answer = reader["Answer"] as string
                             };
                             UserAnswerList.Add(info);

@@ -30,9 +30,24 @@ namespace Questionnaire202204.Models
         public string UserAnswerToString()
         {
             var tempText = "";
+            var tempOptionNO = 1;
             foreach (var item in userAnswerList)
             {
-                tempText += $",{item.Answer}";
+                if (item.OptionNO == 0)
+                {
+                    tempText += $",{item.Answer}";
+                    tempOptionNO = 1;
+                    continue;
+                }
+                if (item.OptionNO == tempOptionNO)
+                {
+                    tempText += (tempOptionNO == 1) ? $",{item.Answer}" : $";{item.Answer}";
+                    tempOptionNO += 1;
+                }else
+                {
+                    tempOptionNO = 2;
+                    tempText +=  $",{item.Answer}";
+                }
             }
             return $"{userData.Name},{userData.Age},{userData.Mobile},{userData.Email}{tempText}";
         }

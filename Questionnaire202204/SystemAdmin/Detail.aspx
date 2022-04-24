@@ -621,6 +621,20 @@
                             isRequiredText = "";
                         }
 
+                        //暫存該題答案列表
+                        var userAnswerDataList = [];
+                        for (var j = 0; j < userAnswerList.length;j++) {
+                            if (userAnswerList[j].QuestionID === questionList[i].QuestionID && questionList[i].QusType < 5) {
+
+                                userAnswerDataList[0] = userAnswerList[j].Answer;
+                                j = userAnswerList.length + 10;
+
+                            } else if (userAnswerList[j].QuestionID === questionList[i].QuestionID && questionList[i].QusType >= 5) {
+
+                                userAnswerDataList[userAnswerList[j].OptionNO] = userAnswerList[j].Answer;
+                            }
+                        }
+
                         //判斷該題題型以顯示對應格式
                         var qusTypeText = "";
                         switch (questionList[i].QusTypeText) {
@@ -628,13 +642,12 @@
                             case "文字方塊 (數字)":
                             case "文字方塊(Email)":
                             case "文字方塊 (日期)":
-                                qusTypeText = `<input type="text" readonly="readonly" value="${userAnswerList[i].Answer}" /><br/>`;
+                                qusTypeText = `<input type="text" readonly="readonly" value="${userAnswerDataList[0]}" /><br/>`;
                                 break;
                             case "單選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                var answerText = `${userAnswerList[i].Answer}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
-                                    if (answerText[j] === 'True') {
+                                    if (userAnswerDataList[j] === 'True') {
                                         qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
                                         qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[j]}<br/>`;
@@ -643,9 +656,8 @@
                                 break;
                             case "複選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                var answerText = `${userAnswerList[i].Answer}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
-                                    if (answerText[j] === 'True') {
+                                    if (userAnswerDataList[j] === 'True') {
                                         qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
                                         qusTypeText += `<input type="radio" onclick="return false" />${optionText[j]}<br/>`;
@@ -658,7 +670,7 @@
                             <%--題目--%>
                             <p>${questionList[i].NO}.${questionList[i].QuestionContent}${isRequiredText}</p>
                             <%--答案--%>
-                            ${qusTypeText}
+                            ${qusTypeText}<br />
                             `;
                     }
                     //變更整個填寫資料頁簽畫面
@@ -714,7 +726,7 @@
                             isRequiredText = "";
                         }
 
-                        switch (questionList[i].QusType) {
+                        switch (questionList[i].QusTypeText) {
                             case "文字方塊":
                             case "文字方塊 (數字)":
                             case "文字方塊(Email)":

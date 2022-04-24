@@ -444,24 +444,34 @@ namespace Questionnaire202204.SystemAdmin
             #region 獲得所有資料
             var outPutToCsvModelList = new List<QuestionAndUserAnswerModel>();
             var allUserAnswerList = UserAnswerManager.GetUserAnswerList(QuestionnaireID);
-            
+            Guid tempUserID = Guid.Empty;
+            int tempDataPosition = 0;
             for (var i = 0; i < userDataList.Count; i++)
             {
                 var tempUserAnswerList = new List<UserAnswerModel>();
                 var questionCount = (int)this.Session["DBQuestionDataListCount"];
-            var tempQuestionList = (List<QuestionModel>)this.Session["questionDataList"];
-                var answerCount = (i + 1) * questionCount;
+                var tempQuestionList = (List<QuestionModel>)this.Session["questionDataList"];
+
                 //將資料切分成單一答題者
-                for (var j = i * questionCount; j < answerCount; j++)
+                //需將資料照UserID順序排列才能執行
+                tempUserID = (tempUserID == Guid.Empty) ? allUserAnswerList[i].UserID : tempUserID;
+                for (var j = tempDataPosition; j < allUserAnswerList.Count; j++)
                 {
-                    tempUserAnswerList.Add(allUserAnswerList[j]);
+                    if (tempUserID == allUserAnswerList[j].UserID)
+                    {
+                        tempUserAnswerList.Add(allUserAnswerList[j]);
+                        continue;
+                    }
+                    tempUserID = allUserAnswerList[j].UserID;
+                    tempDataPosition = j ;
+                    break;
                 }
-                //將資料放入暫存List
+
                 QuestionAndUserAnswerModel model = new QuestionAndUserAnswerModel()
                 {
                     userData = userDataList[i],
                     userAnswerList = tempUserAnswerList,
-                    questionList=tempQuestionList
+                    questionList = tempQuestionList
                 };
                 outPutToCsvModelList.Add(model);
             }

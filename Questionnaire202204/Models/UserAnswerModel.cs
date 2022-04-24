@@ -13,7 +13,7 @@ namespace Questionnaire202204.Models
         public Guid UserID { get; set; }
         public Guid QuestionnaireID { get; set; }
         public string QuestionID { get; set; }
-        public int? OptionNO { get; set; }
+        public int OptionNO { get; set; }
         public string Answer { get; set; }
     }
 
