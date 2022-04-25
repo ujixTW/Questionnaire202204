@@ -24,7 +24,7 @@ namespace Questionnaire202204.SystemAdmin
                     pageIndex = 1;
 
                 //取得考題資料清單
-                var questionList = CommonlyQuestionManager.GetEditCommonlyQuestionList( _pageSize, pageIndex, out totalRows);
+                var questionList = CommonlyQuestionManager.GetEditCommonlyQuestionList(_pageSize, pageIndex, out totalRows);
 
                 this.ucPageChange.PageSize = _pageSize;
                 this.ucPageChange.PageIndex = pageIndex;
@@ -50,7 +50,8 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void btnAdd_Click(object sender, ImageClickEventArgs e)
         {
-
+            var id = Guid.NewGuid();
+            this.Response.Redirect("CommonlyQuestionDetail.aspx?ID=" + id);
         }
     }
 }
