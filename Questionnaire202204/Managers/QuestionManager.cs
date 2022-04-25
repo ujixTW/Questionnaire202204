@@ -147,6 +147,7 @@ namespace Questionnaire202204.Managers
             string connStr = ConfigHelper.GetConnectionString();
             string commandText = $@"{deleteText}{qusUpDateText}";
 
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connStr))

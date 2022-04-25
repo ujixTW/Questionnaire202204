@@ -119,7 +119,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
     <%--標籤--%>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -146,6 +145,7 @@
 
     <%--內容--%>
     <div class="tab-content" id="myTabContent">
+        <asp:Literal ID="ltlIsAnsweredMsg" runat="server" Visible="false"><p class="errorMsg">已有人填寫問卷，編輯功能已關閉。</p></asp:Literal>
 
         <%--問卷--%>
         <div class="tab-pane fade" id="questionnaireContent" role="tabpanel" aria-labelledby="questionnaireContent-tab">

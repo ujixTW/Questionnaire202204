@@ -22,7 +22,6 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             string questionnaireIDText = this.Request.QueryString["ID"];
             string pageState = this.Request.QueryString["State"];
             //檢查QS上的ID是否正確
@@ -63,7 +62,6 @@ namespace Questionnaire202204.SystemAdmin
         }
 
 
-
         /// <summary>
         /// 儲存資料
         /// </summary>
@@ -71,20 +69,39 @@ namespace Questionnaire202204.SystemAdmin
         /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            if (_CheckIsAnswered())
+            {
+                this.ltlIsAnsweredMsg.Visible = true;
+                return;
+            }
+
             if (sender == this.btnQuestionnaireSave)
             {
-                QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
-                if (model.StartTime > model.EndTime)
+                QuestionnaireModel questionnaireModel = (QuestionnaireModel)this.Session["questionnaireData"];
+                if (questionnaireModel.StartTime > questionnaireModel.EndTime)
                 {
                     this.ltlSaveFailMsg.Visible = true;
                     return;
                 }
-                QuestionnaireManager.SaveQuestionnaireData(model);
+                QuestionnaireManager.SaveQuestionnaireData(questionnaireModel);
+                this.Session["questionnaireData"] = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
             }
             else if (sender == this.btnQuestionListSave)
             {
+                //如果是新增問卷模式且未先儲存問卷頁簽資料
+                if (this.Session["questionnaireData"] != null)
+                {
+                    QuestionnaireModel questionnaireModel = (QuestionnaireModel)this.Session["questionnaireData"];
+                    if (questionnaireModel.NO == null)
+                    {
+                        QuestionnaireManager.SaveQuestionnaireData(questionnaireModel);
+                        this.Session["questionnaireData"] = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
+                    }
+                }
+
                 List<QuestionModel> models = (List<QuestionModel>)this.Session["questionDataList"];
                 QuestionManager.UpDateQuestionList(models, (int)this.Session["DBQuestionDataListCount"]);
+                this.Session["DBQuestionDataListCount"] = models.Count;
             }
             this.ltlSaveMsg.Visible = true;
 
@@ -100,19 +117,43 @@ namespace Questionnaire202204.SystemAdmin
             this.Session.Clear();
             Response.Redirect("List.aspx");
         }
+        /// <summary>
+        /// 檢查是否有人做過問卷
+        /// </summary>
+
+        //判斷是否有人做過問卷，有為 true，沒有為false
+        private bool _CheckIsAnswered()
+        {
+            //判斷是否有人填問卷了，如果有就阻止問卷內容變更
+            if (this.Session["IsAnswered"] is null)
+            {
+                this.Session["IsAnswered"] = UserAnswerManager.GetIsAnswered(QuestionnaireID);
+            }
+            return ((bool)this.Session["IsAnswered"]) ? true : false;
+
+        }
 
         #region 問卷頁簽
 
         //變更問卷文字方塊內文字
         protected void txtQuestionnaire_TextChanged(object sender, EventArgs e)
         {
+            this.ltlSaveFailMsg.Visible = false;
             this.ltlSaveMsg.Visible = false;
+
             //取出session
             QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
             if (model == null)
             {
                 return;
             }
+            //判斷是否有人填問卷了，如果有就阻止問卷內容變更
+            if (_CheckIsAnswered())
+            {
+                this.ltlIsAnsweredMsg.Visible = true;
+                return;
+            }
+
             //改動特定資料
             if (sender == this.txtQuestionnaireTitle)
             {
@@ -186,6 +227,14 @@ namespace Questionnaire202204.SystemAdmin
         //問卷是否啟用checkbox
         protected void checkIsEnable_CheckedChanged(object sender, EventArgs e)
         {
+            //判斷是否有人填問卷了，如果有就阻止問卷內容變更
+            if (_CheckIsAnswered())
+            {
+                this.ltlIsAnsweredMsg.Visible = true;
+                return;
+            }
+
+            this.ltlSaveFailMsg.Visible = false;
             this.ltlSaveMsg.Visible = false;
             QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
             model.IsEnable = this.checkIsEnable.Checked;
@@ -267,6 +316,14 @@ namespace Questionnaire202204.SystemAdmin
         //加入問卷問題按鈕
         protected void btnAddQuestion_Click(object sender, EventArgs e)
         {
+            //判斷是否有人填問卷了，如果有就阻止問卷內容變更
+            if (_CheckIsAnswered())
+            {
+                this.ltlIsAnsweredMsg.Visible = true;
+                return;
+            }
+
+
             //將問題清單從session中取出
             var questionDataList = (List<QuestionModel>)this.Session["questionDataList"];
             var questionID = string.Empty;
@@ -463,7 +520,7 @@ namespace Questionnaire202204.SystemAdmin
                         continue;
                     }
                     tempUserID = allUserAnswerList[j].UserID;
-                    tempDataPosition = j ;
+                    tempDataPosition = j;
                     break;
                 }
 
@@ -493,10 +550,6 @@ namespace Questionnaire202204.SystemAdmin
             #endregion
             this.ltlUserAnswerOutPutSuccessMsg.Visible = true;
         }
-
-        #endregion
-
-        #region 統計
 
         #endregion
 

@@ -15,18 +15,6 @@ namespace Questionnaire202204.API
         //Session請參考ReadMe.txt
         public void ProcessRequest(HttpContext context)
         {
-            //存入問題清單至暫存資料，供問題、填寫資料、統計頁簽使用
-            if (context.Session["questionDataList"] == null)
-            {
-                var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
-                //從DB取值，並輸出
-                var questionList = QuestionManager.GetQuestionList(questionnaireID);
-                //將資料存入session
-                context.Session["questionDataList"] = questionList;
-                //紀錄DB內問題清單長度
-                context.Session["DBQuestionDataListCount"] = questionList.Count;
-            }
-
             //問卷
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("Questionnaire", context.Request.QueryString["Page"], true) == 0)
@@ -49,6 +37,7 @@ namespace Questionnaire202204.API
                 }
 
 
+
                 context.Response.ContentType = "application/json";
                 context.Response.Write(jsonText);
                 return;
@@ -58,6 +47,8 @@ namespace Questionnaire202204.API
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("Question", context.Request.QueryString["Page"], true) == 0)
             {
+                QuestionDataListToSession(context);
+
                 string jsonText;
 
                 //從session取值
@@ -81,6 +72,8 @@ namespace Questionnaire202204.API
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
             string.Compare("Statistics", context.Request.QueryString["Page"], true) == 0)
             {
+                QuestionDataListToSession(context);
+
                 string jsonText;
                 var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
 
@@ -107,6 +100,8 @@ namespace Questionnaire202204.API
             //詳細作答情形-使用者資料
             if (string.Compare("UserData", context.Request.QueryString["Detail"], true) == 0)
             {
+                QuestionDataListToSession(context);
+
                 string jsonText;
                 //暫存使用者資料、問題清單、使用者回答的Model
                 var userAnswerPageData = new QuestionAndUserAnswerModel();
@@ -177,6 +172,26 @@ namespace Questionnaire202204.API
             }
 
         }
+
+        /// <summary>
+        /// 若session中沒有question資料，將資料取出並存入session
+        /// </summary>
+        /// <param name="context">提供內建函式的伺服器物件的參考物件</param>
+        private void QuestionDataListToSession(HttpContext context)
+        {
+            //存入問題清單至暫存資料，供問題、填寫資料、統計頁簽使用
+            if (context.Session["questionDataList"] == null)
+            {
+                var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
+                //從DB取值，並輸出
+                var questionList = QuestionManager.GetQuestionList(questionnaireID);
+                //將資料存入session
+                context.Session["questionDataList"] = questionList;
+                //紀錄DB內問題清單長度
+                context.Session["DBQuestionDataListCount"] = questionList.Count;
+            }
+        }
+
 
         public bool IsReusable
         {

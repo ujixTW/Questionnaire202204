@@ -248,6 +248,47 @@ namespace Questionnaire202204.Managers
                 throw;
             }
         }
+        /// <summary>
+        /// 取得是否有使用者做過這份問卷
+        /// </summary>
+        /// <param name="questionnaireID">問卷ID</param>
+        /// <returns>有做過為true ; 否則為 false</returns>
+        public static bool GetIsAnswered(Guid questionnaireID)
+        {
+            //連接資料庫用文字
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                SELECT COUNT([UserID]) AS 'AnswerCount'
+                                  FROM [Questionnaire202204].[dbo].[UserData]
+                                  WHERE QuestionnaireID = @QuestionnaireID
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@QuestionnaireID", questionnaireID);
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        var answerCount = 0;
+                        if (reader.Read())
+                        {
+                            answerCount = (int)reader["AnswerCount"];
+                        }
+
+                        return (answerCount != 0) ? true : false;
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.UserAnswerManager.GetIsAnswered", ex);
+                throw;
+            }
+        }
 
     }
 }
