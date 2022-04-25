@@ -11,12 +11,130 @@ namespace Questionnaire202204.Managers
     public class CommonlyQuestionManager
     {
         //增加
-        public static void CreateCommonlyQuestion()
+        /// <summary>
+        /// 新增常用問題資料
+        /// </summary>
+        /// <param name="model">欲增加的常用問題</param>
+        public static void CreateCommonlyQuestion(CommonlyQuestionModel model)
         {
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                INSERT INTO [CommonlyQuestion]
+                                    ([Name],[Type],[QuestionContent]
+                                    ,[QuestionOption],[IsRequired])
+                                VALUES
+                                    (@Name, @Type, @QuestionContent, @QuestionOption, @IsRequired)
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@Type", model.Type);
+                        command.Parameters.AddWithValue("@QuestionContent", model.QuestionContent);
+                        command.Parameters.AddWithValue("@QuestionOption", (object)model.QuestionOption ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@IsRequired", model.IsRequired);
 
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.CreateCommonlyQuestion", ex);
+                throw;
+            }
         }
         //刪除
+        /// <summary>
+        /// 刪除所選擇的常用問題
+        /// </summary>
+        /// <param name="questionIDList">欲刪除的常用問題ID</param>
+        public static void DeleteCommonlyQuestion(List<Guid> questionIDList)
+        {
+            var questionIDText = "";
+            for (var i = 0; i < questionIDList.Count; i++)
+            {
+                questionIDText += (i != 0) ? "," : "";
+                questionIDText += $"@QuestionID{i}";
+            }
+
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                DELETE [CommonlyQuestion]
+                                WHERE
+                                    QuestionID IN ( {questionIDText} )
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        for (var i = 0; i < questionIDList.Count; i++)
+                        {
+                            command.Parameters.AddWithValue("@QuestionID" + i, questionIDList);
+                        }
+
+
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.DeleteCommonlyQuestion", ex);
+                throw;
+            }
+        }
         //修改
+        /// <summary>
+        /// 修改單筆常用問題資料
+        /// </summary>
+        /// <param name="model">欲修改的常用問題</param>
+        public static void UpdateCommonlyQuestion(CommonlyQuestionModel model)
+        {
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                UPDATE [CommonlyQuestion]
+                                SET
+                                    [Name] = @Name, [Type] = @Type, [QuestionContent] = @QuestionContent
+                                    , [QuestionOption] = @QuestionOption, [IsRequired] = @IsRequired
+                                WHERE
+                                    QuestionID = @QuestionID
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@QuestionID", model.QuestionID);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@Type", model.Type);
+                        command.Parameters.AddWithValue("@QuestionContent", model.QuestionContent);
+                        command.Parameters.AddWithValue("@QuestionOption", (object)model.QuestionOption ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@IsRequired", model.IsRequired);
+
+
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.UpdateCommonlyQuestion", ex);
+                throw;
+            }
+        }
         //查詢
         /// <summary>
         /// 查詢多筆常用問題資料
@@ -27,10 +145,11 @@ namespace Questionnaire202204.Managers
             string connStr = ConfigHelper.GetConnectionString();
             string commandText = $@"
                                 SELECT
-                                    [QuestionID],[Name],[Type],[QuestionContent]
+                                    [QuestionID],[NO],[Name],[Type],[QuestionContent]
                                     ,[QuestionOption],[IsRequired]
                                 FROM [Questionnaire202204].[dbo].[CommonlyQuestion]
-                                ORDER BY [CreateTime] DESC
+                                WHERE [IsEnable] = 'true'
+                                ORDER BY [NO] DESC
                                 ";
             try
             {
@@ -48,6 +167,7 @@ namespace Questionnaire202204.Managers
                             CommonlyQuestionModel info = new CommonlyQuestionModel()
                             {
                                 QuestionID = (Guid)reader["QuestionID"],
+                                NO = (int)reader["NO"],
                                 Name = reader["Name"] as string,
                                 Type = (int)reader["Type"],
                                 QuestionContent = reader["QuestionContent"] as string,
@@ -66,5 +186,80 @@ namespace Questionnaire202204.Managers
                 throw;
             }
         }
+
+        /// <summary>
+        /// 查詢多筆管理用常用問題資料
+        /// </summary>
+        /// <returns>管理用常用問題資料</returns>
+        public static List<CommonlyQuestionModel> GetEditCommonlyQuestionList(int pageSize, int pageIndex, out int totalRows)
+        {
+            //計算跳頁數
+            int skip = pageSize * (pageIndex - 1);
+            if (skip < 0)
+                skip = 0;
+
+            //連接資料庫用文字
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                SELECT TOP {pageSize}
+                                    [QuestionID],[NO],[Name],[Type],[QuestionContent]
+                                    ,[QuestionOption],[IsRequired],[IsEnable]
+                                FROM [Questionnaire202204].[dbo].[CommonlyQuestion]
+                                WHERE 
+                                      [CommonlyQuestion].[QuestionID] NOT IN(
+                                            SELECT TOP {skip} [QuestionID]
+                                            FROM [CommonlyQuestion] 
+                                            ORDER BY [NO]
+                                      ) 
+                                ORDER BY [NO] DESC
+                                ";
+            string commandCountText =
+                $@" SELECT COUNT([CommonlyQuestion].[QuestionID])
+                    FROM [CommonlyQuestion]
+                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        List<CommonlyQuestionModel> commonlyQuestionDataList = new List<CommonlyQuestionModel>();
+
+                        //將資料取出放到List中
+                        while (reader.Read())
+                        {
+                            CommonlyQuestionModel info = new CommonlyQuestionModel()
+                            {
+                                QuestionID = (Guid)reader["QuestionID"],
+                                NO = (int)reader["NO"],
+                                Name = reader["Name"] as string,
+                                Type = (int)reader["Type"],
+                                QuestionContent = reader["QuestionContent"] as string,
+                                QuestionOption = reader["QuestionOption"] as string,
+                                IsRequired = (bool)reader["IsRequired"],
+                                IsEnable = (bool)reader["IsEnable"]
+                            };
+                            commonlyQuestionDataList.Add(info);
+                        }
+                        reader.Close();
+
+                        //取得總筆數
+                        command.CommandText = commandCountText;
+
+                        totalRows = (int)command.ExecuteScalar();
+
+                        return commonlyQuestionDataList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetEditCommonlyQuestionList", ex);
+                throw;
+            }
+        }
+
     }
 }

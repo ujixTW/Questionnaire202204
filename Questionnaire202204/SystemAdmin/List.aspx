@@ -9,21 +9,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        /*搜尋欄位*/
-        .SearchBar {
-            border: 3px solid #000;
-            padding: 10px 30px;
-            width: 90%;
-        }
-
-            .SearchBar td {
-                padding: 5px;
-            }
-
-            .SearchBar input[type=text] {
-                width: 100%;
-                border: 3px solid #000;
-            }
+        
         /*新增/刪除按鈕*/
         .btnImage {
             width: 25px;

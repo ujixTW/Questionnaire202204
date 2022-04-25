@@ -1,5 +1,21 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ucQuestionnaireSearchBar.ascx.cs" Inherits="Questionnaire202204.ShareControls.ucQuestionnaireSearchBar" %>
+<style>
+    /*搜尋欄位*/
+        .SearchBar {
+            border: 3px solid #000;
+            padding: 10px 30px;
+            width: 90%;
+        }
 
+            .SearchBar td {
+                padding: 5px;
+            }
+
+            .SearchBar input[type=text] {
+                width: 100%;
+                border: 3px solid #000;
+            }
+</style>
 <%--搜尋欄位--%>
     <div class="SearchBar">
         <table>

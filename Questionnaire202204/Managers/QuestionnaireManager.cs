@@ -21,7 +21,8 @@ namespace Questionnaire202204.Managers
             {
                 //新
                 CreateQuestionnaireData(questionnaire);
-            }else
+            }
+            else
             {
                 //已有
                 UpDateQuestionnaireDeta(questionnaire);
@@ -34,7 +35,7 @@ namespace Questionnaire202204.Managers
         /// <param name="questionnaire">存入的問卷資料</param>
         public static void CreateQuestionnaireData(QuestionnaireModel questionnaire)
         {
-           
+
             string connStr = ConfigHelper.GetConnectionString();
             string commandText = $@"
                                 INSERT INTO [Questionnaire]
@@ -79,10 +80,8 @@ namespace Questionnaire202204.Managers
             string idText = string.Empty;
             for (var i = 0; i < questionnaireIDList.Count; i++)
             {
-                if (i != 0)
-                    idText += "," + $"'{questionnaireIDList[i]}'";
-                else
-                    idText += $"'{questionnaireIDList[i]}'";
+                idText += (i != 0) ? "," : "";
+                idText += "," + $"@QuestionnaireID{i}";
             }
 
             string connStr = ConfigHelper.GetConnectionString();
@@ -100,7 +99,10 @@ namespace Questionnaire202204.Managers
                 {
                     using (SqlCommand command = new SqlCommand(commandText, conn))
                     {
-
+                        for (var i = 0; i < questionnaireIDList.Count; i++)
+                        {
+                            command.Parameters.AddWithValue("@QuestionnaireID" + i, questionnaireIDList[i]);
+                        }
                         conn.Open();
                         command.ExecuteNonQuery();
 
@@ -235,7 +237,7 @@ namespace Questionnaire202204.Managers
                         //將資料取出放到List中
                         while (reader.Read())
                         {
-                           
+
                             QuestionnaireModel info = new QuestionnaireModel()
                             {
                                 QuestionnaireID = (Guid)reader["QuestionnaireID"],

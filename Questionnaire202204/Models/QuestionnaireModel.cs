@@ -67,8 +67,7 @@ namespace Questionnaire202204.Models
         {
             get
             {
-                string temp;
-                return temp = IsEnable ? "開放" : "已關閉";
+                return (this.IsEnable) ? "開放" : "已關閉";
             }
         }
 
