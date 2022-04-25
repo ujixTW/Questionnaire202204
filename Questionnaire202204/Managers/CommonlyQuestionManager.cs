@@ -68,6 +68,12 @@ namespace Questionnaire202204.Managers
                                 DELETE [CommonlyQuestion]
                                 WHERE
                                     QuestionID IN ( {questionIDText} )
+
+                                declare @num INT
+                                select @num = 0
+                                UPDATE CommonlyQuestion
+                                SET @num = @num + 1,
+                                     [CommonlyQuestion].[NO] = @num
                                 ";
             try
             {
