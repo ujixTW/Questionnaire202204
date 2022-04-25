@@ -11,9 +11,9 @@ namespace Questionnaire202204.ShareControls
 {
     public partial class ucDeleteButton : System.Web.UI.UserControl
     {
-        private static List<Guid> _questionnaireIDList = new List<Guid>();
-        private static List<string> _questionIDList = new List<string>();
-        private static string[] _UrlArray = new string[] { "List.aspx", "Detail.aspx" };
+        private static List<Guid> _guidIDList = new List<Guid>();
+        private static List<string> _stringIDList = new List<string>();
+        private static string[] _UrlArray = new string[] { "List.aspx", "Detail.aspx", "CommonlyQuestionList.aspx" };
         //當前頁數，對應_UrlArray位置的值
         private static int _page = -1;
 
@@ -23,10 +23,10 @@ namespace Questionnaire202204.ShareControls
         /// <param name="page">現在的頁面</param>
         private void _PageCheck(out int page)
         {
-            var url = this.Request.RawUrl;
+            var url = System.IO.Path.GetFileName(this.Request.PhysicalPath);
             for (var i = 0; i < _UrlArray.Length; i++)
             {
-                if (url.Contains(_UrlArray[i]))
+                if (url.Equals(_UrlArray[i]))
                 {
                     page = i;
                     return;
@@ -47,10 +47,13 @@ namespace Questionnaire202204.ShareControls
             switch (_page)
             {
                 case 0:
-                    _ShowWindowAdminQuestionnaireList();
+                    _SaveTempGuidIDList();
                     break;
                 case 1:
-                    _ShowWindowAdminOptionList();
+                    _SaveTempStringIDList();
+                    break;
+                case 2:
+                    _SaveTempGuidIDList();
                     break;
             }
             //開啟警告畫面
@@ -60,29 +63,29 @@ namespace Questionnaire202204.ShareControls
         /// <summary>
         /// 後台問卷清單
         /// </summary>
-        private void _ShowWindowAdminQuestionnaireList()
+        private void _SaveTempGuidIDList()
         {
             //重置選取的ID資料
-            _questionnaireIDList.Clear();
+            _guidIDList.Clear();
             //讀取被選取的checkbox的value
-            var questionnaire = Request["checkboxQus"];
+            var guidListValue = Request["checkboxQus"];
 
-            if (questionnaire != null)
+            if (guidListValue != null)
             {
-                var questionnaireIDs = questionnaire.ToString().Split(',');
-                foreach (var item in questionnaireIDs)
+                var guidIDs = guidListValue.ToString().Split(',');
+                foreach (var item in guidIDs)
                 {
-                    _questionnaireIDList.Add(Guid.Parse(item));
+                    _guidIDList.Add(Guid.Parse(item));
                 }
             }
         }
         /// <summary>
         /// 後台選項清單
         /// </summary>
-        private void _ShowWindowAdminOptionList()
+        private void _SaveTempStringIDList()
         {
             //重置選取的ID資料
-            _questionIDList.Clear();
+            _stringIDList.Clear();
             //讀取被選取的checkbox的value
             var question = Request["checkboxQus"];
 
@@ -91,7 +94,7 @@ namespace Questionnaire202204.ShareControls
                 var questionIDs = question.ToString().Split(',');
                 foreach (var item in questionIDs)
                 {
-                    _questionIDList.Add(item);
+                    _stringIDList.Add(item);
                 }
             }
         }
@@ -113,6 +116,9 @@ namespace Questionnaire202204.ShareControls
                     case 1:
                         _DeleteAdminQuestionList();
                         break;
+                    case 2:
+                        _DeleteAdminCommonlyQuestionList();
+                        break;
                 }
                 this.divDeleteMsg.Visible = false;
                 Response.Redirect(Request.RawUrl);
@@ -127,9 +133,9 @@ namespace Questionnaire202204.ShareControls
         /// </summary>
         private void _DeleteAdminQuestionnaireList()
         {
-            if (_questionnaireIDList.Count != 0)
+            if (_guidIDList.Count != 0)
             {
-                QuestionnaireManager.DeleteQuestionnaireList(_questionnaireIDList);
+                QuestionnaireManager.DeleteQuestionnaireList(_guidIDList);
             }
         }
 
@@ -139,14 +145,14 @@ namespace Questionnaire202204.ShareControls
         private void _DeleteAdminQuestionList()
         {
             var questionnaireID = this.Request.QueryString["ID"];
-            if (_questionIDList.Count != 0)
+            if (_stringIDList.Count != 0)
             {
                 List<QuestionModel> modelList = (List<QuestionModel>)this.Session["questionDataList"];
-                for (var i = 0; i < _questionIDList.Count; i++)
+                for (var i = 0; i < _stringIDList.Count; i++)
                 {
                     for (var j = 0; j < modelList.Count; j++)
                     {
-                        if (_questionIDList[i] == modelList[j].QuestionID)
+                        if (_stringIDList[i] == modelList[j].QuestionID)
                         {
                             modelList.RemoveAt(j);
                             j -= 1;
@@ -163,6 +169,17 @@ namespace Questionnaire202204.ShareControls
             }
             //重新整理以更新畫面
             Response.Redirect(Request.Path + $"?ID={questionnaireID}&State=Question");
+        }
+
+        /// <summary>
+        /// 刪除多筆常用問題資料
+        /// </summary>
+        private void _DeleteAdminCommonlyQuestionList()
+        {
+            if (_guidIDList.Count != 0)
+            {
+                CommonlyQuestionManager.DeleteCommonlyQuestion(_guidIDList);
+            }
         }
 
     }

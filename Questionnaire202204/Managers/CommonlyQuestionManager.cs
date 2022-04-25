@@ -77,7 +77,7 @@ namespace Questionnaire202204.Managers
                     {
                         for (var i = 0; i < questionIDList.Count; i++)
                         {
-                            command.Parameters.AddWithValue("@QuestionID" + i, questionIDList);
+                            command.Parameters.AddWithValue("@QuestionID" + i, questionIDList[i]);
                         }
 
 

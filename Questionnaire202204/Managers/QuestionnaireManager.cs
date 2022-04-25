@@ -81,7 +81,7 @@ namespace Questionnaire202204.Managers
             for (var i = 0; i < questionnaireIDList.Count; i++)
             {
                 idText += (i != 0) ? "," : "";
-                idText += "," + $"@QuestionnaireID{i}";
+                idText +=  $"@QuestionnaireID{i}";
             }
 
             string connStr = ConfigHelper.GetConnectionString();
