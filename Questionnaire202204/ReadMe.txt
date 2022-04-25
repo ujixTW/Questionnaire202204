@@ -12,3 +12,6 @@
     userDataListCount       單一問卷填寫者數量
 
     IsAnswered              是否有人已做過問卷
+
+常用問題編輯/新增頁面存有Session
+    commonlyQuestionListCount    常用問題資料總數

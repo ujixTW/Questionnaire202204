@@ -22,8 +22,8 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            string questionnaireIDText = this.Request.QueryString["ID"];
             string pageState = this.Request.QueryString["State"];
+            string questionnaireIDText = this.Request.QueryString["ID"];
             //檢查QS上的ID是否正確
             if (!string.IsNullOrWhiteSpace(questionnaireIDText))
             {
@@ -44,6 +44,8 @@ namespace Questionnaire202204.SystemAdmin
 
             if (!IsPostBack)
             {
+                
+
                 //依頁簽不同套用不同資料
                 switch (pageState)
                 {
@@ -271,15 +273,6 @@ namespace Questionnaire202204.SystemAdmin
             }
 
             //套用資料進DropDownList
-            //建立DropDownList用臨時DataTable
-            DataTable dropDownData = new DataTable();
-            dropDownData.Columns.Add(new DataColumn("Text", typeof(string)));
-            dropDownData.Columns.Add(new DataColumn("Value", typeof(string)));
-            //代入自訂/編輯問題至臨時DataTable中
-            DataRow customizeData = dropDownData.NewRow();
-            customizeData["Text"] = "自訂問題";
-            customizeData["Value"] = qusID;
-            dropDownData.Rows.Add(customizeData);
             //判斷session中是否有commonlyQuestion資料
             List<CommonlyQuestionModel> commonlyQuestionModelList = new List<CommonlyQuestionModel>();
             if (this.Session["commonlyQuestionList"] != null)
@@ -291,19 +284,15 @@ namespace Questionnaire202204.SystemAdmin
                 commonlyQuestionModelList = CommonlyQuestionManager.GetCommonlyQuestionList();
                 this.Session["commonlyQuestionList"] = commonlyQuestionModelList;
             }
-            //將commonlyQuestion資料代入臨時DataTable中
+            //套用資料進DropDownList
+            this.listCommonlyQuestionType.Items.Add(new ListItem("自訂問題", qusID));
+            
             for (var i = 0; i < commonlyQuestionModelList.Count; i++)
             {
-                DataRow data = dropDownData.NewRow();
-                data["Text"] = commonlyQuestionModelList[i].Name;
-                data["Value"] = commonlyQuestionModelList[i].QuestionID;
-                dropDownData.Rows.Add(data);
+                var text= commonlyQuestionModelList[i].Name;
+                var value= commonlyQuestionModelList[i].QuestionID.ToString();
+                this.listCommonlyQuestionType.Items.Add(new ListItem(text,value));
             }
-            //套用資料進DropDownList
-            this.listCommonlyQuestionType.DataSource = dropDownData;
-            this.listCommonlyQuestionType.DataTextField = "Text";
-            this.listCommonlyQuestionType.DataValueField = "Value";
-            this.listCommonlyQuestionType.DataBind();
 
             //更新其他表格
             this.txtQuestionContent.Text = question.QuestionContent;

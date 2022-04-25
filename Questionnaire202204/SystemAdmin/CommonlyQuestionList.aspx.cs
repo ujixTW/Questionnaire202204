@@ -25,6 +25,7 @@ namespace Questionnaire202204.SystemAdmin
 
                 //取得考題資料清單
                 var questionList = CommonlyQuestionManager.GetEditCommonlyQuestionList(_pageSize, pageIndex, out totalRows);
+                this.Session["commonlyQuestionListCount"] = totalRows;
 
                 this.ucPageChange.PageSize = _pageSize;
                 this.ucPageChange.PageIndex = pageIndex;

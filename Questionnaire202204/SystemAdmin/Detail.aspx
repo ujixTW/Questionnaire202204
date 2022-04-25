@@ -31,6 +31,7 @@
             height: 100px;
             resize: none;
         }
+
         /*問卷CSS結束*/
 
         /*問題CSS*/
@@ -57,6 +58,12 @@
             width: 100%;
         }
 
+        .listQusType {
+            max-height: 100px;
+            overflow-y: scroll;
+            position: absolute;
+        }
+
         /*問題CSS結束*/
 
         /*填寫資料CSS開始*/
@@ -73,20 +80,18 @@
 
         #myTabContent {
             padding: 10px;
+            border:3px solid #000;
+            border-radius:3px;
         }
         /*警告文字*/
         .errorMsg {
             color: #f88;
         }
-        /*確認、取消按鍵區域*/
-        .btnActionBar ul li {
-            display: inline;
-            float: left;
-            width: 50%;
-            height: 60px;
-            text-align: right;
-            padding: 0px 10px;
+        
+        .btnActionBar .nav-item{
+            margin:10px 10px 10px 40%;
         }
+
         /*清單固定格式*/
         .tableList {
             border: 3px solid #000;
@@ -161,6 +166,7 @@
                                 此欄位為必填。
                             </p>
                         </asp:Literal>
+
                     </td>
                 </tr>
                 <tr>
@@ -208,14 +214,16 @@
 
             <%--確認按鈕--%>
             <div class="btnActionBar">
-                <ul>
-                    <li>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
                         <asp:Button ID="btnQuestionnaireCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
-                    <li>
+                    <li class="nav-item">
                         <asp:Button ID="btnQuestionnaireSave" runat="server" Text="送出" OnClick="btnSave_Click" />
                     </li>
+                    
                 </ul>
+                
             </div>
 
         </div>
@@ -229,7 +237,7 @@
                     <tr class="lg">
                         <td>種類</td>
                         <td>
-                            <asp:DropDownList ID="listCommonlyQuestionType" runat="server" OnSelectedIndexChanged="listCommonlyQuestionType_SelectedIndexChanged" AutoPostBack="true">
+                            <asp:DropDownList ID="listCommonlyQuestionType" runat="server" CssClass="listQusType" OnSelectedIndexChanged="listCommonlyQuestionType_SelectedIndexChanged" AutoPostBack="true">
                             </asp:DropDownList>
                         </td>
                     </tr>
@@ -287,11 +295,11 @@
 
             <%--確認按鈕--%>
             <div class="btnActionBar">
-                <ul>
-                    <li>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
                         <asp:Button ID="btnQuestionListCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
                     </li>
-                    <li>
+                    <li class="nav-item">
                         <asp:Button ID="btnQuestionListSave" runat="server" Text="送出" OnClick="btnSave_Click" />
                     </li>
                 </ul>
@@ -623,7 +631,7 @@
 
                         //暫存該題答案列表
                         var userAnswerDataList = [];
-                        for (var j = 0; j < userAnswerList.length;j++) {
+                        for (var j = 0; j < userAnswerList.length; j++) {
                             if (userAnswerList[j].QuestionID === questionList[i].QuestionID && questionList[i].QusType < 5) {
 
                                 userAnswerDataList[0] = userAnswerList[j].Answer;
@@ -711,7 +719,6 @@
                     var answerStatisticsList = objDataList.answerStatisticsList;
 
                     var statisticsDataText = "";
-                    statisticsDataText += (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>":"";
                     //判斷該題題型以顯示對應格式
                     var qusTypeText = "";
                     for (var i = 0; i < questionList.length; i++) {
@@ -748,6 +755,7 @@
                             `;
 
                     }
+                    statisticsDataText = (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>" : "";
 
                     $("#statisticsContent").empty();
                     $("#statisticsContent").append(statisticsDataText);

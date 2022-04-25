@@ -20,10 +20,10 @@ namespace Questionnaire202204.Managers
             string connStr = ConfigHelper.GetConnectionString();
             string commandText = $@"
                                 INSERT INTO [CommonlyQuestion]
-                                    ([Name],[Type],[QuestionContent]
-                                    ,[QuestionOption],[IsRequired])
+                                    ([QuestionID], [NO], [Name],[Type],[QuestionContent]
+                                    ,[QuestionOption],[IsRequired], [IsEnable])
                                 VALUES
-                                    (@Name, @Type, @QuestionContent, @QuestionOption, @IsRequired)
+                                    (@QuestionID, @NO, @Name, @Type, @QuestionContent, @QuestionOption, @IsRequired, @IsEnable)
                                 ";
             try
             {
@@ -31,14 +31,17 @@ namespace Questionnaire202204.Managers
                 {
                     using (SqlCommand command = new SqlCommand(commandText, conn))
                     {
+                        command.Parameters.AddWithValue("@QuestionID", model.QuestionID);
+                        command.Parameters.AddWithValue("@NO", model.NO);
                         command.Parameters.AddWithValue("@Name", model.Name);
                         command.Parameters.AddWithValue("@Type", model.Type);
                         command.Parameters.AddWithValue("@QuestionContent", model.QuestionContent);
                         command.Parameters.AddWithValue("@QuestionOption", (object)model.QuestionOption ?? DBNull.Value);
                         command.Parameters.AddWithValue("@IsRequired", model.IsRequired);
+                        command.Parameters.AddWithValue("@IsEnable", model.IsEnable);
 
                         conn.Open();
-                        SqlDataReader reader = command.ExecuteReader();
+                        command.ExecuteNonQuery();
 
                     }
                 }
@@ -88,7 +91,7 @@ namespace Questionnaire202204.Managers
 
 
                         conn.Open();
-                        SqlDataReader reader = command.ExecuteReader();
+                        command.ExecuteNonQuery();
 
                     }
                 }
@@ -111,9 +114,9 @@ namespace Questionnaire202204.Managers
                                 UPDATE [CommonlyQuestion]
                                 SET
                                     [Name] = @Name, [Type] = @Type, [QuestionContent] = @QuestionContent
-                                    , [QuestionOption] = @QuestionOption, [IsRequired] = @IsRequired
+                                    , [QuestionOption] = @QuestionOption, [IsRequired] = @IsRequired,[IsEnable] = @IsEnable
                                 WHERE
-                                    QuestionID = @QuestionID
+                                    [QuestionID] = @QuestionID
                                 ";
             try
             {
@@ -127,10 +130,10 @@ namespace Questionnaire202204.Managers
                         command.Parameters.AddWithValue("@QuestionContent", model.QuestionContent);
                         command.Parameters.AddWithValue("@QuestionOption", (object)model.QuestionOption ?? DBNull.Value);
                         command.Parameters.AddWithValue("@IsRequired", model.IsRequired);
-
+                        command.Parameters.AddWithValue("@IsEnable", model.IsEnable);
 
                         conn.Open();
-                        SqlDataReader reader = command.ExecuteReader();
+                        command.ExecuteNonQuery();
 
                     }
                 }
@@ -266,6 +269,49 @@ namespace Questionnaire202204.Managers
                 throw;
             }
         }
+        public static CommonlyQuestionModel GetCommonlyQuestion(Guid commonlyQusID)
+        {
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                SELECT
+                                    [QuestionID],[NO],[Name],[Type],[QuestionContent]
+                                    ,[QuestionOption],[IsRequired],[IsEnable]
+                                FROM [Questionnaire202204].[dbo].[CommonlyQuestion]
+                                WHERE [QuestionID] = @QuestionID
+                                ";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        command.Parameters.AddWithValue("@QuestionID", commonlyQusID);
+                        conn.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        CommonlyQuestionModel model = new CommonlyQuestionModel();
 
+                        //將資料取出放到List中
+                        if (reader.Read())
+                        {
+                            model.QuestionID = (Guid)reader["QuestionID"];
+                            model.NO = (int)reader["NO"];
+                            model.Name = reader["Name"] as string;
+                            model.Type = (int)reader["Type"];
+                            model.QuestionContent = reader["QuestionContent"] as string;
+                            model.QuestionOption = reader["QuestionOption"] as string;
+                            model.IsRequired = (bool)reader["IsRequired"];
+
+                        }
+
+                        return model;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireList", ex);
+                throw;
+            }
+        }
     }
 }
