@@ -711,7 +711,7 @@
                     var answerStatisticsList = objDataList.answerStatisticsList;
 
                     var statisticsDataText = "";
-                    statisticsDataText += (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>";
+                    statisticsDataText += (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>":"";
                     //判斷該題題型以顯示對應格式
                     var qusTypeText = "";
                     for (var i = 0; i < questionList.length; i++) {
