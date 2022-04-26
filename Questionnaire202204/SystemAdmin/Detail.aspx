@@ -327,8 +327,8 @@
         <div class="tab-pane fade" id="statisticsContent" role="tabpanel" aria-labelledby="statisticsContent-tab">
         </div>
 
-        <asp:Literal ID="ltlSaveFailMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存失敗!</p></div></asp:Literal>
-        <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false"><div style="text-align:left; margin:5px 0px;"><p>儲存成功!</p></div></asp:Literal>
+        <asp:Literal ID="ltlSaveFailMsg" runat="server" Visible="false"><div style="text-align:right; padding:5px 10px;"><p>儲存失敗!</p></div></asp:Literal>
+        <asp:Literal ID="ltlSaveMsg" runat="server" Visible="false"><div style="text-align:right; padding:5px 10px;"><p>儲存成功!</p></div></asp:Literal>
     </div>
 
 

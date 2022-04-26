@@ -44,7 +44,7 @@ namespace Questionnaire202204.SystemAdmin
 
             if (!IsPostBack)
             {
-                
+
 
                 //依頁簽不同套用不同資料
                 switch (pageState)
@@ -71,12 +71,6 @@ namespace Questionnaire202204.SystemAdmin
         /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            if (_CheckIsAnswered())
-            {
-                this.ltlIsAnsweredMsg.Visible = true;
-                return;
-            }
-
             if (sender == this.btnQuestionnaireSave)
             {
                 QuestionnaireModel questionnaireModel = (QuestionnaireModel)this.Session["questionnaireData"];
@@ -90,6 +84,11 @@ namespace Questionnaire202204.SystemAdmin
             }
             else if (sender == this.btnQuestionListSave)
             {
+                if (_CheckIsAnswered())
+                {
+                    this.ltlIsAnsweredMsg.Visible = true;
+                    return;
+                }
                 //如果是新增問卷模式且未先儲存問卷頁簽資料
                 if (this.Session["questionnaireData"] != null)
                 {
@@ -150,7 +149,7 @@ namespace Questionnaire202204.SystemAdmin
                 return;
             }
             //判斷是否有人填問卷了，如果有就阻止問卷內容變更
-            if (_CheckIsAnswered())
+            if (sender != this.txtQuestionnaireEndDate && _CheckIsAnswered())
             {
                 this.ltlIsAnsweredMsg.Visible = true;
                 return;
@@ -196,12 +195,17 @@ namespace Questionnaire202204.SystemAdmin
             }
             else if (sender == this.txtQuestionnaireEndDate)
             {
+
                 //如果格式不正確就顯示警告視窗
                 //不正確格式:日期未包含年月日、日期未分割、輸入非數字及符號、日期未在規定範圍內
                 if (DateTime.TryParse(this.txtQuestionnaireEndDate.Text, out DateTime date))
                 {
+                    //如果日期有變化就不顯示已有人填寫問卷的警告文字
+                    if(model.EndTime!=date)
+                        this.ltlIsAnsweredMsg.Visible = false;
+
                     //檢查時間是否小於起始時間
-                    if (date > model.StartTime)
+                    if (date > model.StartTime && date > DateTime.Today)
                     {
                         model.EndTime = date;
                         this.ltlQuestionnaireEndDateMsg.Visible = false;
@@ -221,25 +225,24 @@ namespace Questionnaire202204.SystemAdmin
                 {
                     this.ltlQuestionnaireEndDateMsg.Visible = true;
                 }
+
             }
             //重新放回session
             this.Session["questionnaireData"] = model;
 
         }
+
         //問卷是否啟用checkbox
         protected void checkIsEnable_CheckedChanged(object sender, EventArgs e)
         {
-            //判斷是否有人填問卷了，如果有就阻止問卷內容變更
-            if (_CheckIsAnswered())
-            {
-                this.ltlIsAnsweredMsg.Visible = true;
-                return;
-            }
-
             this.ltlSaveFailMsg.Visible = false;
             this.ltlSaveMsg.Visible = false;
             QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
-            model.IsEnable = this.checkIsEnable.Checked;
+            if (this.checkIsEnable.Checked != model.IsEnable)
+            {
+                model.IsEnable = this.checkIsEnable.Checked;
+                this.ltlIsAnsweredMsg.Visible = false;
+            }
             this.Session["questionnaireData"] = model;
         }
 
@@ -286,12 +289,12 @@ namespace Questionnaire202204.SystemAdmin
             }
             //套用資料進DropDownList
             this.listCommonlyQuestionType.Items.Add(new ListItem("自訂問題", qusID));
-            
+
             for (var i = 0; i < commonlyQuestionModelList.Count; i++)
             {
-                var text= commonlyQuestionModelList[i].Name;
-                var value= commonlyQuestionModelList[i].QuestionID.ToString();
-                this.listCommonlyQuestionType.Items.Add(new ListItem(text,value));
+                var text = commonlyQuestionModelList[i].Name;
+                var value = commonlyQuestionModelList[i].QuestionID.ToString();
+                this.listCommonlyQuestionType.Items.Add(new ListItem(text, value));
             }
 
             //更新其他表格
@@ -475,6 +478,7 @@ namespace Questionnaire202204.SystemAdmin
             this.ucPageChange.PageSize = PageSize;
             this.ucPageChange.Bind(keyQS, keyQSValue);
         }
+
         /// <summary>
         /// 點擊匯出按鈕
         /// </summary>
@@ -541,6 +545,7 @@ namespace Questionnaire202204.SystemAdmin
         }
 
         #endregion
+
 
     }
 }
