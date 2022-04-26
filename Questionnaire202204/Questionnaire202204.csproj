@@ -91,6 +91,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\FrontHandler.ashx.cs">
+      <DependentUpon>FrontHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="API\QuestionnaireDetailHandler.ashx.cs">
       <DependentUpon>QuestionnaireDetailHandler.ashx</DependentUpon>
     </Compile>
@@ -204,8 +207,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="API\QuestionnaireDetailHandler.ashx" />
     <Content Include="FrontMaster.Master" />
+    <Content Include="API\FrontHandler.ashx" />
+    <Content Include="API\QuestionnaireDetailHandler.ashx" />
     <None Include="packages.config" />
     <Content Include="SystemAdmin\AdminMaster.Master" />
     <None Include="Web.Debug.config">

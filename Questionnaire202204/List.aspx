@@ -86,5 +86,23 @@
         </table>
         <uc1:ucPageChange runat="server" ID="ucPageChange" />
     </div>
+    <script>
+        $(document).ready(function () {
+            var postData = {
+                "questionnaireID": questionnaireID
+            }
+            $.ajax({
+                url:"",
+                method:"POST",
+                data:postData,
+                success: function () {
 
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
+        });
+    </script>
 </asp:Content>

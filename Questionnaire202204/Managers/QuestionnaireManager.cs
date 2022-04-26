@@ -375,9 +375,9 @@ namespace Questionnaire202204.Managers
                                			)
                                		) AND 
                                       [Questionnaire].[QuestionnaireID] NOT IN(
-                                            SELECT TOP {skip} [QuestionnaireID]
+                                            SELECT TOP ({skip}) [QuestionnaireID]
                                             FROM [Questionnaire] 
-                                            ORDER BY [CreateTime]
+                                            ORDER BY [NO] DESC
                                       ) 
                                         {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
                                 ORDER BY [NO] DESC
@@ -385,7 +385,19 @@ namespace Questionnaire202204.Managers
             string commandCountText =
                 $@" SELECT COUNT([Questionnaire].[QuestionnaireID])
                     FROM [Questionnaire]
-                    WHERE [IsDelete]='false' {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
+                    WHERE [IsDelete]='false' AND
+                    [StartTime] < GETDATE() AND(
+                               			( [EndTime] > GETDATE() AND [IsEnable]='true') OR 
+                               			( [IsEnable] = 'false' AND
+                               　		    [Questionnaire].[QuestionnaireID] IN(
+                               　		      SELECT TOP (1000) 
+                               			    　    [QuestionnaireID]
+                               			    　FROM [Questionnaire202204].[dbo].[UserAnswer]
+                               			    　GROUP BY [QuestionnaireID]
+                               　		    ) 
+                               			)
+                               		)
+                    {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
                 ";
             try
             {
