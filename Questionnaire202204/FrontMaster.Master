@@ -5,6 +5,9 @@
 <html>
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="CSS/Bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="JavaScript/bootstrap/bootstrap.min.js"></script>
+    <script src="JavaScript/jquery/jquery.min.js"></script>
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
@@ -14,7 +17,7 @@
         }
 
             .pageHeadBar .pageTitle {
-                font-size: 48pt;
+                font-size: 50pt;
             }
 
             .pageHeadBar > div {
@@ -25,7 +28,6 @@
             }
 
         .PageMain {
-            height: 200px;
             padding: 10px 100px;
         }
 

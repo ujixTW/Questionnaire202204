@@ -56,6 +56,21 @@ namespace Questionnaire202204.Models
                 }
             }
         }
+
+        /// <summary>
+        /// 用於前台問卷清單，紀錄目前是否可以投票
+        /// </summary>
+        public string VoteStateText
+        {
+            get
+            {
+                if ((EndTime is null || (DateTime)EndTime > DateTime.Today) && IsEnable == true)
+                {
+                    return "投票中";
+                }
+                return "已完結";
+            }
+        }
         /// <summary>
         /// 是否啟用
         /// </summary>
