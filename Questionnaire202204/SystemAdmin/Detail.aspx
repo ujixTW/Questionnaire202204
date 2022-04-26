@@ -77,20 +77,48 @@
         }
 
         /*填寫資料CSS結束*/
+        /*統計頁CSS開始*/
+
+        #statisticsContent {
+            padding: 10px 30px;
+        }
+
+        /*統計頁CSS結束*/
 
         #myTabContent {
             padding: 10px;
-            border:3px solid #000;
-            border-radius:3px;
+            border: 3px solid #000;
+            border-radius: 0 0 3px 3px;
+            border-top: 0;
         }
+
+        #myTab {
+            border-bottom: 3px solid #000;
+            border-radius: 3px;
+        }
+
+            #myTab > li {
+                margin: 0 -3px -3px 0;
+                border: 3px solid #000;
+                border-radius: 5px 5px 0 0;
+                background-color: #ddd;
+            }
+
+                #myTab > li > .active {
+                    background-color:#fff;
+                    margin:0 0 -3px 0;
+                    border-bottom:3px solid #fff;
+                }
         /*警告文字*/
         .errorMsg {
             color: #f88;
         }
-        
-        .btnActionBar .nav-item{
-            margin:10px 10px 10px 40%;
+
+        .btnActionBar .nav-item {
+            margin: 10px 10px 10px 40%;
         }
+
+
 
         /*清單固定格式*/
         .tableList {
@@ -221,9 +249,9 @@
                     <li class="nav-item">
                         <asp:Button ID="btnQuestionnaireSave" runat="server" Text="送出" OnClick="btnSave_Click" />
                     </li>
-                    
+
                 </ul>
-                
+
             </div>
 
         </div>
@@ -756,7 +784,7 @@
                             `;
 
                     }
-                    statisticsDataText = (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>" : "";
+                    statisticsDataText = (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>" : statisticsDataText;
 
                     $("#statisticsContent").empty();
                     $("#statisticsContent").append(statisticsDataText);
