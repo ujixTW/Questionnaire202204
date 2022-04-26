@@ -510,7 +510,8 @@
         function UserAnswerList() {
             var postData = {
                 "questionnaireID": questionnaireID,
-                "page": '<%=this.PageIndex%>'
+                "page": '<%=this.PageIndex%>',
+                "pageSize":<%=this.PageSize%>
             }
             $.ajax({
                 url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,

@@ -17,7 +17,7 @@ namespace Questionnaire202204.SystemAdmin
     public partial class Detail : System.Web.UI.Page
     {
         public Guid QuestionnaireID;
-        private const int _pageSize = 10;
+        public int PageSize { get { return 4; } }
         public int PageIndex;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -472,7 +472,7 @@ namespace Questionnaire202204.SystemAdmin
 
             this.ucPageChange.TotalRows = totalRows;
             this.ucPageChange.PageIndex = PageIndex;
-            this.ucPageChange.PageSize = _pageSize;
+            this.ucPageChange.PageSize = PageSize;
             this.ucPageChange.Bind(keyQS, keyQSValue);
         }
         /// <summary>

@@ -320,7 +320,7 @@ namespace Questionnaire202204.Managers
             }
         }
         /// <summary>
-        /// 查詢多筆問卷資料
+        /// 前台查詢多筆可填寫、已結束投票問卷資料
         /// </summary>
         /// <param name="pageSize">每頁最大筆數</param>
         /// <param name="pageIndex">目前頁數</param>
@@ -364,7 +364,7 @@ namespace Questionnaire202204.Managers
                                  WHERE 
                                　   [IsDelete]='false' AND
                                		[StartTime] < GETDATE() AND(
-                               			( [EndTime] > GETDATE() AND [IsEnable]='true') OR 
+                               			( ([EndTime] > GETDATE() OR [EndTime] IS NULL ) AND [IsEnable]='true') OR 
                                			( [IsEnable] = 'false' AND
                                　		    [Questionnaire].[QuestionnaireID] IN(
                                　		      SELECT TOP (1000) 
@@ -387,7 +387,7 @@ namespace Questionnaire202204.Managers
                     FROM [Questionnaire]
                     WHERE [IsDelete]='false' AND
                     [StartTime] < GETDATE() AND(
-                               			( [EndTime] > GETDATE() AND [IsEnable]='true') OR 
+                               			( ([EndTime] > GETDATE() OR [EndTime] IS NULL ) AND [IsEnable]='true') OR 
                                			( [IsEnable] = 'false' AND
                                　		    [Questionnaire].[QuestionnaireID] IN(
                                　		      SELECT TOP (1000) 

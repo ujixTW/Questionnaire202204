@@ -50,7 +50,6 @@
         <table class="tableQusList">
             <thead>
                 <tr>
-                    <th>&emsp;</th>
                     <th>#&emsp;&emsp;</th>
                     <th>問卷&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</th>
                     <th>狀態&nbsp;</th>
@@ -59,28 +58,7 @@
                     <th>觀看統計</th>
                 </tr>
             </thead>
-            <tbody>
-                <asp:Repeater ID="rptQusList" runat="server">
-                    <ItemTemplate>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="checkboxQus" value="<%#Eval("QuestionnaireID") %>" /></td>
-                            <td><%# Eval("NO") %></td>
-                            <td>
-                                <a href="Form.aspx?ID=<%# Eval("QuestionnaireID") %>" onclick="return false"><%# Eval("Title") %></a>
-                            </td>
-                            <td><%# Eval("VoteStateText") %></td>
-                            <td><%# Eval("StartTimeText") %></td>
-                            <td><%# Eval("EndTimeText") %></td>
-                            <td><a href="Stastic.aspx?ID=<%#Eval("QuestionnaireID") %>">前往</a></td>
-                        </tr>
-                    </ItemTemplate>
-                </asp:Repeater>
-
-                <%--查無資料--%>
-                <tr id="trNoData" runat="server" visible="false">
-                    <td align="center" colspan="7">查無資料</td>
-                </tr>
+            <tbody id="tbodyQuestionnaireList">
             </tbody>
 
         </table>
@@ -88,15 +66,41 @@
     </div>
     <script>
         $(document).ready(function () {
-            var postData = {
-                "questionnaireID": questionnaireID
-            }
             $.ajax({
-                url:"",
-                method:"POST",
-                data:postData,
-                success: function () {
+                url: `../API/FrontHandler.ashx?Page=List`,
+                method: "POST",
+                success: function (objDataList) {
+                    var tableText = "";
+                    if (objDataList.length != 0) {
+                        for (var item of objDataList) {
+                            let qusLinkText = "";
+                            if (item.VoteStateText === "投票中") {
+                                qusLinkText = `<a href="Form.aspx?ID=${item.QuestionnaireID}">${item.Title}</a>`;
+                            } else {
+                                qusLinkText = `${item.Title}`;
+                            }
+                            tableText += `<tr>
+                                              <td>${item.NO}</td>
+                                              <td>
+                                                  ${qusLinkText}
+                                              </td>
+                                              <td>${item.VoteStateText}</td>
+                                              <td>${item.StartTimeText}</td>
+                                              <td>${item.EndTimeText}</td>
+                                              <td><a href="Stastic.aspx?ID=${item.QuestionnaireID}">前往</a></td>
+                                          </tr>`;
+                        }
+                    } else {
+                        tableText = `
+                        <%--查無資料--%>
+                            <tr>
+                                 <td align="center" colspan="6">查無資料</td>
+                            </tr>
+                        `;
+                    }
 
+                    $("#tbodyQuestionnaireList").empty();
+                    $("#tbodyQuestionnaireList").append(tableText);
                 },
                 error: function (msg) {
                     console.log(msg);

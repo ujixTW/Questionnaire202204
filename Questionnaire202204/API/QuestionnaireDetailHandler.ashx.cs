@@ -135,36 +135,35 @@ namespace Questionnaire202204.API
                  string.Compare("UserAnswer", context.Request.QueryString["Page"], true) == 0)
             {
                 string jsonText;
-                if (context.Session["userDataList"] != null)
-                {
-                    //從session取值
-                    List<UserDataModel> sessionUserDataList = (List<UserDataModel>)context.Session["userDataList"];
-                    //取得現在頁數
-                    var nowPage = int.Parse(context.Request.Form["page"]);
-                    var pageDataStart = (nowPage != 0) ? (nowPage - 1) * 10 : 0;
-                    //取得資料總筆數
-                    var totalDataCount = (int)context.Session["userDataListCount"];
-                    //計算迴圈i最大值
-                    var maxDataCount = ((totalDataCount - pageDataStart) < 9) ? totalDataCount : pageDataStart + 9;
-                    List<UserDataModel> userDataList = new List<UserDataModel>();
-                    for (var i = pageDataStart; i < maxDataCount; i++)
-                    {
-                        userDataList.Add(sessionUserDataList[i]);
-                    }
-
-                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
-                }
-                else
+                if (context.Session["userDataList"] == null)
                 {
                     //從DB取值，並輸出
                     Guid questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
-                    var userDataList = UserAnswerManager.GetUserDataList(questionnaireID, out int userDataListCount);
-                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
+                    var userSessionDataList = UserAnswerManager.GetUserDataList(questionnaireID, out int userDataListCount);
                     //將資料存入session
-                    context.Session["userDataList"] = userDataList;
+                    context.Session["userDataList"] = userSessionDataList;
                     //紀錄資料總數
                     context.Session["userDataListCount"] = userDataListCount;
                 }
+
+                //從session取值
+                List<UserDataModel> sessionUserDataList = (List<UserDataModel>)context.Session["userDataList"];
+                //取得現在頁數
+                var nowPage = int.Parse(context.Request.Form["page"]);
+                var pageSize = int.Parse(context.Request.Form["pageSize"]);
+                var pageDataStart = (nowPage != 0) ? (nowPage - 1) * pageSize : 0;
+                //取得資料總筆數
+                var totalDataCount = (int)context.Session["userDataListCount"];
+                //計算迴圈i最大值
+                var maxDataCount = ((totalDataCount - pageDataStart) < pageSize - 1) ? totalDataCount : pageDataStart + pageSize - 1;
+                List<UserDataModel> userDataList = new List<UserDataModel>();
+                for (var i = pageDataStart; i < maxDataCount; i++)
+                {
+                    userDataList.Add(sessionUserDataList[i]);
+                }
+
+                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(userDataList);
+
 
                 context.Response.ContentType = "application/json";
                 context.Response.Write(jsonText);

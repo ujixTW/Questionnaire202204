@@ -15,3 +15,7 @@
 
 常用問題編輯/新增頁面存有Session
     commonlyQuestionListCount    常用問題資料總數
+
+前台問卷列表存有Session
+    
+    questionnaireDataList       問卷列表頁面資料清單
