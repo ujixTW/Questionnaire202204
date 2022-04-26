@@ -11,7 +11,7 @@ namespace Questionnaire202204
 {
     public partial class List : System.Web.UI.Page
     {
-        private const int _pageSize = 10;
+        private const int _pageSize = 4;
         protected void Page_Load(object sender, EventArgs e)
         {
             int pageIndex;  //目前頁數
@@ -34,7 +34,7 @@ namespace Questionnaire202204
                 List<string> keyQSValue = new List<string>() { keyword, startTimeText, endTimeText };
 
                 //取得考題資料清單
-                var questionnaireList = QuestionnaireManager.GetQuestionnaireList(keyword, startTimeText, endTimeText, _pageSize, pageIndex, out totalRows);
+                var questionnaireList = QuestionnaireManager.GetFormQuestionnaireList(keyword, startTimeText, endTimeText, _pageSize, pageIndex, out totalRows);
 
                 this.ucQuestionnaireSearchBar.Keyword = keyword;
                 this.ucQuestionnaireSearchBar.StartTimeText = startTimeText;

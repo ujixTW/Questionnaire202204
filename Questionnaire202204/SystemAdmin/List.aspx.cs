@@ -12,7 +12,7 @@ namespace Questionnaire202204.SystemAdmin
 {
     public partial class List : System.Web.UI.Page
     {
-        private const int _pageSize = 10;
+        private const int _pageSize = 5;
 
         protected void Page_Load(object sender, EventArgs e)
         {

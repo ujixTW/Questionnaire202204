@@ -10,7 +10,7 @@
         /*問卷清單*/
         .tableQusList {
             border: 3px solid #000;
-            padding:0px;
+            padding: 0px;
             width: 100%;
         }
 
@@ -35,7 +35,6 @@
             .tableQusList tr:nth-child(even) {
                 background-color: #fff;
             }
-
     </style>
 </asp:Content>
 
@@ -67,8 +66,10 @@
                             <td>
                                 <input type="checkbox" name="checkboxQus" value="<%#Eval("QuestionnaireID") %>" /></td>
                             <td><%# Eval("NO") %></td>
-                            <td><a href="Form.aspx?ID=<%# Eval("QuestionnaireID") %>"><%# Eval("Title") %></a></td>
-                            <td><%# Eval("IsEnableText") %></td>
+                            <td>
+                                <a href="Form.aspx?ID=<%# Eval("QuestionnaireID") %>" onclick="return false"><%# Eval("Title") %></a>
+                            </td>
+                            <td><%# Eval("VoteStateText") %></td>
                             <td><%# Eval("StartTimeText") %></td>
                             <td><%# Eval("EndTimeText") %></td>
                             <td><a href="Stastic.aspx?ID=<%#Eval("QuestionnaireID") %>">前往</a></td>
