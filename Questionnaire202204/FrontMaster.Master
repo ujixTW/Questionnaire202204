@@ -1,0 +1,61 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="FrontMaster.master.cs" Inherits="Questionnaire202204.FrontMaster" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+        .pageHeadBar {
+            padding: 10px 40px;
+        }
+
+            .pageHeadBar .pageTitle {
+                font-size: 48pt;
+            }
+
+            .pageHeadBar > div {
+                margin: auto 0px;
+                width: 50px;
+                float: right;
+                text-align: right;
+            }
+
+        .PageMain {
+            height: 200px;
+            padding: 10px 100px;
+        }
+
+        .voteTimeText {
+            font-size: 16pt;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="form1" runat="server">
+        <div class="pageHeadBar">
+            <span class="pageTitle">前台</span>
+
+            <div>
+                <asp:Label ID="lblIsVote" runat="server" CssClass="voteTimeText" Text=""></asp:Label>
+                <br />
+                <br />
+                <asp:Label ID="lblVoteTime" runat="server" CssClass="voteTimeText" Text=""></asp:Label>
+            </div>
+        </div>
+        <div class="PageMain">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+
+        </div>
+
+    </form>
+
+
+
+</body>
+</html>

@@ -70,16 +70,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ConfirmPage.aspx" />
     <Content Include="CSS\Bootstrap\bootstrap.min.css" />
+    <Content Include="Form.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Image\plus-lg.svg" />
     <Content Include="Image\trash3-fill.svg" />
     <Content Include="JavaScript\bootstrap\bootstrap.min.js" />
     <Content Include="JavaScript\jquery\jquery.min.js" />
+    <Content Include="List.aspx" />
     <Content Include="ReadMe.txt" />
     <Content Include="ShareControls\ucDeleteButton.ascx" />
     <Content Include="ShareControls\ucPageChange.ascx" />
     <Content Include="ShareControls\ucQuestionnaireSearchBar.ascx" />
+    <Content Include="Stastic.aspx" />
     <Content Include="SystemAdmin\CommonlyQuestionDetail.aspx" />
     <Content Include="SystemAdmin\CommonlyQuestionList.aspx" />
     <Content Include="SystemAdmin\Detail.aspx" />
@@ -90,6 +94,27 @@
     <Compile Include="API\QuestionnaireDetailHandler.ashx.cs">
       <DependentUpon>QuestionnaireDetailHandler.ashx</DependentUpon>
     </Compile>
+    <Compile Include="ConfirmPage.aspx.cs">
+      <DependentUpon>ConfirmPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmPage.aspx.designer.cs">
+      <DependentUpon>ConfirmPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Form.aspx.cs">
+      <DependentUpon>Form.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Form.aspx.designer.cs">
+      <DependentUpon>Form.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FrontMaster.Master.cs">
+      <DependentUpon>FrontMaster.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FrontMaster.Master.designer.cs">
+      <DependentUpon>FrontMaster.Master</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -97,6 +122,13 @@
     <Compile Include="Helpers\CSVHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\PageSearchHelper.cs" />
+    <Compile Include="List.aspx.cs">
+      <DependentUpon>List.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="List.aspx.designer.cs">
+      <DependentUpon>List.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Managers\CommonlyQuestionManager.cs" />
     <Compile Include="Managers\QuestionManager.cs" />
     <Compile Include="Managers\QuestionnaireManager.cs" />
@@ -127,6 +159,13 @@
     </Compile>
     <Compile Include="ShareControls\ucQuestionnaireSearchBar.ascx.designer.cs">
       <DependentUpon>ucQuestionnaireSearchBar.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Stastic.aspx.cs">
+      <DependentUpon>Stastic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Stastic.aspx.designer.cs">
+      <DependentUpon>Stastic.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\AdminMaster.Master.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
@@ -166,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="API\QuestionnaireDetailHandler.ashx" />
+    <Content Include="FrontMaster.Master" />
     <None Include="packages.config" />
     <Content Include="SystemAdmin\AdminMaster.Master" />
     <None Include="Web.Debug.config">
