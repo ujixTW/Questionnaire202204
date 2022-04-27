@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Questionnaire202204.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -22,6 +23,8 @@ namespace Questionnaire202204
             }
 
 
+            if (this.Session["questionnaireData"] == null)
+                this.Session["questionnaireData"] = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
 
         }
     }

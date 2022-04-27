@@ -16,7 +16,8 @@ namespace Questionnaire202204
             // 檢查QS的ID格式是否正確
             var questionnaireIDText = this.Request.QueryString["ID"];
             var questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
-            if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID) || QuestionnaireID != questionnaireData.QuestionnaireID)
+
+            if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID) || questionnaireData == null || QuestionnaireID != questionnaireData.QuestionnaireID)
             {
                 Response.Redirect("List.aspx");
                 this.Session.Clear();

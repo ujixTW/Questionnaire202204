@@ -48,6 +48,28 @@ namespace Questionnaire202204.API
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                string.Compare("Stastic", context.Request.QueryString["Page"], true) == 0)
             {
+                string jsonText;
+                var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
+                List<QuestionModel> questionModels = new List<QuestionModel>();
+                if (context.Session["questionDataList"] == null)
+                {
+                    questionModels = QuestionManager.GetQuestionList(questionnaireID);
+                }
+                else
+                {
+                    questionModels = (List<QuestionModel>)context.Session["questionDataList"];
+                }
+                var userAnswerStatistics = UserAnswerManager.GetAnswerStatisticsList(questionnaireID);
+                var answerStatisticsPageData = new QuestionAndAnswerStatisticsModel()
+                {
+                    questionList = questionModels,
+                    answerStatisticsList = userAnswerStatistics
+                };
+                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(answerStatisticsPageData);
+
+                context.Response.ContentType = "application/json";
+                context.Response.Write(jsonText);
+                return;
 
             }
 
@@ -176,11 +198,12 @@ namespace Questionnaire202204.API
                     userAnsList[i].UserID = userID;
                 }
                 UserAnswerManager.SaveUserAnswer(userAnsList, userData);
-
+                context.Session.Remove("userData");
+                context.Session.Remove("userAnswerList");
 
                 return;
             }
-            
+
 
         }
 

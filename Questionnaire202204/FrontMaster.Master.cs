@@ -14,17 +14,10 @@ namespace Questionnaire202204
         protected void Page_Load(object sender, EventArgs e)
         {
             var pagePath = Path.GetFileName(Request.PhysicalPath);
-            string startTimeText = string.Empty;
-            string endTimeText = string.Empty;
-            string title = string.Empty;
-            string briefly = string.Empty;
+            QuestionnaireModel model = new QuestionnaireModel();
             if (this.Session["questionnaireData"] != null)
             {
-                var questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
-                startTimeText = questionnaireData.StartTimeText;
-                endTimeText = questionnaireData.EndTimeText;
-                title = questionnaireData.Title;
-                briefly = questionnaireData.Briefly;
+                model = (QuestionnaireModel)this.Session["questionnaireData"];
             }
 
 
@@ -40,23 +33,40 @@ namespace Questionnaire202204
                     break;
                 case "Form.aspx":
                     this.Page.Title = "前台內頁";
-                    this.lblIsVote.Text = "投票中";
-                    this.lblVoteTime.Text = $"{startTimeText}～{endTimeText}";
-                    this.lblQuestionnatreTitle.Text = title;
-                    this.lblQuestionnatreBriefly.Text = briefly;
+                    if (model.StartTime > DateTime.Today || model.EndTime < DateTime.Today || model.IsEnable == false)
+                    {
+                        this.lblIsVote.Text = "已結束投票";
+                        this.lblVoteTime.Text = string.Empty;
+                    }
+                    else
+                    {
+                        this.lblIsVote.Text = "投票中";
+                        this.lblVoteTime.Text = $"{model.StartTimeText}～{model.EndTimeText}";
+                    }
+
+                    this.lblQuestionnatreTitle.Text = model.Title;
+                    this.lblQuestionnatreBriefly.Text = model.Briefly;
                     break;
                 case "ConfirmPage.aspx":
                     this.Page.Title = "前台確認頁";
-                    this.lblIsVote.Text = "投票中";
-                    this.lblVoteTime.Text = $"{startTimeText}～{endTimeText}";
-                    this.lblQuestionnatreTitle.Text = title;
+                    if (model.StartTime > DateTime.Today || model.EndTime < DateTime.Today || model.IsEnable == false)
+                    {
+                        this.lblIsVote.Text = "已結束投票";
+                        this.lblVoteTime.Text = string.Empty;
+                    }
+                    else
+                    {
+                        this.lblIsVote.Text = "投票中";
+                        this.lblVoteTime.Text = $"{model.StartTimeText}～{model.EndTimeText}";
+                    }
+                    this.lblQuestionnatreTitle.Text = model.Title;
                     this.lblQuestionnatreBriefly.Text = string.Empty;
                     break;
                 case "Stastic.aspx":
                     this.Page.Title = "前台統計頁";
                     this.lblIsVote.Text = string.Empty;
                     this.lblVoteTime.Text = string.Empty;
-                    this.lblQuestionnatreTitle.Text = title;
+                    this.lblQuestionnatreTitle.Text = model.Title;
                     this.lblQuestionnatreBriefly.Text = string.Empty;
                     break;
             }

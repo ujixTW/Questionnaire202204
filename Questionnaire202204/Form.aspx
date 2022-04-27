@@ -2,7 +2,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        
         /*使用者資料填寫區CSS*/
         #userDataArea > table {
             width: 60%;
@@ -157,7 +156,7 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="radio" name="${questionList[i].QuestionID}" value="${j+1}"${isRequiredClassText} /> ${optionText[j]}<br/>
+                                        <input type="radio" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -209,7 +208,7 @@
                                     break;
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
-                                    for (let j = 0; j < optionText.length; j++) {
+                                    for (let j = 0; j < optionText.length + 1; j++) {
                                         if (tempUserAnswerList[j] === 'true') {
                                             qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
@@ -219,7 +218,7 @@
                                     break;
                                 case "複選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
-                                    for (let j = 0; j < optionText.length; j++) {
+                                    for (let j = 0; j < optionText.length + 1; j++) {
                                         if (tempUserAnswerList[j] === 'true') {
                                             qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
@@ -250,20 +249,20 @@
                     }
 
                     if ('<%=this.NotEnable%>' === 'true') {
-                        let tempInput = document.getElementsByTagName('input');
-                        for (let item of tempInput) {
-                            item.setAttribute('onclick', 'return false;');
-                            item.setAttribute('readonly', 'readonly');
-                        }
-                        $("#btnSend").css("visibility", "hidden");
-                    }
-                },
-                error: function (msg) {
-                    console.log(msg);
-                    alert("連線失敗，請聯絡管理員。");
-                }
-            });
-        });
+                          let tempInput = document.getElementsByTagName('input');
+                          for (let item of tempInput) {
+                              item.setAttribute('onclick', 'return false;');
+                              item.setAttribute('readonly', 'readonly');
+                          }
+                          $("#btnSend").css("visibility", "hidden");
+                      }
+                  },
+                  error: function (msg) {
+                      console.log(msg);
+                      alert("連線失敗，請聯絡管理員。");
+                  }
+              });
+          });
 
 
         //當按下送出按鈕時

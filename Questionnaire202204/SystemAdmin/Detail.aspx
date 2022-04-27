@@ -105,9 +105,9 @@
             }
 
                 #myTab > li > .active {
-                    background-color:#fff;
-                    margin:0 0 -3px 0;
-                    border-bottom:3px solid #fff;
+                    background-color: #fff;
+                    margin: 0 0 -3px 0;
+                    border-bottom: 3px solid #fff;
                 }
         /*警告文字*/
         .errorMsg {
@@ -683,7 +683,7 @@
                                 break;
                             case "單選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                for (var j = 0; j < optionText.length; j++) {
+                                for (var j = 0; j < optionText.length + 1; j++) {
                                     if (userAnswerDataList[j] === 'True') {
                                         qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
@@ -693,7 +693,7 @@
                                 break;
                             case "複選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                for (var j = 0; j < optionText.length; j++) {
+                                for (var j = 0; j < optionText.length + 1; j++) {
                                     if (userAnswerDataList[j] === 'True') {
                                         qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {

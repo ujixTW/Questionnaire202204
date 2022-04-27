@@ -25,7 +25,7 @@ namespace Questionnaire202204
             }
 
             var questionnaireData = new QuestionnaireModel();
-            if (this.Session[""] == null)
+            if (this.Session["questionnaireData"] == null)
             {
                 questionnaireData = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
                 this.Session["questionnaireData"] = questionnaireData;
@@ -35,7 +35,7 @@ namespace Questionnaire202204
                 questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
             }
             //如果問卷ID與SESSION資料不相符、則強制回到列表頁
-            if (QuestionnaireID != questionnaireData.QuestionnaireID)
+            if (questionnaireData == null || QuestionnaireID != questionnaireData.QuestionnaireID)
             {
                 Response.Redirect("List.aspx");
                 this.Session.Clear();
