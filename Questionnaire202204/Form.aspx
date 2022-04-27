@@ -100,7 +100,7 @@
             </tr>
         </table>
 
-
+        
     </div>
 
     <%--問卷題目與回覆區域--%>
@@ -153,29 +153,29 @@
                             switch (questionList[i].QusTypeText) {
                                 case "文字方塊":
                                     qusInputAreaText = `
-                                    <input type="text"${isRequiredClassText} />
+                                    <input type="text" name="${questionList[i].QuestionID}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (數字)":
                                     qusInputAreaText = `
-                                    <input type="number"${isRequiredClassText} />
+                                    <input type="number" name="${questionList[i].QuestionID}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊(Email)":
                                     qusInputAreaText = `
-                                    <input type="email" placeholder="請輸入Email"${isRequiredClassText} />
+                                    <input type="email" name="${questionList[i].QuestionID}" placeholder="請輸入Email"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (日期)":
                                     qusInputAreaText = `
-                                    <input type="date"${isRequiredClassText} />
+                                    <input type="date" name="${questionList[i].QuestionID}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="radio" name="${questionList[i].QuestionID}" value="${j}"${isRequiredClassText} /> ${optionText[j]}<br/>
+                                        <input type="radio" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -183,7 +183,7 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="checkbox" id="${questionList[i].QuestionID + j}"${isRequiredClassText} /> ${optionText[j]}<br/>
+                                        <input type="checkbox" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}" id="${questionList[i].QuestionID + j}"${isRequiredClassText} /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -207,31 +207,31 @@
                             switch (questionList[i].QusTypeText) {
                                 case "文字方塊":
                                     qusInputAreaText = `
-                                    <input type="text" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
+                                    <input type="text" name="${questionList[i].QuestionID}" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (數字)":
                                     qusInputAreaText = `
-                                    <input type="number" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
+                                    <input type="number" name="${questionList[i].QuestionID}" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊(Email)":
                                     qusInputAreaText = `
-                                    <input type="email" placeholder="請輸入Email" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
+                                    <input type="email" name="${questionList[i].QuestionID}" placeholder="請輸入Email" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (日期)":
                                     qusInputAreaText = `
-                                    <input type="date" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
+                                    <input type="date" name="${questionList[i].QuestionID}" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${j}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${j}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
@@ -239,9 +239,9 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="checkbox" checked="checked" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="checkbox" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
@@ -277,9 +277,35 @@
 
 
         //當按下送出按鈕時
-        $("#btnSend").submit(function () {
-            let userInputAnswer = [];
+        $("#form").submit(function () {
+            const userInputAnswer = document.getElementsByTagName("input");
+            let userAnsDataList = new Array();
+            //將使用者資料放入暫存的自定義型別中
+            let userData = {
+                Name: userInputAnswer[0].value,
+                Mobile: userInputAnswer[1].value,
+                Email: userInputAnswer[2].value,
+                Age: userInputAnswer[3].value
+            };
+            for (let i = 4; i < userInputAnswer.length; i++) {
+                if (userInputAnswer[i].type === "radio") {
+                   
+                }
+            }
 
+            var postData = {};
+            $.ajax({
+                url: "../API/FrontHandler.ashx?Page=Form&Action=Send",
+                method: "POST",
+                data: postData,
+                success: function () {
+                    location.href = `ConfirmPage.aspx?ID=${questionnaireID}`;
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
         });
 
         //當按下送出按鈕時
