@@ -34,7 +34,7 @@
             text-align: right;
         }
 
-            #footerBtnArea > input[type=button] {
+            #footerBtnArea > input {
                 margin-left: 30%;
                 border:2px solid #000;
             border-radius:3px;
@@ -62,38 +62,39 @@
         </div>
     </div>
 
+    
     <%--個人資料填寫區域--%>
     <div id="userDataArea">
         <table>
             <tr>
                 <td class="userDataName">姓名</td>
                 <td class="userDataInput">
-                    <div class="required">
-                        <input type="text" id="txtUserName" placeholder="請輸入您的姓名" />
+                    <div>
+                        <input type="text" id="txtUserName" required="required" placeholder="請輸入您的姓名" />
                     </div>
                 </td>
             </tr>
             <tr>
                 <td class="userDataName">手機</td>
                 <td class="userDataInput">
-                    <div class="required">
-                        <input type="text" id="txtMobil" placeholder="請輸入您的電話" />
+                    <div>
+                        <input type="text" id="txtMobil" required="required" maxlength="10" placeholder="請輸入您的電話" />
                     </div>
                 </td>
             </tr>
             <tr>
                 <td class="userDataName">Email</td>
                 <td class="userDataInput">
-                    <div class="required">
-                        <input type="email" id="txtEmail" placeholder="請輸入您的Email" />
+                    <div>
+                        <input type="email" id="txtEmail" required="required" placeholder="請輸入您的Email" />
                     </div>
                 </td>
             </tr>
             <tr>
                 <td class="userDataName">年齡</td>
                 <td class="userDataInput">
-                    <div class="required">
-                        <input type="number" id="txtAge" placeholder="請輸入您的年齡" />
+                    <div>
+                        <input type="number" id="txtAge" required="required" min="0" max="150" placeholder="請輸入您的年齡" />
                     </div>
                 </td>
             </tr>
@@ -110,7 +111,7 @@
     <div id="footerBtnArea">
         <p id="pQusCount"></p>
         <input type="button" id="btnCancel" value="取消" />
-        <input type="button" id="btnSend" value="送出" />
+        <input type="submit" id="btnSend" value="送出" />
     </div>
 
     <script>
@@ -137,10 +138,10 @@
                         let isRequiredText = "";
                         let isRequiredClassText = "";
                         if (questionList[i].IsRequired === true && questionList[i].QusType < 5) {
-                            isRequiredClassText = " required";
+                            isRequiredClassText = ` required="required"`;
                             isRequiredText = "(必填欄位)";
                         } else if (questionList[i].IsRequired === true && questionList[i].QusType >= 5) {
-                            isRequiredClassText = " required";
+                            isRequiredClassText = ` required="required"`;
                             isRequiredText = "(必填)";
                         } else {
                             isRequiredText = "";
@@ -152,29 +153,29 @@
                             switch (questionList[i].QusTypeText) {
                                 case "文字方塊":
                                     qusInputAreaText = `
-                                    <input type="text" />
+                                    <input type="text"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (數字)":
                                     qusInputAreaText = `
-                                    <input type="number" />
+                                    <input type="number"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊(Email)":
                                     qusInputAreaText = `
-                                    <input type="email" placeholder="請輸入Email" />
+                                    <input type="email" placeholder="請輸入Email"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (日期)":
                                     qusInputAreaText = `
-                                    <input type="date" />
+                                    <input type="date"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="radio" name="${questionList[i].QuestionID}" value="${j}" /> ${optionText[j]}<br/>
+                                        <input type="radio" name="${questionList[i].QuestionID}" value="${j}"${isRequiredClassText} /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -182,7 +183,7 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="checkbox" id="${questionList[i].QuestionID + j}" /> ${optionText[j]}<br/>
+                                        <input type="checkbox" id="${questionList[i].QuestionID + j}"${isRequiredClassText} /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -206,31 +207,31 @@
                             switch (questionList[i].QusTypeText) {
                                 case "文字方塊":
                                     qusInputAreaText = `
-                                    <input type="text" value="${tempUserAnswerList[0]}" />
+                                    <input type="text" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (數字)":
                                     qusInputAreaText = `
-                                    <input type="number" value="${tempUserAnswerList[0]}" />
+                                    <input type="number" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊(Email)":
                                     qusInputAreaText = `
-                                    <input type="email" placeholder="請輸入Email" value="${tempUserAnswerList[0]}" />
+                                    <input type="email" placeholder="請輸入Email" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "文字方塊 (日期)":
                                     qusInputAreaText = `
-                                    <input type="date" value="${tempUserAnswerList[0]}" />
+                                    <input type="date" value="${tempUserAnswerList[0]}"${isRequiredClassText} />
                                     `;
                                     break;
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${j}" />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${j}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${j}" />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${j}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
@@ -238,9 +239,9 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="checkbox" checked="checked" id="${questionList[i].QuestionID + j}" />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" checked="checked" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="checkbox" id="${questionList[i].QuestionID + j}" />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
@@ -248,7 +249,7 @@
                         }
 
 
-                        questionText += `<div class='question${isRequiredClassText}'>${questionList[i].NO}.${questionList[i].QuestionContent} ${isRequiredText}<br/>`;
+                        questionText += `<div class='question'>${questionList[i].NO}.${questionList[i].QuestionContent} ${isRequiredText}<br/>`;
                         questionText += `${qusInputAreaText}</div>`;
                     }
 
@@ -276,8 +277,9 @@
 
 
         //當按下送出按鈕時
-        $("#btnSend").click(function () {
-            alert("送出資料");
+        $("#btnSend").submit(function () {
+            let userInputAnswer = [];
+
         });
 
         //當按下送出按鈕時
