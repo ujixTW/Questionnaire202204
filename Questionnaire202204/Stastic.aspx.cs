@@ -9,8 +9,19 @@ namespace Questionnaire202204
 {
     public partial class Stastic : System.Web.UI.Page
     {
+        public Guid QuestionnaireID;
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 檢查QS的ID格式是否正確
+            var questionnaireIDText = this.Request.QueryString["ID"];
+            if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID))
+            {
+                Response.Redirect("List.aspx");
+                this.Session.Clear();
+                return;
+            }
+
+
 
         }
     }

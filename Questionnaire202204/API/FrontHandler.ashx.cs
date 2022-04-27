@@ -38,6 +38,18 @@ namespace Questionnaire202204.API
 
                 FormPageProcessRequest(context, questionnaireID);
             }
+            //前台確認頁
+            if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
+                string.Compare("ConfirmPage", context.Request.QueryString["Page"], true) == 0)
+            {
+                ConfirmPagePageProcessRequest(context);
+            }
+            //前台統計頁
+            if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
+               string.Compare("Stastic", context.Request.QueryString["Page"], true) == 0)
+            {
+
+            }
 
         }
         /// <summary>
@@ -125,6 +137,50 @@ namespace Questionnaire202204.API
                 context.Session.Clear();
                 return;
             }
+
+        }
+        /// <summary>
+        /// 前台確認頁API
+        /// </summary>
+        /// <param name="context"></param>
+        private void ConfirmPagePageProcessRequest(HttpContext context)
+        {
+            if (string.Compare("Start", context.Request.QueryString["Action"], true) == 0)
+            {
+                string jsonText;
+                var questionList = (List<QuestionModel>)context.Session["questionDataList"];
+                var userAnsList = (List<UserAnswerModel>)context.Session["userAnswerList"];
+                var userData = (UserDataModel)context.Session["userData"];
+
+                QuestionAndUserAnswerModel model = new QuestionAndUserAnswerModel();
+                model.questionList = questionList;
+                model.userAnswerList = userAnsList;
+                model.userData = userData;
+
+                jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+
+                context.Response.ContentType = "application/json";
+                context.Response.Write(jsonText);
+                return;
+            }
+            if (string.Compare("Send", context.Request.QueryString["Action"], true) == 0)
+            {
+                var userID = Guid.NewGuid();
+
+                var userAnsList = (List<UserAnswerModel>)context.Session["userAnswerList"];
+                var userData = (UserDataModel)context.Session["userData"];
+
+                userData.UserID = userID;
+                for (var i = 0; i < userAnsList.Count; i++)
+                {
+                    userAnsList[i].UserID = userID;
+                }
+                UserAnswerManager.SaveUserAnswer(userAnsList, userData);
+
+
+                return;
+            }
+            
 
         }
 

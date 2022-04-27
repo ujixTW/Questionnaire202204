@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Questionnaire202204.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,7 +15,8 @@ namespace Questionnaire202204
         {
             // 檢查QS的ID格式是否正確
             var questionnaireIDText = this.Request.QueryString["ID"];
-            if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID))
+            var questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
+            if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID) || QuestionnaireID != questionnaireData.QuestionnaireID)
             {
                 Response.Redirect("List.aspx");
                 this.Session.Clear();

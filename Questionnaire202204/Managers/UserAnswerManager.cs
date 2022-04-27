@@ -11,6 +11,70 @@ namespace Questionnaire202204.Managers
     public class UserAnswerManager
     {
         //增加
+        /// <summary>
+        /// 儲存使用者資料及問卷回復至DB
+        /// </summary>
+        /// <param name="userAnswers">問卷回復</param>
+        /// <param name="userData">使用者資料</param>
+        public static void SaveUserAnswer(List<UserAnswerModel> userAnswers, UserDataModel userData)
+        {
+            //連接資料庫用文字
+            string connStr = ConfigHelper.GetConnectionString();
+            string commandText = $@"
+                                  INSERT INTO [UserData]
+                                		( [UserID],[QuestionnaireID],[NO],[Name],[Mobile],[Email],[Age])
+                                  VALUES
+                                		(@UserID ,@QuestionnaireID, 
+                                		(SELECT COUNT([QuestionnaireID]) AS NO FROM [UserData] WHERE [QuestionnaireID] = @QuestionnaireID) + 1
+                                		,@Name ,@Mobile ,@Email ,@Age )
+                                 ";
+            for (var i = 0; i < userAnswers.Count; i++)
+            {
+                commandText += $@"
+                                INSERT INTO [UserAnswer]
+                                		([UserID],[QuestionnaireID],[QuestionID],[OptionNO],[Answer])
+                                VALUES
+                                		( @UserID{i}, @QuestionnaireID{i}, @QuestionID{i}, @OptionNO{i}, @Answer{i})
+                                ";
+            }
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    using (SqlCommand command = new SqlCommand(commandText, conn))
+                    {
+                        //userData用資料
+                        command.Parameters.AddWithValue("@UserID", userData.UserID);
+                        command.Parameters.AddWithValue("@QuestionnaireID", userData.QuestionnaireID);
+                        command.Parameters.AddWithValue("@Name", userData.Name);
+                        command.Parameters.AddWithValue("@Mobile", userData.Mobile);
+                        command.Parameters.AddWithValue("@Email", userData.Email);
+                        command.Parameters.AddWithValue("@Age", userData.Age);
+                        //userAnswer用資料
+                        for (var i = 0; i < userAnswers.Count; i++)
+                        {
+                            command.Parameters.AddWithValue("@UserID" + i, userAnswers[i].UserID);
+                            command.Parameters.AddWithValue("@QuestionnaireID"+i, userAnswers[i].QuestionnaireID);
+                            command.Parameters.AddWithValue("@QuestionID" + i, userAnswers[i].QuestionID);
+                            command.Parameters.AddWithValue("@OptionNO" + i, userAnswers[i].OptionNO);
+                            command.Parameters.AddWithValue("@Answer" + i, userAnswers[i].Answer);
+                        }
+
+                        conn.Open();
+                        command.ExecuteNonQuery();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("Questionnaire202204.Manager.UserAnswerManager.SaveUserAnswer", ex);
+                throw;
+            }
+
+        }
+
+
         //查詢
         /// <summary>
         /// 查詢單筆問卷的填寫紀錄
