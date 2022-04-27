@@ -36,13 +36,12 @@
 
             #footerBtnArea > input {
                 margin-left: 30%;
-                border:2px solid #000;
-            border-radius:3px;
+                border: 2px solid #000;
+                border-radius: 3px;
             }
 
         #btnSend {
-            background-color:#9d9;
-            
+            background-color: #9d9;
         }
         /*下方案扭區CSS結束*/
     </style>
@@ -62,7 +61,7 @@
         </div>
     </div>
 
-    
+
     <%--個人資料填寫區域--%>
     <div id="userDataArea">
         <table>
@@ -100,7 +99,7 @@
             </tr>
         </table>
 
-        
+
     </div>
 
     <%--問卷題目與回覆區域--%>
@@ -239,9 +238,9 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" id="${questionList[i].QuestionID + j}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
@@ -282,18 +281,36 @@
             let userAnsDataList = new Array();
             //將使用者資料放入暫存的自定義型別中
             let userData = {
-                Name: userInputAnswer[0].value,
-                Mobile: userInputAnswer[1].value,
-                Email: userInputAnswer[2].value,
-                Age: userInputAnswer[3].value
+                Name: userInputAnswer[2].value,
+                Mobile: userInputAnswer[3].value,
+                Email: userInputAnswer[4].value,
+                Age: userInputAnswer[5].value
             };
-            for (let i = 4; i < userInputAnswer.length; i++) {
-                if (userInputAnswer[i].type === "radio") {
-                   
+            //將使用者答案放入暫存的自定義型別中
+            for (let i = 6; i < userInputAnswer.length - 2; i++) {
+                if (userInputAnswer[i].type === "radio" || userInputAnswer[i].type === "checkbox") {
+                    let userAns = {
+                        QuestionID: userInputAnswer[i].name,
+                        OptionNO: userInputAnswer[i].value,
+                        Answer: userInputAnswer[i].checked
+                    };
+                    userAnsDataList[i - 6] = userAns;
+                } else {
+                    let userAns = {
+                        QuestionID: userInputAnswer[i].name,
+                        OptionNO: 0,
+                        Answer: userInputAnswer[i].value
+                    };
+                    userAnsDataList[i - 6] = userAns;
                 }
+
             }
 
-            var postData = {};
+            var postData = {
+                "questionnaireID":questionnaireID,
+                "userData": userData,
+                "userAnsDataList": userAnsDataList
+            };
             $.ajax({
                 url: "../API/FrontHandler.ashx?Page=Form&Action=Send",
                 method: "POST",
@@ -311,8 +328,8 @@
         //當按下送出按鈕時
         $("#btnCancel").click(function () {
             $.ajax({
-                url:"../API/FrontHandler.ashx?Page=Form&Action=Cancel",
-                method:"POST",
+                url: "../API/FrontHandler.ashx?Page=Form&Action=Cancel",
+                method: "POST",
                 success: function () {
                     location.href = `List.aspx`;
                 },

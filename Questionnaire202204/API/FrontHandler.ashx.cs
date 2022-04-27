@@ -88,7 +88,37 @@ namespace Questionnaire202204.API
                 }
 
             }
+            if (string.Compare("Send", context.Request.QueryString["Action"], true) == 0)
+            {
+                var formList = context.Request.Form;
+                //formModel資料長度，扣除前5筆(如userData所見)，後面各3筆資料為一個model，故除以3
+                var formDataCount = (formList.Count - 5) / 3;
+                var userAnsList = new List<UserAnswerModel>();
+                var userData = new UserDataModel()
+                {
+                    QuestionnaireID = questionnaireID,
+                    Name = formList["Name"],
+                    Mobile = formList["Mobile"],
+                    Email = formList["Email"],
+                    Age = int.Parse(formList["Age"])
+                };
+                for (var i = 0; i < formDataCount; i++)
+                {
+                    UserAnswerModel model = new UserAnswerModel()
+                    {
+                        QuestionnaireID = questionnaireID,
+                        QuestionID = formList[$"userInputAnswer[{i}][QuestionID]"],
+                        OptionNO = int.Parse(formList[$"userInputAnswer[{i}][OptionNO]"]),
+                        Answer = formList[$"userInputAnswer[{i}][Answer]"]
+                    };
+                    userAnsList.Add(model);
+                }
+                context.Session["userData"] = userData;
+                context.Session["userAnswerList"] = userAnsList;
 
+                return;
+
+            }
 
             if (string.Compare("Cancel", context.Request.QueryString["Action"], true) == 0)
             {
