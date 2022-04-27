@@ -43,8 +43,6 @@
     <%--搜尋欄位--%>
     <uc1:ucQuestionnaireSearchBar runat="server" ID="ucQuestionnaireSearchBar" />
 
-    <br />
-
     <%--問卷列表--%>
     <div class="ListBar">
         <table class="tableQusList">

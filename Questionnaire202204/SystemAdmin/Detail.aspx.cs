@@ -24,23 +24,14 @@ namespace Questionnaire202204.SystemAdmin
         {
             string pageState = this.Request.QueryString["State"];
             string questionnaireIDText = this.Request.QueryString["ID"];
-            //檢查QS上的ID是否正確
-            if (!string.IsNullOrWhiteSpace(questionnaireIDText))
-            {
-                //檢查QS傳遞內容是否為GUID
-                if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID))
-                {
-                    //不符條件，送回列表頁
-                    Response.Redirect("List.aspx");
-                    return;
-                }
-            }
-            else
+            //檢查QS上的ID格式是否正確
+            if (!Guid.TryParse(questionnaireIDText, out QuestionnaireID))
             {
                 //不符條件，送回列表頁
                 Response.Redirect("List.aspx");
                 return;
             }
+            
 
             if (!IsPostBack)
             {

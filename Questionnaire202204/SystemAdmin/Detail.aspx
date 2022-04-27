@@ -685,9 +685,9 @@
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
                                     if (userAnswerDataList[j] === 'True') {
-                                        qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
+                                        qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
-                                        qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[j]}<br/>`;
+                                        qusTypeText += `<input type="radio" onclick="return false" />${optionText[j]}<br/>`;
                                     }
                                 }
                                 break;
@@ -695,9 +695,9 @@
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
                                     if (userAnswerDataList[j] === 'True') {
-                                        qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
+                                        qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
-                                        qusTypeText += `<input type="radio" onclick="return false" />${optionText[j]}<br/>`;
+                                        qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[j]}<br/>`;
                                     }
                                 }
                                 break;

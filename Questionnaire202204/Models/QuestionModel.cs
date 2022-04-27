@@ -30,7 +30,7 @@ namespace Questionnaire202204.Models
                         temp = "文字方塊";
                         break;
                     case 2:
-                        temp = "文字方塊 (數字) ";
+                        temp = "文字方塊 (數字)";
                         break;
                     case 3:
                         temp = "文字方塊(Email)";

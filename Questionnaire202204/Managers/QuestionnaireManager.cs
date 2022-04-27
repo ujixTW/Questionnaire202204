@@ -267,7 +267,7 @@ namespace Questionnaire202204.Managers
             }
         }
         /// <summary>
-        /// 後台查詢單筆問卷資料
+        /// 查詢單筆問卷資料
         /// </summary>
         /// <param name="questionnaireID">問卷ID</param>
         /// <returns></returns>

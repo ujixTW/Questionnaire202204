@@ -14,6 +14,7 @@
     <style>
         .pageHeadBar {
             padding: 10px 40px;
+            height: 120px;
         }
 
             .pageHeadBar .pageTitle {
@@ -22,17 +23,26 @@
 
             .pageHeadBar > div {
                 margin: auto 0px;
-                width: 50px;
+                height: 100px;
                 float: right;
-                text-align: right;
+                display: flex;
             }
 
+                .pageHeadBar > div > div {
+                    margin: auto;
+                    text-align: right;
+                }
+
         .PageMain {
-            padding: 10px 100px;
+            padding: 0 100px;
         }
 
+            .PageMain > div {
+                margin-bottom:30px;
+            }
+
         .voteTimeText {
-            font-size: 16pt;
+            font-size: 14pt;
         }
     </style>
 </head>
@@ -43,10 +53,11 @@
             <span class="pageTitle">前台</span>
 
             <div>
-                <asp:Label ID="lblIsVote" runat="server" CssClass="voteTimeText" Text=""></asp:Label>
-                <br />
-                <br />
-                <asp:Label ID="lblVoteTime" runat="server" CssClass="voteTimeText" Text=""></asp:Label>
+                <div>
+                    <asp:Label ID="lblIsVote" runat="server" CssClass="voteTimeText" Text=""></asp:Label>
+                    <br />
+                    <asp:Label ID="lblVoteTime" runat="server" CssClass="voteTimeText" Text=""></asp:Label>
+                </div>
             </div>
         </div>
         <div class="PageMain">
