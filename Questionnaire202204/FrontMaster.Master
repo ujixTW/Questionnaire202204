@@ -38,12 +38,23 @@
         }
 
             .PageMain > div {
-                margin-bottom:30px;
+                margin-bottom: 30px;
             }
 
         .voteTimeText {
             font-size: 14pt;
         }
+
+        #questionnaireDataArea{
+            margin-bottom:30px;
+            padding:0 100px;
+        }
+
+        .questionnaireTitleArea {
+            text-align: center;
+            font-size: 36pt;
+        }
+
     </style>
 </head>
 
@@ -60,6 +71,19 @@
                 </div>
             </div>
         </div>
+
+        <%--問卷基礎資訊區域--%>
+        <div id="questionnaireDataArea">
+            <%--問卷標題--%>
+            <div class="questionnaireTitleArea">
+                <asp:Label ID="lblQuestionnatreTitle" runat="server" Text=""></asp:Label>
+            </div>
+            <%--問卷簡述--%>
+            <div>
+                <asp:Label ID="lblQuestionnatreBriefly" runat="server" Text="Label"></asp:Label>
+            </div>
+        </div>
+
         <div class="PageMain">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>

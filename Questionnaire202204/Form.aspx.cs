@@ -1,4 +1,5 @@
 ﻿using Questionnaire202204.Managers;
+using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,24 @@ namespace Questionnaire202204
                 return;
             }
 
-            var questionnaireData = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
-            this.Session["questionnaireData"] = questionnaireData;
+            var questionnaireData = new QuestionnaireModel();
+            if (this.Session[""] == null)
+            {
+                questionnaireData = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
+                this.Session["questionnaireData"] = questionnaireData;
+            }
+            else
+            {
+                questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
+            }
+            //如果問卷ID與SESSION資料不相符、則強制回到列表頁
+            if (QuestionnaireID != questionnaireData.QuestionnaireID)
+            {
+                Response.Redirect("List.aspx");
+                this.Session.Clear();
+                return;
+            }
+
             if (questionnaireData.StartTime > DateTime.Today || questionnaireData.EndTime < DateTime.Today || questionnaireData.IsEnable == false)
             {
                 NotEnable = true;
@@ -32,11 +49,6 @@ namespace Questionnaire202204
             else
             {
                 NotEnable = false;
-            }
-            if (!IsPostBack)
-            {
-                this.lblQuestionnatreTitle.Text = questionnaireData.Title;
-                this.lblQuestionnatreBriefly.Text = questionnaireData.Briefly;
             }
 
         }

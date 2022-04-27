@@ -15,13 +15,19 @@ namespace Questionnaire202204
         {
             var pagePath = Path.GetFileName(Request.PhysicalPath);
             string startTimeText = string.Empty;
-            string EndTimeText = string.Empty;
+            string endTimeText = string.Empty;
+            string title = string.Empty;
+            string briefly = string.Empty;
             if (this.Session["questionnaireData"] != null)
             {
                 var questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
                 startTimeText = questionnaireData.StartTimeText;
-                EndTimeText = questionnaireData.EndTimeText;
+                endTimeText = questionnaireData.EndTimeText;
+                title = questionnaireData.Title;
+                briefly = questionnaireData.Briefly;
             }
+
+
 
             switch (pagePath)
             {
@@ -29,21 +35,29 @@ namespace Questionnaire202204
                     this.Page.Title = "前台列表頁";
                     this.lblIsVote.Text = string.Empty;
                     this.lblVoteTime.Text = string.Empty;
+                    this.lblQuestionnatreTitle.Text = string.Empty;
+                    this.lblQuestionnatreBriefly.Text = string.Empty;
                     break;
                 case "Form.aspx":
                     this.Page.Title = "前台內頁";
                     this.lblIsVote.Text = "投票中";
-                    this.lblVoteTime.Text = $"{startTimeText}～{EndTimeText}";
+                    this.lblVoteTime.Text = $"{startTimeText}～{endTimeText}";
+                    this.lblQuestionnatreTitle.Text = title;
+                    this.lblQuestionnatreBriefly.Text = briefly;
                     break;
                 case "ConfirmPage.aspx":
                     this.Page.Title = "前台確認頁";
                     this.lblIsVote.Text = "投票中";
-                    this.lblVoteTime.Text = $"{startTimeText}～{EndTimeText}";
+                    this.lblVoteTime.Text = $"{startTimeText}～{endTimeText}";
+                    this.lblQuestionnatreTitle.Text = title;
+                    this.lblQuestionnatreBriefly.Text = string.Empty;
                     break;
                 case "Stastic.aspx":
                     this.Page.Title = "前台統計頁";
                     this.lblIsVote.Text = string.Empty;
                     this.lblVoteTime.Text = string.Empty;
+                    this.lblQuestionnatreTitle.Text = title;
+                    this.lblQuestionnatreBriefly.Text = string.Empty;
                     break;
             }
         }

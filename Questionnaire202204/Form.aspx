@@ -2,10 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        .questionnaireTitleArea {
-            text-align: center;
-            font-size: 36pt;
-        }
+        
         /*使用者資料填寫區CSS*/
         #userDataArea > table {
             width: 60%;
@@ -48,19 +45,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <%--問卷基礎資訊區域--%>
-    <div id="questionnaireDataArea">
-        <%--問卷標題--%>
-        <div class="questionnaireTitleArea">
-            <asp:Label ID="lblQuestionnatreTitle" runat="server" Text=""></asp:Label>
-        </div>
-        <%--問卷簡述--%>
-        <div>
-            <asp:Label ID="lblQuestionnatreBriefly" runat="server" Text="Label"></asp:Label>
-        </div>
-    </div>
-
 
     <%--個人資料填寫區域--%>
     <div id="userDataArea">
@@ -173,7 +157,7 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="radio" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} /> ${optionText[j]}<br/>
+                                        <input type="radio" name="${questionList[i].QuestionID}" value="${j+1}"${isRequiredClassText} /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -181,7 +165,7 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="checkbox" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}" /> ${optionText[j]}<br/>
+                                        <input type="checkbox" name="${questionList[i].QuestionID}" value="${j + 1}" /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -226,20 +210,20 @@
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
-                                        if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                        if (tempUserAnswerList[j] === 'true') {
+                                            qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
                                 case "複選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
-                                        if (userAnswerDataList[j] === 'True') {
-                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                        if (tempUserAnswerList[j] === 'true') {
+                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
-                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}"${isRequiredClassText} />${optionText[j]}<br/>`;
+                                            qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         }
                                     }
                                     break;
@@ -259,13 +243,13 @@
 
                     //如果使用者資料不為NULL就帶入使用者資料到對應欄位
                     if (userData != null) {
-                        $("#txtUserName").text(userData.Name);
-                        $("#txtMobil").text(userData.Mobile);
-                        $("#txtEmail").text(userData.Email);
-                        $("#txtAge").text(userData.Age);
+                        $("#txtUserName").val(userData.Name);
+                        $("#txtMobil").val(userData.Mobile);
+                        $("#txtEmail").val(userData.Email);
+                        $("#txtAge").val(userData.Age);
                     }
 
-                    if ('<%=this.NotEnable%>' === 'True') {
+                    if ('<%=this.NotEnable%>' === 'true') {
                         let tempInput = document.getElementsByTagName('input');
                         for (let item of tempInput) {
                             item.setAttribute('onclick', 'return false;');

@@ -97,19 +97,19 @@ namespace Questionnaire202204.API
                 var userData = new UserDataModel()
                 {
                     QuestionnaireID = questionnaireID,
-                    Name = formList["Name"],
-                    Mobile = formList["Mobile"],
-                    Email = formList["Email"],
-                    Age = int.Parse(formList["Age"])
+                    Name = formList["userData[Name]"],
+                    Mobile = formList["userData[Mobile]"],
+                    Email = formList["userData[Email]"],
+                    Age = int.Parse(formList["userData[Age]"])
                 };
                 for (var i = 0; i < formDataCount; i++)
                 {
                     UserAnswerModel model = new UserAnswerModel()
                     {
                         QuestionnaireID = questionnaireID,
-                        QuestionID = formList[$"userInputAnswer[{i}][QuestionID]"],
-                        OptionNO = int.Parse(formList[$"userInputAnswer[{i}][OptionNO]"]),
-                        Answer = formList[$"userInputAnswer[{i}][Answer]"]
+                        QuestionID = formList[$"userAnsDataList[{i}][QuestionID]"],
+                        OptionNO = int.Parse(formList[$"userAnsDataList[{i}][OptionNO]"]),
+                        Answer = formList[$"userAnsDataList[{i}][Answer]"]
                     };
                     userAnsList.Add(model);
                 }
