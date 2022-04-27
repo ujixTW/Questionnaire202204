@@ -99,7 +99,6 @@
             </tr>
         </table>
 
-
     </div>
 
     <%--問卷題目與回覆區域--%>
@@ -182,7 +181,7 @@
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
                                     for (let j = 0; j < optionText.length; j++) {
                                         qusInputAreaText += `
-                                        <input type="checkbox" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}" id="${questionList[i].QuestionID + j}"${isRequiredClassText} /> ${optionText[j]}<br/>
+                                        <input type="checkbox" name="${questionList[i].QuestionID}" value="${questionList[i].OptionNO}" /> ${optionText[j]}<br/>
                                     `;
                                     }
                                     break;
@@ -266,6 +265,14 @@
                         $("#txtAge").text(userData.Age);
                     }
 
+                    if ('<%=this.NotEnable%>' === 'True') {
+                        let tempInput = document.getElementsByTagName('input');
+                        for (let item of tempInput) {
+                            item.setAttribute('onclick', 'return false;');
+                            item.setAttribute('readonly', 'readonly');
+                        }
+                        $("#btnSend").css("visibility", "hidden");
+                    }
                 },
                 error: function (msg) {
                     console.log(msg);
@@ -307,7 +314,7 @@
             }
 
             var postData = {
-                "questionnaireID":questionnaireID,
+                "questionnaireID": questionnaireID,
                 "userData": userData,
                 "userAnsDataList": userAnsDataList
             };

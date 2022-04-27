@@ -11,6 +11,7 @@ namespace Questionnaire202204
     public partial class Form : System.Web.UI.Page
     {
         public Guid QuestionnaireID;
+        public bool NotEnable;
         protected void Page_Load(object sender, EventArgs e)
         {
             //檢查QS的ID格式是否正確
@@ -24,9 +25,19 @@ namespace Questionnaire202204
 
             var questionnaireData = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
             this.Session["questionnaireData"] = questionnaireData;
-
-            this.lblQuestionnatreTitle.Text = questionnaireData.Title;
-            this.lblQuestionnatreBriefly.Text = questionnaireData.Briefly;
+            if (questionnaireData.StartTime > DateTime.Today || questionnaireData.EndTime < DateTime.Today || questionnaireData.IsEnable == false)
+            {
+                NotEnable = true;
+            }
+            else
+            {
+                NotEnable = false;
+            }
+            if (!IsPostBack)
+            {
+                this.lblQuestionnatreTitle.Text = questionnaireData.Title;
+                this.lblQuestionnatreBriefly.Text = questionnaireData.Briefly;
+            }
 
         }
     }
