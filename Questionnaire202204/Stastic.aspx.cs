@@ -27,5 +27,12 @@ namespace Questionnaire202204
                 this.Session["questionnaireData"] = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
 
         }
+
+        protected void btnSure_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("List.aspx");
+            this.Session.Clear();
+            return;
+        }
     }
 }
