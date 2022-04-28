@@ -277,8 +277,8 @@ namespace Questionnaire202204.Managers
                                       ,COUNT([Answer]) AS 'AnswerStatistics'
                                   FROM [Questionnaire202204].[dbo].[UserAnswer]
                                   WHERE OptionNO IS NOT NULL  AND QuestionnaireID = @QuestionnaireID
-                                  GROUP BY [UserAnswer].QuestionID,[OptionNO]
-                                  ORDER BY QuestionID,[OptionNO]
+                                  GROUP BY [UserAnswer].QuestionID,[OptionNO],[Answer]
+                                  ORDER BY QuestionID,[OptionNO],[Answer]
                                 ";
             try
             {

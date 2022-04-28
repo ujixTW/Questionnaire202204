@@ -72,6 +72,7 @@
                             `;
 
                     }
+                    statisticsDataText = (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>" : statisticsDataText;
 
                     $("#statisticsContent").empty();
                     $("#statisticsContent").append(statisticsDataText);
@@ -93,11 +94,12 @@
             var choiseNumList = [];
             var choiseCount = 0;
             var qusTypeText = "";
-            for (let item of answerStatisticsList) {
+            for (let j = 0; j < answerStatisticsList.length;j++) {
                 //將問題選擇數量對上對應的問題選項
-                if (item.QuestionID === questionID) {
-                    choiseNumList[item.OptionNO - 1] = item.AnswerStatistics;
-                    choiseCount += item.AnswerStatistics;
+                if (answerStatisticsList[j].QuestionID === questionID) {
+                    choiseNumList[answerStatisticsList[j + 1].OptionNO - 1] = answerStatisticsList[j + 1].AnswerStatistics;
+                    choiseCount += answerStatisticsList[j + 1].AnswerStatistics;
+                    j++;
                 }
             }
             let qusPercentTotal = "";
@@ -119,6 +121,7 @@
             //    }
             //};
             //qusPercentTotal += `<div>${qusTypeText}</div>`;
+            
 
             for (let j = 0; j < optionText.length; j++) {
                 let choisePercent = (choiseCount <= 0) ? 0 : Math.round(choiseNumList[j] / choiseCount * 10000) / 100;

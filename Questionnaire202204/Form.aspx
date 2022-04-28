@@ -208,8 +208,8 @@
                                     break;
                                 case "單選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
-                                    for (let j = 0; j < optionText.length + 1; j++) {
-                                        if (tempUserAnswerList[j] === 'true') {
+                                    for (let j = 0; j < optionText.length; j++) {
+                                        if (tempUserAnswerList[j + 1] === 'true') {
                                             qusInputAreaText += `<input type="radio" checked="checked" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
                                             qusInputAreaText += `<input type="radio" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
@@ -218,8 +218,8 @@
                                     break;
                                 case "複選方塊":
                                     var optionText = `${questionList[i].OptionContent}`.split(';');
-                                    for (let j = 0; j < optionText.length + 1; j++) {
-                                        if (tempUserAnswerList[j] === 'true') {
+                                    for (let j = 0; j < optionText.length; j++) {
+                                        if (tempUserAnswerList[j + 1] === 'true') {
                                             qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" checked="checked" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
                                         } else {
                                             qusInputAreaText += `<input type="checkbox" name="${questionList[i].QuestionID}" value="${j + 1}"${isRequiredClassText} />${optionText[j]}<br/>`;
@@ -249,20 +249,20 @@
                     }
 
                     if ('<%=this.NotEnable%>' === 'true') {
-                          let tempInput = document.getElementsByTagName('input');
-                          for (let item of tempInput) {
-                              item.setAttribute('onclick', 'return false;');
-                              item.setAttribute('readonly', 'readonly');
-                          }
-                          $("#btnSend").css("visibility", "hidden");
-                      }
-                  },
-                  error: function (msg) {
-                      console.log(msg);
-                      alert("連線失敗，請聯絡管理員。");
-                  }
-              });
-          });
+                        let tempInput = document.getElementsByTagName('input');
+                        for (let item of tempInput) {
+                            item.setAttribute('onclick', 'return false;');
+                            item.setAttribute('readonly', 'readonly');
+                        }
+                        $("#btnSend").css("visibility", "hidden");
+                    }
+                },
+                error: function (msg) {
+                    console.log(msg);
+                    alert("連線失敗，請聯絡管理員。");
+                }
+            });
+        });
 
 
         //當按下送出按鈕時

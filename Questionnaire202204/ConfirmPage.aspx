@@ -15,6 +15,10 @@
             width: 100px;
         }
 
+        .userDataInput > input {
+            border: 0;
+        }
+
         #userAnswerListArea > div {
             margin-bottom: 30px;
         }
@@ -31,10 +35,37 @@
                 border-radius: 3px;
             }
 
-        #btnSend {
+
+        .send {
             background-color: #9d9;
         }
         /*下方案扭區CSS結束*/
+        /*送出、返回確認CSS*/
+
+        #sendMsg,
+        #cancelMsg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(0,0,0,0.2);
+            display: none;
+        }
+
+            #sendMsg > div,
+            #cancelMsg > div {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                width: 300px;
+                height: 100px;
+                background-color: #fff;
+                padding: 10px;
+                text-align: center;
+            }
+        /*送出、返回確認CSS結束*/
     </style>
 </asp:Content>
 
@@ -48,9 +79,22 @@
     <div id="footerBtnArea">
         <p id="pQusCount"></p>
         <input type="button" id="btnCancel" value="取消" />
-        <input type="button" id="btnSend" value="送出" />
+        <input type="button" id="btnSend" class="send" value="送出" />
     </div>
-
+    <div id="sendMsg">
+        <div>
+            <p>確定要送出資料嗎?</p>
+            <input type="button" id="btnSendCancel" value="取消" />
+            <input type="button" id="btnSendSure" class="send" value="送出" />
+        </div>
+    </div>
+    <div id="cancelMsg">
+        <div>
+            <p>即將返回填寫頁</p>
+            <input type="button" id="btnCancelCancel" value="取消" />
+            <input type="button" id="btnCancelSure" class="send" value="送出" />
+        </div>
+    </div>
     <script>
         var questionnaireID = "<%=this.QuestionnaireID%>";
 
@@ -72,29 +116,27 @@
                             <tr>
                                 <td class="userDataName">姓名</td>
                                 <td class="userDataInput">
-                                    <p>${userData.Name}</p>
-            
+                                    <input type="text" readonly="readonly" value="${userData.Name}" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="userDataName">手機</td>
                                 <td class="userDataInput">
-                                    <p>${userData.Mobile}</p>
-            
+                                    <input type="text" readonly="readonly" value="${userData.Mobile}" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="userDataName">Email</td>
                                 <td class="userDataInput">
-                                    <p>${userData.Email}</p>
-            
+                                    <input type="text" readonly="readonly" value="${userData.Email}" />
+
                                 </td>
                             </tr>
                             <tr>
                                 <td class="userDataName">年齡</td>
                                 <td class="userDataInput">
-                                    <p>${userData.Age}</p>
-            
+                                    <input type="text" readonly="readonly" value="${userData.Age}" />
+
                                 </td>
                             </tr>
                             
@@ -136,16 +178,16 @@
                                 break;
                             case "單選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                for (var j = 0; j < optionText.length + 1; j++) {
-                                    if (userAnswerDataList[j] === 'true') {
+                                for (var j = 0; j < optionText.length; j++) {
+                                    if (userAnswerDataList[j + 1] === 'true') {
                                         qusTypeText += `<p>${optionText[j]}</p>`;
                                     }
                                 }
                                 break;
                             case "複選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                for (var j = 0; j < optionText.length + 1; j++) {
-                                    if (userAnswerDataList[j] === 'true') {
+                                for (var j = 0; j < optionText.length; j++) {
+                                    if (userAnswerDataList[j + 1] === 'true') {
                                         qusTypeText += `<p>${optionText[j]}</p>`;
                                     }
                                 }
@@ -181,7 +223,20 @@
 
         });
 
+        //當按下送出按鈕時
         $("#btnSend").click(function () {
+            $("#sendMsg").attr("style", "display:block;");
+
+        });
+
+        //當按下取消按鈕時
+        $("#btnCancel").click(function () {
+            $("#cancelMsg").attr("style", "display:block;");
+
+        });
+        //送出確認-確認
+        $("#btnSendSure").click(function () {
+
             let postData = {
                 "questionnaireID": questionnaireID
             };
@@ -200,10 +255,22 @@
 
         });
 
-        //當按下送出按鈕時
-        $("#btnCancel").click(function () {
+        //送出確認-取消
+        $("#btnSendCancel").click(function () {
+            $("#sendMsg").attr("style", "display:none;");
+
+        });
+
+        //返回確認-確認
+        $("#btnCancelSure").click(function () {
 
             location.href = `Form.aspx?ID=${questionnaireID}`;
+
+        });
+
+        //返回確認-取消
+        $("#btnCancelCancel").click(function () {
+            $("#cancelMsg").attr("style", "display:none;");
 
         });
 

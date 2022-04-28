@@ -34,13 +34,7 @@ namespace Questionnaire202204
             {
                 questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
             }
-            //如果問卷ID與SESSION資料不相符、則強制回到列表頁
-            if (questionnaireData == null || QuestionnaireID != questionnaireData.QuestionnaireID)
-            {
-                Response.Redirect("List.aspx");
-                this.Session.Clear();
-                return;
-            }
+            
 
             if (questionnaireData.StartTime > DateTime.Today || questionnaireData.EndTime < DateTime.Today || questionnaireData.IsEnable == false)
             {

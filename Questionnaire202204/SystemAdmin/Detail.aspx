@@ -683,8 +683,8 @@
                                 break;
                             case "單選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                for (var j = 0; j < optionText.length + 1; j++) {
-                                    if (userAnswerDataList[j] === 'True') {
+                                for (var j = 0; j < optionText.length; j++) {
+                                    if (userAnswerDataList[j + 1] === 'True') {
                                         qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
                                         qusTypeText += `<input type="radio" onclick="return false" />${optionText[j]}<br/>`;
@@ -693,8 +693,8 @@
                                 break;
                             case "複選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
-                                for (var j = 0; j < optionText.length + 1; j++) {
-                                    if (userAnswerDataList[j] === 'True') {
+                                for (var j = 0; j < optionText.length; j++) {
+                                    if (userAnswerDataList[j + 1] === 'True') {
                                         qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
                                         qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[j]}<br/>`;
@@ -804,11 +804,12 @@
             var choiseNumList = [];
             var choiseCount = 0;
             var qusTypeText = "";
-            for (var item of answerStatisticsList) {
+            for (let j = 0; j < answerStatisticsList.length; j++) {
                 //將問題選擇數量對上對應的問題選項
-                if (item.QuestionID === questionID) {
-                    choiseNumList[item.OptionNO - 1] = item.AnswerStatistics;
-                    choiseCount += item.AnswerStatistics;
+                if (answerStatisticsList[j].QuestionID === questionID) {
+                    choiseNumList[answerStatisticsList[j + 1].OptionNO - 1] = answerStatisticsList[j + 1].AnswerStatistics;
+                    choiseCount += answerStatisticsList[j + 1].AnswerStatistics;
+                    j++;
                 }
             }
 
