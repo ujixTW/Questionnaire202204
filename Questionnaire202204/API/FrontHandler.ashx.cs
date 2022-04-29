@@ -170,6 +170,7 @@ namespace Questionnaire202204.API
             if (string.Compare("Start", context.Request.QueryString["Action"], true) == 0)
             {
                 string jsonText;
+                
                 var questionList = (List<QuestionModel>)context.Session["questionDataList"];
                 var userAnsList = (List<UserAnswerModel>)context.Session["userAnswerList"];
                 var userData = (UserDataModel)context.Session["userData"];
@@ -188,7 +189,7 @@ namespace Questionnaire202204.API
             if (string.Compare("Send", context.Request.QueryString["Action"], true) == 0)
             {
                 var userID = Guid.NewGuid();
-
+                
                 var userAnsList = (List<UserAnswerModel>)context.Session["userAnswerList"];
                 var userData = (UserDataModel)context.Session["userData"];
 

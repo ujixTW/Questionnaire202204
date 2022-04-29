@@ -83,6 +83,14 @@ namespace Questionnaire202204.SystemAdmin
             model.IsRequired = this.checkIsRequired.Checked;
             model.IsEnable = this.checkBoxIsEnable.Checked;
 
+            //檢查選擇題選項是否為空白
+            if (model.Type >= 5&&string.IsNullOrWhiteSpace(model.QuestionOption))
+            {
+                this.ltlQuestionOptionMsg.Visible = true;
+                return;
+            }
+
+
             if ((int)this.Session["commonlyQuestionListCount"] < model.NO)
             {
                 CommonlyQuestionManager.CreateCommonlyQuestion(model);

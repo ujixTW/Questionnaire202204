@@ -110,7 +110,10 @@
                     let userData = objDataList.userData;
                     let questionList = objDataList.questionList;
                     let userAnswerList = objDataList.userAnswerList;
+                    if (userData === null) {
+                        location.href = `List.aspx`;
 
+                    }
                     var userDataText = `
                         <table class="userAnswerDetail">
                             <tr>

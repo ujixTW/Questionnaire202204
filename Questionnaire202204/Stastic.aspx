@@ -5,6 +5,10 @@
         #statisticsContent > div {
             margin-bottom: 30px;
         }
+        /*警告文字*/
+        .errorMsg {
+            color: #f88;
+        }
     </style>
 
 </asp:Content>
@@ -97,33 +101,16 @@
             for (let j = 0; j < answerStatisticsList.length;j++) {
                 //將問題選擇數量對上對應的問題選項
                 if (answerStatisticsList[j].QuestionID === questionID) {
-                    choiseNumList[answerStatisticsList[j + 1].OptionNO - 1] = answerStatisticsList[j + 1].AnswerStatistics;
-                    choiseCount += answerStatisticsList[j + 1].AnswerStatistics;
-                    j++;
+                    choiseNumList[answerStatisticsList[j].OptionNO - 1] = answerStatisticsList[j].AnswerStatistics;
+                    choiseCount += answerStatisticsList[j].AnswerStatistics;
                 }
             }
             let qusPercentTotal = "";
-            //let dataList = [];
-            //for (let j = 0; j < optionText.length; j++) {
-            //    let choisePercent = (choiseCount <= 0) ? 0 : Math.round(choiseNumList[j] / choiseCount * 10000) / 100;
-            //    let data = {
-            //        label: `${optionText[j]}:${choisePercent}% (${choiseNumList[j]})`,
-            //        data: choisePercent
-            //    };
-            //    dataList[j] = data;
-            //}
-            //let options = {
-            //    series: {
-            //        pie: { show: true }
-            //    },
-            //    legend: {
-            //        show: false
-            //    }
-            //};
-            //qusPercentTotal += `<div>${qusTypeText}</div>`;
             
-
             for (let j = 0; j < optionText.length; j++) {
+                if (!choiseNumList[j]) {
+                    choiseNumList[j] = 0;
+                }
                 let choisePercent = (choiseCount <= 0) ? 0 : Math.round(choiseNumList[j] / choiseCount * 10000) / 100;
                 qusTypeText += `
                     <tr>

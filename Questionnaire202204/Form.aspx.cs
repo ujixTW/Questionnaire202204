@@ -33,8 +33,13 @@ namespace Questionnaire202204
             else
             {
                 questionnaireData = (QuestionnaireModel)this.Session["questionnaireData"];
+                if (questionnaireData.QuestionnaireID != QuestionnaireID)
+                {
+                    questionnaireData = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
+                    this.Session["questionnaireData"] = questionnaireData;
+                }
             }
-            
+
 
             if (questionnaireData.StartTime > DateTime.Today || questionnaireData.EndTime < DateTime.Today || questionnaireData.IsEnable == false)
             {

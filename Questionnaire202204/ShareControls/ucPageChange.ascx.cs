@@ -65,6 +65,10 @@ namespace Sakei.ShareControls
             int pageCount = (this.TotalRows / this.PageSize);
             if ((this.TotalRows % this.PageSize) > 0)
                 pageCount += 1;
+            if (pageCount == 0)
+                pageCount = 1;
+            if (this.PageIndex > pageCount)
+                this.PageIndex = pageCount + 1;
 
             string url = this.Url;
 
@@ -78,16 +82,18 @@ namespace Sakei.ShareControls
             this.aLinkPrevious.HRef = url + "?" + this.BuildQueryString(collection, prevIndex);
             if (this.PageIndex <= 1)
                 this.aLinkPrevious.Visible = false;
+
             //下一頁
             this.aLinkNext.HRef = url + "?" + this.BuildQueryString(collection, nextIndex);
             if ((this.PageIndex + 1) > pageCount)
                 this.aLinkNext.Visible = false;
+
             //最未頁
             this.aLinkFinal.HRef = url + "?" + this.BuildQueryString(collection, pageCount);
 
 
             this.aLinkPage1.HRef = url + "?" + this.BuildQueryString(collection, this.PageIndex - 2);
-            this.aLinkPage1.InnerText = (this.PageIndex - 2 ).ToString();
+            this.aLinkPage1.InnerText = (this.PageIndex - 2).ToString();
             if (this.PageIndex <= 2)
                 this.aLinkPage1.Visible = false;
 

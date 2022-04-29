@@ -29,6 +29,10 @@
             margin: 10px 30px 0px 30px;
         }
         /*問題CSS結束*/
+        /*警告文字*/
+        .errorMsg {
+            color: #f88;
+        }
     </style>
 </asp:Content>
 
@@ -75,7 +79,13 @@
                 <td>回答</td>
                 <td>
                     <asp:TextBox ID="txtQuestionOption" runat="server"></asp:TextBox>&emsp;
+                    <asp:Literal ID="ltlQuestionOptionMsg" runat="server" Visible="false">
+                            <span class="errorMsg">
+                                此欄位為必填。
+                            </span>
+                    </asp:Literal>
                     (多個答案以 ; 分隔)
+                    
                 </td>
             </tr>
             <tr>

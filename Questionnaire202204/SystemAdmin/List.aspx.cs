@@ -16,6 +16,7 @@ namespace Questionnaire202204.SystemAdmin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            
             int pageIndex;  //目前頁數
             if (!IsPostBack)
             {

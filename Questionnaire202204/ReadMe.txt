@@ -1,4 +1,17 @@
-﻿後台內頁存有session
+﻿環境準備
+    DB設置
+        DB資料夾>
+            >Questionnaire.bak          資料庫備份
+            >QuestionnaireData.sql      資料庫資料指令碼
+            >QuestionnaireStructure.sql 資料庫資料結構指令碼
+開始
+    後台>
+        >SystemAdmin >List.aspx     後台列表頁
+    前台>
+        >List.aspx                  前台列表頁
+
+
+後台內頁存有session
     questionnaireData           問卷頁面資料
 
     questionDataList            問題頁面清單資料
@@ -29,3 +42,4 @@
     userAnswerList              使用者答案清單
 
     userData                    使用者資料
+

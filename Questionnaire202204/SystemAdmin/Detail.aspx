@@ -565,7 +565,7 @@
                                         `;
                         }
                     } else {
-                        qusListText = `<tr><td align='center' colspan='4'>查無資料</td></tr>`;
+                        tableText = `<tr><td align='center' colspan='4'>查無資料</td></tr>`;
                     }
                     //變更整個填寫資料頁簽畫面
                     listText = `
@@ -684,7 +684,7 @@
                             case "單選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
-                                    if (userAnswerDataList[j + 1] === 'True') {
+                                    if (userAnswerDataList[j + 1] === 'true') {
                                         qusTypeText += `<input type="radio" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
                                         qusTypeText += `<input type="radio" onclick="return false" />${optionText[j]}<br/>`;
@@ -694,7 +694,7 @@
                             case "複選方塊":
                                 var optionText = `${questionList[i].OptionContent}`.split(';');
                                 for (var j = 0; j < optionText.length; j++) {
-                                    if (userAnswerDataList[j + 1] === 'True') {
+                                    if (userAnswerDataList[j + 1] === 'true') {
                                         qusTypeText += `<input type="checkbox" checked="checked" onclick="return false" />${optionText[j]}<br/>`;
                                     } else {
                                         qusTypeText += `<input type="checkbox" onclick="return false" />${optionText[j]}<br/>`;
@@ -807,13 +807,15 @@
             for (let j = 0; j < answerStatisticsList.length; j++) {
                 //將問題選擇數量對上對應的問題選項
                 if (answerStatisticsList[j].QuestionID === questionID) {
-                    choiseNumList[answerStatisticsList[j + 1].OptionNO - 1] = answerStatisticsList[j + 1].AnswerStatistics;
-                    choiseCount += answerStatisticsList[j + 1].AnswerStatistics;
-                    j++;
+                    choiseNumList[answerStatisticsList[j].OptionNO - 1] = answerStatisticsList[j].AnswerStatistics;
+                    choiseCount += answerStatisticsList[j].AnswerStatistics;
                 }
             }
 
             for (var j = 0; j < optionText.length; j++) {
+                if (!choiseNumList[j]) {
+                    choiseNumList[j] = 0;
+                }
                 var choisePercent = (choiseCount <= 0) ? 0 : Math.round(choiseNumList[j] / choiseCount * 10000) / 100;
                 qusTypeText += `${optionText[j]} ${choisePercent}% (${choiseNumList[j]})<br/>`;
             }

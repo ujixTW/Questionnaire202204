@@ -61,7 +61,7 @@ namespace Questionnaire202204.ShareControls
         }
 
         /// <summary>
-        /// 後台問卷清單
+        /// ID類型為GUID的頁面
         /// </summary>
         private void _SaveTempGuidIDList()
         {
@@ -80,7 +80,7 @@ namespace Questionnaire202204.ShareControls
             }
         }
         /// <summary>
-        /// 後台選項清單
+        /// ID類型為String的頁面
         /// </summary>
         private void _SaveTempStringIDList()
         {

@@ -31,7 +31,24 @@ namespace Questionnaire202204.SystemAdmin
                 Response.Redirect("List.aspx");
                 return;
             }
-            
+
+            if (this.Session["questionnaireData"] != null)
+            {
+                QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
+                if (model.QuestionnaireID != QuestionnaireID)
+                {
+                    this.Session.Clear();
+                }
+            }
+            else if (this.Session["questionDataList"] != null)
+            {
+                List<QuestionModel> modelList = (List<QuestionModel>)this.Session["questionDataList"];
+                if (modelList[0].QuestionnaireID != QuestionnaireID)
+                {
+                    this.Session.Clear();
+                }
+            }
+
 
             if (!IsPostBack)
             {
@@ -165,6 +182,11 @@ namespace Questionnaire202204.SystemAdmin
             }
             else if (sender == this.txtQuestionnaireStartDate)
             {
+                //起始時間如果與舊有資料相同就不做判斷
+                if (string.Compare(model.StartTimeText, this.txtQuestionnaireStartDate.Text, true) == 0)
+                {
+                    return;
+                }
                 //如果格式不正確就顯示警告視窗
                 //不正確格式:日期未包含年月日、日期未分割、輸入非數字及符號、日期未在規定範圍內
                 if (DateTime.TryParse(this.txtQuestionnaireStartDate.Text, out DateTime date))
@@ -192,7 +214,7 @@ namespace Questionnaire202204.SystemAdmin
                 if (DateTime.TryParse(this.txtQuestionnaireEndDate.Text, out DateTime date))
                 {
                     //如果日期有變化就不顯示已有人填寫問卷的警告文字
-                    if(model.EndTime!=date)
+                    if (model.EndTime != date)
                         this.ltlIsAnsweredMsg.Visible = false;
 
                     //檢查時間是否小於起始時間
@@ -305,14 +327,18 @@ namespace Questionnaire202204.SystemAdmin
                 this.ltlIsAnsweredMsg.Visible = true;
                 return;
             }
-
+            //判斷問題內容欄位是否有填寫，如果沒有就阻止加入
+            if (string.IsNullOrWhiteSpace(this.txtQuestionContent.Text))
+            {
+                return;
+            }
 
             //將問題清單從session中取出
             var questionDataList = (List<QuestionModel>)this.Session["questionDataList"];
             var questionID = string.Empty;
             var questionNO = 0;
             //取得問題ID及NO
-            if (string.IsNullOrWhiteSpace(this.listCommonlyQuestionType.SelectedValue))
+            if (string.Compare("自訂問題", this.listCommonlyQuestionType.SelectedValue, true) == 0)
             {
                 //如果是新問題
                 var random = new Random();
@@ -352,10 +378,17 @@ namespace Questionnaire202204.SystemAdmin
                     }
                 }
             }
+
+            //暫存資料
             var questionContent = this.txtQuestionContent.Text;
             var questionType = int.Parse(this.listQuestionType.SelectedValue);
             var isRequired = this.checkIsRequired.Checked;
             var questionOption = this.txtQuestionOption.Text;
+
+            //如果題目為選擇題而未給選項的話，阻止加入
+            if (questionType >= 5 && string.IsNullOrWhiteSpace(questionOption))
+                return;
+
 
             //判斷如果資料為編輯或新增
             if (questionNO > questionDataList.Count)
