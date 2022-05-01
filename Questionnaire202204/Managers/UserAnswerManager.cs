@@ -54,7 +54,7 @@ namespace Questionnaire202204.Managers
                         for (var i = 0; i < userAnswers.Count; i++)
                         {
                             command.Parameters.AddWithValue("@UserID" + i, userAnswers[i].UserID);
-                            command.Parameters.AddWithValue("@QuestionnaireID"+i, userAnswers[i].QuestionnaireID);
+                            command.Parameters.AddWithValue("@QuestionnaireID" + i, userAnswers[i].QuestionnaireID);
                             command.Parameters.AddWithValue("@QuestionID" + i, userAnswers[i].QuestionID);
                             command.Parameters.AddWithValue("@OptionNO" + i, userAnswers[i].OptionNO);
                             command.Parameters.AddWithValue("@Answer" + i, userAnswers[i].Answer);
@@ -267,7 +267,7 @@ namespace Questionnaire202204.Managers
         /// </summary>
         /// <param name="questionnaireID">問卷ID</param>
         /// <returns>單一問卷選擇題的統計資料清單</returns>
-        public static List<UserAnswerStatisticsModel> GetAnswerStatisticsList(Guid questionnaireID)
+        public static List<UserAnswerStatisticsModel> GetAnswerStatisticsList(Guid questionnaireID, out bool isAnswered)
         {
             //連接資料庫用文字
             string connStr = ConfigHelper.GetConnectionString();
@@ -280,6 +280,12 @@ namespace Questionnaire202204.Managers
                                   GROUP BY [UserAnswer].QuestionID,[OptionNO],[Answer]
                                   ORDER BY QuestionID,[OptionNO],[Answer]
                                 ";
+            string isAnsweredCommandText = $@"
+                                            SELECT QuestionnaireID
+                                              FROM [Questionnaire202204].[dbo].[UserAnswer]
+                                              WHERE QuestionnaireID = @QuestionnaireID
+                                              GROUP BY QuestionnaireID
+                                        ";
             try
             {
                 using (SqlConnection conn = new SqlConnection(connStr))
@@ -301,6 +307,12 @@ namespace Questionnaire202204.Managers
                             };
                             answerStatisticsList.Add(info);
                         }
+                        reader.Close();
+
+                        //取得是否有人作答
+                        command.CommandText = isAnsweredCommandText;
+                        isAnswered = (command.ExecuteScalar() != null) ? true : false;
+
 
                         return answerStatisticsList;
                     }

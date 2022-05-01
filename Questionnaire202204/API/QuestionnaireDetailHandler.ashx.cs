@@ -50,9 +50,10 @@ namespace Questionnaire202204.API
                 string jsonText;
                 var questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
 
-                var userAnswerStatistics = UserAnswerManager.GetAnswerStatisticsList(questionnaireID);
+                var userAnswerStatistics = UserAnswerManager.GetAnswerStatisticsList(questionnaireID,out bool isAnswered);
                 var answerStatisticsPageData = new QuestionAndAnswerStatisticsModel()
                 {
+                    IsAnswered=isAnswered,
                     questionList = (List<QuestionModel>)context.Session["questionDataList"],
                     answerStatisticsList = userAnswerStatistics
                 };

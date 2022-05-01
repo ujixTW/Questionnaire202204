@@ -754,7 +754,7 @@
                             `;
 
                     }
-                    statisticsDataText = (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>" : statisticsDataText;
+                    statisticsDataText = (objDataList.IsAnswered) ? statisticsDataText : "<p class='errorMsg'>目前無人作答</p>";
 
                     $("#statisticsContent").empty();
                     $("#statisticsContent").append(statisticsDataText);

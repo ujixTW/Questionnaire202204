@@ -64,12 +64,12 @@
                                 case "單選方塊":
                                     qusTypeText = `<canvas id="${questionList[i].QuestionID}" style="width:100%;max-width:700px"></canvas>`;
                                     qusTypeText += CreateStatisticsOptionText(i, questionList, answerStatisticsList);
-                                    ChartsDataList[ChartsDataList.length]= CreateStatisticsChartsData(i, questionList, answerStatisticsList);
+                                    ChartsDataList[ChartsDataList.length] = CreateStatisticsChartsData(i, questionList, answerStatisticsList);
                                     break;
                                 case "複選方塊":
                                     qusTypeText = `<canvas id="${questionList[i].QuestionID}" style="width:100%;max-width:700px"></canvas>`;
                                     qusTypeText += CreateStatisticsOptionText(i, questionList, answerStatisticsList);
-                                    ChartsDataList[ChartsDataList.length]= CreateStatisticsChartsData(i, questionList, answerStatisticsList);
+                                    ChartsDataList[ChartsDataList.length] = CreateStatisticsChartsData(i, questionList, answerStatisticsList);
                                     break;
                             }
                             statisticsDataText += `
@@ -82,7 +82,8 @@
                             `;
 
                         }
-                        statisticsDataText = (answerStatisticsList.length === 0) ? "<p class='errorMsg'>目前無人作答</p>" : statisticsDataText;
+
+                        statisticsDataText = (objDataList.IsAnswered) ? statisticsDataText : "<p class='errorMsg'>目前無人作答</p>" ;
 
                         $("#statisticsContent").empty();
                         $("#statisticsContent").append(statisticsDataText);
@@ -111,15 +112,15 @@
                             if (!choiseNumList[j]) {
                                 choiseNumList[j] = 0;
                             }
-                            xValues[xValues.length]= `${optionText[j]}(${choiseNumList[j]})`;
+                            xValues[xValues.length] = `${optionText[j]}(${choiseNumList[j]})`;
                             let r = Math.floor(Math.random() * 256);
                             let g = Math.floor(Math.random() * 256);
                             let b = Math.floor(Math.random() * 256);
 
-                            barColors[barColors.length]= `rgb(${r},${g},${b})`;
+                            barColors[barColors.length] = `rgb(${r},${g},${b})`;
                         }
                         for (let item of choisePercent) {
-                            yValues[yValues.length]= item;
+                            yValues[yValues.length] = item;
                         }
 
                         new Chart(questionID, {
@@ -201,7 +202,7 @@
                         choiseNumList[j] = 0;
                     }
                     let choisePercent = (choiseCount <= 0) ? 0 : Math.round(choiseNumList[j] / choiseCount * 10000) / 100;
-                    PercentList[PercentList.length]= choisePercent;
+                    PercentList[PercentList.length] = choisePercent;
                 }
                 //輸出成圓餅圖用文字
                 let ChartsData = {

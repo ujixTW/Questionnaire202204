@@ -69,9 +69,14 @@ namespace Questionnaire202204.Models
     public class QuestionAndAnswerStatisticsModel
     {
         /// <summary>
+        /// 是否有人作答
+        /// </summary>
+        public bool IsAnswered { get; set; }
+        /// <summary>
         /// 問題List
         /// </summary>
         public List<QuestionModel> questionList { get; set; }
+
         /// <summary>
         /// 使用者回答統計List
         /// </summary>

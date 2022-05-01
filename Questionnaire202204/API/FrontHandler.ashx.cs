@@ -59,9 +59,10 @@ namespace Questionnaire202204.API
                 {
                     questionModels = (List<QuestionModel>)context.Session["questionDataList"];
                 }
-                var userAnswerStatistics = UserAnswerManager.GetAnswerStatisticsList(questionnaireID);
+                var userAnswerStatistics = UserAnswerManager.GetAnswerStatisticsList(questionnaireID,out bool isAnswered);
                 var answerStatisticsPageData = new QuestionAndAnswerStatisticsModel()
                 {
+                    IsAnswered=isAnswered,
                     questionList = questionModels,
                     answerStatisticsList = userAnswerStatistics
                 };
