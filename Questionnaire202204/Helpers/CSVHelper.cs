@@ -20,15 +20,16 @@ namespace Questionnaire202204.Helpers
         /// <param name="data">目標資料字串List</param>
         public static void CSVGenerator(string fillFoldPath, string filePath, List<string> data)
         {
-            if (!Directory.Exists(fillFoldPath))
-            {
-                Directory.CreateDirectory(fillFoldPath);
-            }
             if (!File.Exists(filePath))
             {
                 File.Create(filePath);
             }
-            using (var file = new StreamWriter(filePath))
+            if (!Directory.Exists(fillFoldPath))
+            {
+                Directory.CreateDirectory(fillFoldPath);
+            }
+
+            using (var file = new StreamWriter(filePath, true, System.Text.Encoding.UTF8))
             {
                 foreach (var i in data)
                 {

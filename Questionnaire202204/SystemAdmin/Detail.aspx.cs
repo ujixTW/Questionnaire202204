@@ -537,11 +537,11 @@ namespace Questionnaire202204.SystemAdmin
             var allUserAnswerList = UserAnswerManager.GetUserAnswerList(QuestionnaireID);
             Guid tempUserID = Guid.Empty;
             int tempDataPosition = 0;
+            var tempQuestionList = (this.Session["questionDataList"]!=null)?(List<QuestionModel>)this.Session["questionDataList"]:QuestionManager.GetQuestionList(QuestionnaireID);
+
             for (var i = 0; i < userDataList.Count; i++)
             {
                 var tempUserAnswerList = new List<UserAnswerModel>();
-                var questionCount = (int)this.Session["DBQuestionDataListCount"];
-                var tempQuestionList = (List<QuestionModel>)this.Session["questionDataList"];
 
                 //將資料切分成單一答題者
                 //需將資料照UserID順序排列才能執行
