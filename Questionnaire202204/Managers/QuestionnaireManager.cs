@@ -211,6 +211,9 @@ namespace Questionnaire202204.Managers
                                       [Questionnaire].[QuestionnaireID] NOT IN(
                                             SELECT TOP ({skip}) [QuestionnaireID]
                                             FROM [Questionnaire] 
+                                            WHERE 
+                                                [IsDelete]='false'
+                                                {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
                                             ORDER BY [NO] DESC
                                       ) 
                                         {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
@@ -319,131 +322,6 @@ namespace Questionnaire202204.Managers
                 throw;
             }
         }
-        /// <summary>
-        /// 前台查詢多筆可填寫、已結束投票問卷資料
-        /// </summary>
-        /// <param name="pageSize">每頁最大筆數</param>
-        /// <param name="pageIndex">目前頁數</param>
-        /// <param name="totalRows">實際筆數</param>
-        /// <returns>多筆問卷資料，及OUT該頁實際資料筆數</returns>
-        public static List<QuestionnaireModel> GetFormQuestionnaireList(string keyword, string startTime, string endTime, int pageSize, int pageIndex, out int totalRows)
-        {
-            //計算跳頁數
-            int skip = pageSize * (pageIndex - 1);
-            if (skip < 0)
-                skip = 0;
-
-            //帶入關鍵字
-            string whereCondition = string.Empty;
-            if (!string.IsNullOrWhiteSpace(keyword))
-            {
-                whereCondition = " AND Title LIKE '%'+@keyword+'%' ";
-            }
-
-            //帶入起始時間
-            string whatTimeStartCondition = string.Empty;
-            if (!string.IsNullOrWhiteSpace(startTime))
-            {
-                whatTimeStartCondition = " AND StartTime >= @startDate ";
-            }
-
-            //帶入結束時間
-            string whatTimeEndCondition = string.Empty;
-            if (!string.IsNullOrWhiteSpace(endTime))
-            {
-                whatTimeEndCondition = " AND EndTime <= @endDate ";
-            }
-
-            //連接資料庫用文字
-            string connStr = ConfigHelper.GetConnectionString();
-            string commandText = $@"
-                                 SELECT TOP ({pageSize})
-                                    [QuestionnaireID],[NO],[Title],[Briefly]
-                                    ,[StartTime],[EndTime],[CreateTime],[IsEnable]
-                                 FROM [Questionnaire]
-                                 WHERE 
-                               　   [IsDelete]='false' AND
-                               		[StartTime] < GETDATE() AND(
-                               			( ([EndTime] > GETDATE() OR [EndTime] IS NULL ) AND [IsEnable]='true') OR 
-                               			( [IsEnable] = 'false' AND
-                               　		    [Questionnaire].[QuestionnaireID] IN(
-                               　		      SELECT TOP (1000) 
-                               			    　    [QuestionnaireID]
-                               			    　FROM [Questionnaire202204].[dbo].[UserAnswer]
-                               			    　GROUP BY [QuestionnaireID]
-                               　		    ) 
-                               			)
-                               		) AND 
-                                      [Questionnaire].[QuestionnaireID] NOT IN(
-                                            SELECT TOP ({skip}) [QuestionnaireID]
-                                            FROM [Questionnaire] 
-                                            ORDER BY [NO] DESC
-                                      ) 
-                                        {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
-                                ORDER BY [NO] DESC
-                                ";
-            string commandCountText =
-                $@" SELECT COUNT([Questionnaire].[QuestionnaireID])
-                    FROM [Questionnaire]
-                    WHERE [IsDelete]='false' AND
-                    [StartTime] < GETDATE() AND(
-                               			( ([EndTime] > GETDATE() OR [EndTime] IS NULL ) AND [IsEnable]='true') OR 
-                               			( [IsEnable] = 'false' AND
-                               　		    [Questionnaire].[QuestionnaireID] IN(
-                               　		      SELECT TOP (1000) 
-                               			    　    [QuestionnaireID]
-                               			    　FROM [Questionnaire202204].[dbo].[UserAnswer]
-                               			    　GROUP BY [QuestionnaireID]
-                               　		    ) 
-                               			)
-                               		)
-                    {whereCondition} {whatTimeStartCondition} {whatTimeEndCondition}
-                ";
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    using (SqlCommand command = new SqlCommand(commandText, conn))
-                    {
-                        command.Parameters.AddWithValue("@keyword", keyword);
-                        command.Parameters.AddWithValue("@startDate", startTime);
-                        command.Parameters.AddWithValue("@endDate", endTime);
-                        conn.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-                        List<QuestionnaireModel> QuestionnaireDataList = new List<QuestionnaireModel>();
-
-                        //將資料取出放到List中
-                        while (reader.Read())
-                        {
-
-                            QuestionnaireModel info = new QuestionnaireModel()
-                            {
-                                QuestionnaireID = (Guid)reader["QuestionnaireID"],
-                                NO = (int)reader["NO"],
-                                Title = reader["Title"] as string,
-                                Briefly = reader["Briefly"] as string,
-                                StartTime = (DateTime)reader["StartTime"],
-                                EndTime = reader["EndTime"] as DateTime?,
-                                IsEnable = (bool)reader["IsEnable"]
-                            };
-                            QuestionnaireDataList.Add(info);
-                        }
-                        reader.Close();
-
-                        //取得總筆數
-                        command.CommandText = commandCountText;
-
-                        totalRows = (int)command.ExecuteScalar();
-                        return QuestionnaireDataList;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog("Questionnaire202204.Manager.QuestionnaireManager.GetQuestionnaireList", ex);
-                throw;
-            }
-        }
-
+        
     }
 }

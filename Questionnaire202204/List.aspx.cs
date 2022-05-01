@@ -39,7 +39,7 @@ namespace Questionnaire202204
                 List<string> keyQSValue = new List<string>() { keyword, startTimeText, endTimeText };
 
                 //取得考題資料清單
-                var questionnaireList = QuestionnaireManager.GetFormQuestionnaireList(keyword, startTimeText, endTimeText, _pageSize, pageIndex, out totalRows);
+                var questionnaireList = QuestionnaireManager.GetQuestionnaireList(keyword, startTimeText, endTimeText, _pageSize, pageIndex, out totalRows);
                 this.Session["questionnaireDataList"] = questionnaireList;
 
                 this.ucQuestionnaireSearchBar.Keyword = keyword;

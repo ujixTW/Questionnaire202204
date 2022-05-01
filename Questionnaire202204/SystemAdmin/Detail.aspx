@@ -234,8 +234,8 @@
                     <td class="txtInputTitle"></td>
                     <td>
 
-                        <asp:CheckBox ID="checkIsEnable" runat="server" OnCheckedChanged="checkIsEnable_CheckedChanged" />
-                        已啟用
+                        <asp:CheckBox ID="checkIsEnable" runat="server" Text="已啟用" OnCheckedChanged="checkIsEnable_CheckedChanged" AutoPostBack="true" />
+                        
                     </td>
                 </tr>
             </table>
@@ -435,40 +435,10 @@
         //問卷
         function QuestionnairePage() {
             state = "Questionnaire";
-            var postData = {
-                "questionnaireID": questionnaireID
-            }
-            $.ajax({
-                url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
-                method: "POST",
-                data: postData,
-                success: function (objData) {
-                    ResetTabState();
-                    //切換為指定TAB
-                    SetTab(state);
-                    var tittleID ='<%=this.txtQuestionnaireTitle.ClientID%>';
-                    var contentID ='<%=this.txtQuestionnaireContent.ClientID%>';
-                    var startDateID ='<%=this.txtQuestionnaireStartDate.ClientID%>';
-                    var endDateID ='<%=this.txtQuestionnaireEndDate.ClientID%>';
-                    var checkBoxID = '<%=this.checkIsEnable.ClientID%>';
-                    //問卷標題
-                    $(`#${tittleID}`).attr("value", objData.Title);
-                    //問卷描述
-                    $(`#${contentID}`).empty();
-                    $(`#${contentID}`).append(objData.Briefly);
-                    //開始時間
-                    $(`#${startDateID}`).attr("value", objData.StartTimeText);
-                    //結束時間
-                    $(`#${endDateID}`).attr("value", objData.EndTimeText);
-                    //是否啟用
-                    $(`#${checkBoxID}`).attr("checked", objData.IsEnable);
-                },
-                error: function (msg) {
-                    console.log(msg);
-                    alert("連線失敗，請聯絡管理員。");
-                }
-
-            });
+            ResetTabState();
+            //切換為指定TAB
+            SetTab(state);
+            
         }
         //問題
         function QuestionPage() {
@@ -540,7 +510,7 @@
                 "questionnaireID": questionnaireID,
                 "page": '<%=this.PageIndex%>',
                 "pageSize":<%=this.PageSize%>
-            }
+            };
             $.ajax({
                 url: `../API/QuestionnaireDetailHandler.ashx?Page=${state}`,
                 method: "POST",

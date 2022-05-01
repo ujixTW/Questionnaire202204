@@ -68,7 +68,15 @@ namespace Questionnaire202204.Models
                 {
                     return "投票中";
                 }
-                return "已完結";
+                else if (StartTime > DateTime.Today && IsEnable == true)
+                {
+
+                    return "尚未開始";
+                }
+                else
+                {
+                    return "已完結";
+                }
             }
         }
         /// <summary>

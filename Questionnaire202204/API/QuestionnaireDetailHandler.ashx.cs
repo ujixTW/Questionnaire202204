@@ -15,34 +15,7 @@ namespace Questionnaire202204.API
         //Session請參考ReadMe.txt
         public void ProcessRequest(HttpContext context)
         {
-            //問卷
-            if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
-                 string.Compare("Questionnaire", context.Request.QueryString["Page"], true) == 0)
-            {
-                string jsonText;
-                if (context.Session["questionnaireData"] != null)
-                {
-                    //從session取值
-                    var questionnaireData = context.Session["questionnaireData"];
-                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(questionnaireData);
-                }
-                else
-                {
-                    //從DB取值，並輸出
-                    Guid questionnaireID = Guid.Parse(context.Request.Form["questionnaireID"]);
-                    var questionnaireData = QuestionnaireManager.GetQuestionnaireData(questionnaireID);
-                    jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(questionnaireData);
-                    //將資料存入session
-                    context.Session["questionnaireData"] = questionnaireData;
-                }
-
-
-
-                context.Response.ContentType = "application/json";
-                context.Response.Write(jsonText);
-                return;
-            }
-
+            
             //問題
             if (string.Compare("POST", context.Request.HttpMethod, true) == 0 &&
                  string.Compare("Question", context.Request.QueryString["Page"], true) == 0)

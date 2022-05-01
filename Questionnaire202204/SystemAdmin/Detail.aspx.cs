@@ -57,6 +57,9 @@ namespace Questionnaire202204.SystemAdmin
                 //依頁簽不同套用不同資料
                 switch (pageState)
                 {
+                    case "Questionnaire":
+                        SetQuestionnairePageData();
+                        break;
                     case "Question":
                         //如果為問題頁面，自動套用資料進新增、詳細編輯問題的區域
                         _InputQuestionEditAreaDeta();
@@ -143,6 +146,20 @@ namespace Questionnaire202204.SystemAdmin
         }
 
         #region 問卷頁簽
+
+        private void SetQuestionnairePageData()
+        {
+            if (this.Session["questionnaireData"] == null)
+            {
+                this.Session["questionnaireData"] = QuestionnaireManager.GetQuestionnaireData(QuestionnaireID);
+            }
+            QuestionnaireModel model = (QuestionnaireModel)this.Session["questionnaireData"];
+            this.txtQuestionnaireTitle.Text = model.Title;
+            this.txtQuestionnaireContent.Text = model.Briefly;
+            this.txtQuestionnaireStartDate.Text = model.StartTimeText;
+            this.txtQuestionnaireEndDate.Text = model.EndTimeText;
+            this.checkIsEnable.Checked = model.IsEnable;
+        }
 
         //變更問卷文字方塊內文字
         protected void txtQuestionnaire_TextChanged(object sender, EventArgs e)
