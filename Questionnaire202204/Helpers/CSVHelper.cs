@@ -35,6 +35,7 @@ namespace Questionnaire202204.Helpers
                 {
                     file.WriteLineAsync(i);
                 }
+                file.Close();
             }
         }
 
