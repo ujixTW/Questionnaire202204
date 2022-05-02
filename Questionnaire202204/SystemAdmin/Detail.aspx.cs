@@ -4,6 +4,7 @@ using Questionnaire202204.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -571,9 +572,9 @@ namespace Questionnaire202204.SystemAdmin
 
             //輸出成CSV檔
             #region 輸出成CSV檔
-
-            string fillPath = $@"D:\tmp\問卷{this.QuestionnaireID}.csv";
-            string fillFoldPath = @"D:\tmp";
+            string driveText = (Directory.Exists("D:\\")) ? "D:\\" : "C:\\";
+            string fillPath = $@"{driveText}tmp\問卷{this.QuestionnaireID}.csv";
+            string fillFoldPath = $@"{driveText}tmp";
             List<string> dataTextList = new List<string>();
             dataTextList.Add(outPutToCsvModelList[0].CSVTitle());
             foreach (var item in outPutToCsvModelList)
