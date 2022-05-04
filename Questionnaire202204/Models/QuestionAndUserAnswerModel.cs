@@ -31,6 +31,9 @@ namespace Questionnaire202204.Models
         {
             var tempText = "";
             var tempOptionNO = 1;
+            var qusOptionCount = 0;
+            List<string> tempQusOptionList = new List<string>();
+            List<string> tempAnsList = new List<string>();
             foreach (var item in userAnswerList)
             {
                 if (item.OptionNO == 0)
@@ -39,15 +42,41 @@ namespace Questionnaire202204.Models
                     tempOptionNO = 1;
                     continue;
                 }
+
+                //如果為選擇題，則將選項拆為LIST供CSV顯示使用者選擇項
+                if (item.OptionNO == 1)
+                {
+                    foreach (var temp in questionList)
+                    {
+                        if (temp.QuestionID == item.QuestionID)
+                        {
+                            tempQusOptionList = temp.OptionContent.Split(';').ToList();
+                            qusOptionCount = tempQusOptionList.Count;
+                            break;
+                        }
+                    }
+
+                }
+                
+
                 if (item.OptionNO == tempOptionNO)
                 {
-                    tempText += (tempOptionNO == 1) ? $",{item.Answer}" : $";{item.Answer}";
+                    if (bool.Parse(item.Answer))
+                    {
+                        tempAnsList.Add(tempQusOptionList[tempOptionNO - 1]);
+                    }
+                    if (tempOptionNO == qusOptionCount)
+                    {
+                        tempText += "," + string.Join(";", tempAnsList);
+                        tempQusOptionList.Clear();
+                        tempAnsList.Clear();
+                        tempOptionNO = 1;
+                        continue;
+                    }
+                    
                     tempOptionNO += 1;
-                }else
-                {
-                    tempOptionNO = 2;
-                    tempText +=  $",{item.Answer}";
                 }
+                
             }
             return $"{userData.Name},{userData.Age},{userData.Mobile},{userData.Email}{tempText}";
         }

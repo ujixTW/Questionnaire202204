@@ -62,12 +62,12 @@
                                     qusTypeText = "-<br/>";
                                     break;
                                 case "單選方塊":
-                                    qusTypeText = `<canvas id="${questionList[i].QuestionID}" style="width:100%;max-width:700px"></canvas>`;
+                                    qusTypeText = `<canvas id="pie${questionList[i].QuestionID}" style="width:100%;max-width:700px"></canvas>`;
                                     qusTypeText += CreateStatisticsOptionText(i, questionList, answerStatisticsList);
                                     ChartsDataList[ChartsDataList.length] = CreateStatisticsChartsData(i, questionList, answerStatisticsList);
                                     break;
                                 case "複選方塊":
-                                    qusTypeText = `<canvas id="${questionList[i].QuestionID}" style="width:100%;max-width:700px"></canvas>`;
+                                    qusTypeText = `<canvas id="pie${questionList[i].QuestionID}" style="width:100%;max-width:700px"></canvas>`;
                                     qusTypeText += CreateStatisticsOptionText(i, questionList, answerStatisticsList);
                                     ChartsDataList[ChartsDataList.length] = CreateStatisticsChartsData(i, questionList, answerStatisticsList);
                                     break;
@@ -123,7 +123,7 @@
                             yValues[yValues.length] = item;
                         }
 
-                        new Chart(questionID, {
+                        new Chart(`pie${questionID}`, {
                             type: "pie",
                             data: {
                                 labels: xValues,
@@ -169,7 +169,7 @@
                     </tr>
                     <tr>
                         <td style="width:70%; padding-left:50px;">
-                            <div style="width:100%; height:30px; border:3px solid #000;"><div style="width:${choisePercent}%; height:100%; background-color:#aaa;"></div></div>
+                            <div style="width:100%; height:20px; border:3px solid #000;"><div style="width:${choisePercent}%; height:100%; background-color:#aaa;"></div></div>
                         </td>
                         <td style="padding-left:50px;">
                             ${choisePercent}% (${choiseNumList[j]})

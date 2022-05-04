@@ -538,7 +538,7 @@ namespace Questionnaire202204.SystemAdmin
             var allUserAnswerList = UserAnswerManager.GetUserAnswerList(QuestionnaireID);
             Guid tempUserID = Guid.Empty;
             int tempDataPosition = 0;
-            var tempQuestionList = (this.Session["questionDataList"]!=null)?(List<QuestionModel>)this.Session["questionDataList"]:QuestionManager.GetQuestionList(QuestionnaireID);
+            var tempQuestionList = (this.Session["questionDataList"] != null) ? (List<QuestionModel>)this.Session["questionDataList"] : QuestionManager.GetQuestionList(QuestionnaireID);
 
             for (var i = 0; i < userDataList.Count; i++)
             {

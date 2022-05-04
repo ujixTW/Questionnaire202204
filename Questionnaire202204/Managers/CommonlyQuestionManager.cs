@@ -300,6 +300,7 @@ namespace Questionnaire202204.Managers
                             model.QuestionContent = reader["QuestionContent"] as string;
                             model.QuestionOption = reader["QuestionOption"] as string;
                             model.IsRequired = (bool)reader["IsRequired"];
+                            model.IsEnable = (bool)reader["IsEnable"];
 
                         }
 
